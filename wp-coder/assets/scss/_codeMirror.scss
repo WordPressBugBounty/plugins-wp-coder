@@ -1,0 +1,32 @@
+.CodeMirror {
+  border: 1px solid var(--wowp-border);
+  font-size: 13px;
+  //resize: vertical;
+  //overflow: auto;
+  //height: auto !important;
+  //min-height: 350px !important;
+  width: 100%;
+  min-height: 60vh !important;
+  height: calc(100vh - 295px) !important;
+  //border: 1px solid #dcdcde;
+  box-sizing: border-box;
+}
+
+.wpcoder-global-php .CodeMirror-sizer:before {
+  content: "<?php\A defined( 'ABSPATH' ) || exit;\A\A";
+  white-space: pre;
+}
+
+.wpcoder-global-php .CodeMirror-sizer:before {
+  color: #848A8A;
+  position: absolute;
+}
+
+.wpcoder-global-php .CodeMirror-lines {
+  padding-top: 50px;
+}
+
+.highlighted-gutter {
+  background-color: #e8f2ff;
+  border-left: 5px solid var(--wowp-orange);
+}

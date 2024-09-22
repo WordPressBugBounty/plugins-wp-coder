@@ -1,0 +1,72 @@
+.wowp-notification {
+  --notification-color: var(--wowp-dark);
+  position: relative;
+  background-color: color-mix(in srgb, var(--notification-color) 7%, white);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--notification-color);
+  padding-block: 1.25rem;
+  padding-inline: 3rem 1.25rem;
+  border-radius: 4px;
+  margin-block: 15px;
+  &:before {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    content: '';
+    font-family: dashicons;
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--notification-color);
+  }
+
+  &:after {
+    position: absolute;
+    content: '';
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2rem;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background-color: var(--notification-color);
+  }
+
+  &.-info {
+    --notification-color: var(--wowp-blue);
+    &:before {
+      content: "\f348";
+    }
+  }
+  &.-warning {
+    --notification-color: var(--wowp-yellow);
+    &:before {
+      content: "\f534";
+    }
+  }
+  &.-error {
+    --notification-color: var(--wowp-danger);
+    &:before {
+      content: "\f335";
+    }
+  }
+
+  &.-lock {
+    --notification-color: var(--wowp-danger);
+    &:before {
+      content: "\f160";
+    }
+  }
+
+  &.-success {
+    --notification-color: var(--wowp-success);
+    &:before {
+      content: "\f12a";
+    }
+  }
+}

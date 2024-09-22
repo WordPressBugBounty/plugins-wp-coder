@@ -1,0 +1,31 @@
+.changelog-list {
+  max-width: 750px;
+  margin-inline: auto;
+  h4 {
+    font-size: 22px;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #FADFD0;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+  ul {
+    //list-style-type: georgian;
+    li {
+      font-size: 16px;
+      line-height: 1.5;
+      padding-left: 8px;
+      &::marker {
+        font-size: 12px;
+      }
+      &.added::marker {
+        content: '✅';
+      }
+      &.fixed::marker {
+        content: '🛠';
+      }
+      &.initial::marker {
+        content: '📢';
+      }
+    }
+  }
+}

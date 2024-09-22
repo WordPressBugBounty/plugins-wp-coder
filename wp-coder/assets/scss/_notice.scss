@@ -1,0 +1,61 @@
+
+.wowp-notice {
+  padding: 22px;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+.wowp-error {
+  background: #FAD0D0;
+  color: #14102C;
+  border-left: 6px solid #E82C2C;
+}
+
+.wowp-success {
+  padding: 1.25rem;
+  background: #D0FAD0;
+  color: #14102C;
+  border-left: 6px solid #109610;
+}
+
+.wowp-notice {
+  --notification-color: var(--wowp-success);
+  position: relative;
+  background-color: color-mix(in srgb, var(--notification-color) 7%, white);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--notification-color);
+  padding-block: 1.25rem;
+  padding-inline: 3rem 1.25rem;
+  border-radius: 4px;
+  margin-block: 15px;
+
+  &:before {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    content: '\f12a';
+    font-family: dashicons;
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--notification-color);
+  }
+
+  &:after {
+    position: absolute;
+    content: '';
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2rem;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background-color: var(--notification-color);
+  }
+}
