@@ -12,15 +12,15 @@ class SnippetManager {
 		$snippets = [
 			'disable' => [
 				'html-code',
-				__( 'Disable snippets', 'wpcoder' )
+				__( 'Disable snippets', 'wp-coder' )
 			],
 			'enable'  => [
 				'css-code',
-				__( 'Enabled snippets', 'wpcoder' )
+				__( 'Enabled snippets', 'wp-coder' )
 			],
 			'change'  => [
 				'js-code',
-				__( 'Changed snippets', 'wpcoder' )
+				__( 'Changed snippets', 'wp-coder' )
 			],
 		];
 
@@ -29,7 +29,7 @@ class SnippetManager {
             <form method="post">
                 <fieldset style="display: block;">
                     <legend>
-						<?php esc_html_e( 'Snippets', 'wpcoder' ); ?>
+						<?php esc_html_e( 'Snippets', 'wp-coder' ); ?>
                     </legend>
 
                     <h3 class="nav-tab-wrapper wowp-tab" id="settings-tab">
@@ -55,7 +55,7 @@ class SnippetManager {
 
                     <div class="wowp-field is-full has-mt">
 						<?php
-						submit_button( __( 'Save', 'wpcoder' ), 'primary large', 'submit', false ); ?>
+						submit_button( __( 'Save', 'wp-coder' ), 'primary large', 'submit', false ); ?>
                     </div>
 
 					<?php

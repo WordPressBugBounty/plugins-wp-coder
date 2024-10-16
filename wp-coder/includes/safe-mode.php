@@ -69,10 +69,10 @@ function wpcoder_keep_safe_mode_admin_menu() {
 function wpcoder_safe_mode_notice() {
 	?>
 	<div class="notice notice-warning">
-		<p><?php esc_html_e( 'WPCoder is in Safe Mode which means no codes are getting executed. Please disable any snippets that have caused errors and when done click the button below to exit safe mode.', 'wpcoder' ); ?></p>
-		<p><?php esc_html_e( 'The link will open in a new window so if you are still encountering issues you safely can return to this tab and make further adjustments', 'wpcoder' ); ?></p>
+		<p><?php esc_html_e( 'WPCoder is in Safe Mode which means no codes are getting executed. Please disable any snippets that have caused errors and when done click the button below to exit safe mode.', 'wp-coder' ); ?></p>
+		<p><?php esc_html_e( 'The link will open in a new window so if you are still encountering issues you safely can return to this tab and make further adjustments', 'wp-coder' ); ?></p>
 		<p>
-			<a class="button button-secondary wpcoder-safe-mode" href="<?php echo esc_url( remove_query_arg( 'wpcoder-safe-mode' ) ); ?>" target="_blank"><?php esc_html_e( 'Exit safe mode', 'wpcoder' ); ?></a>
+			<a class="button button-secondary wpcoder-safe-mode" href="<?php echo esc_url( remove_query_arg( 'wpcoder-safe-mode' ) ); ?>" target="_blank"><?php esc_html_e( 'Exit safe mode', 'wp-coder' ); ?></a>
 		</p>
 	</div>
 	<?php

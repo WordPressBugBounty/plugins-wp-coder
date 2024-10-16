@@ -14,14 +14,14 @@ class ToolsManager {
             <form method="post">
                 <fieldset style="display: block;">
                     <legend>
-						<?php esc_html_e( 'Tools', 'wpcoder' ); ?>
+						<?php esc_html_e( 'Tools', 'wp-coder' ); ?>
                     </legend>
                     <div class="tab-content-wrapper wowp-tab-content">
 						<?php require_once plugin_dir_path( __FILE__ ) . '/page.php'; ?>
                     </div>
                     <div class="wowp-field is-full has-mt">
 						<?php
-						submit_button( __( 'Save', 'wpcoder' ), 'primary large', 'submit', false ); ?>
+						submit_button( __( 'Save', 'wp-coder' ), 'primary large', 'submit', false ); ?>
                     </div>
 
 					<?php

@@ -14,7 +14,7 @@ class ImporterExporter {
         <form method="post">
             <p></p>
             <p>
-				<?php submit_button( __( 'Export All Data', 'wpcoder' ), 'secondary', 'submit', false ); ?>
+				<?php submit_button( __( 'Export All Data', 'wp-coder' ), 'secondary', 'submit', false ); ?>
 				<?php wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_export_data' ); ?>
             </p>
         </form>
@@ -33,13 +33,13 @@ class ImporterExporter {
             <p>
                 <label>
                     <input type="checkbox" name="wowp_import_update" value="1">
-					<?php esc_attr_e( 'Update item if item already exists.' . 'wpcoder' ); ?>
+					<?php esc_attr_e( 'Update item if item already exists.' , 'wp-coder' ); ?>
                 </label>
 
             </p>
 
             <p>
-				<?php submit_button( __( 'Import', 'wpcoder' ), 'secondary', 'submit', false ); ?>
+				<?php submit_button( __( 'Import', 'wp-coder' ), 'secondary', 'submit', false ); ?>
 				<?php wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_import_data' ); ?>
             </p>
         </form>
@@ -50,7 +50,7 @@ class ImporterExporter {
 	public static function import_data(): void {
 
 		if ( self::get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-			wp_die( __( 'Please upload a valid .json file', 'wpcoder' ), __( 'Error', 'wpcoder' ),
+			wp_die( __( 'Please upload a valid .json file', 'wp-coder' ), __( 'Error', 'wp-coder' ),
 				[ 'response' => 400 ] );
 		}
 

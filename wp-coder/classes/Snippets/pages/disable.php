@@ -152,7 +152,7 @@ self::create_options($disabled_snippets);
 							<label>
 								<span class="label"><?php echo esc_html( $value ); ?></span>
 								<?php self::field( 'checkbox', 'disable_admin_bar_user_' . $key ); ?>
-								<span><?php esc_html_e( 'Enable', 'wpcoder' ); ?></span>
+								<span><?php esc_html_e( 'Enable', 'wp-coder' ); ?></span>
 							</label>
 						</div>
 					<?php endforeach; ?>

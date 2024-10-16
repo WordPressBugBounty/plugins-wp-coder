@@ -52,7 +52,7 @@ defined( 'ABSPATH' ) || exit;
                             <label>
                                 <span class="label"><?php echo esc_html( $value ); ?></span>
 					            <?php self::field( 'checkbox', 'disable_tracking_tool_user_' . $key ); ?>
-                                <span><?php esc_html_e( 'Enable', 'wpcoder' ); ?></span>
+                                <span><?php esc_html_e( 'Enable', 'wp-coder' ); ?></span>
                             </label>
                         </div>
 		            <?php endforeach; ?>
@@ -89,7 +89,7 @@ defined( 'ABSPATH' ) || exit;
                             <label>
                                 <span class="label"><?php echo esc_html( $value ); ?></span>
 					            <?php self::field( 'checkbox', 'disable_google_adsense_user_' . $key ); ?>
-                                <span><?php esc_html_e( 'Enable', 'wpcoder' ); ?></span>
+                                <span><?php esc_html_e( 'Enable', 'wp-coder' ); ?></span>
                             </label>
                         </div>
 		            <?php endforeach; ?>

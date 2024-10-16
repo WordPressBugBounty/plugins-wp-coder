@@ -27,7 +27,8 @@
   color: var(--wowp-orange);
 }
 
-.nav-tab-wrapper.wowp-tab {
+
+.wowp-tab .nav-tab {
   cursor: pointer;
 }
 
@@ -47,9 +48,13 @@
   .tab-content {
     position: absolute;
     left: -9999%;
+    top: -9999%;
+    height: 0;
     &.tab-content-active {
       position: relative;
       left: 0;
+      top: 0;
+      height: auto;
     }
   }
 

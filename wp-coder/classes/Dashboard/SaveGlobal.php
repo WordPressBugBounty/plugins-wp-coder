@@ -19,7 +19,7 @@ class SaveGlobal {
                 <fieldset>
                     <legend>
 						<?php
-						esc_html_e( 'PHP code', 'wpcoder' ); ?>
+						esc_html_e( 'PHP code', 'wp-coder' ); ?>
                     </legend>
                     <div class="wowp-field is-full">
                         <ol id="phpNavigationMenu" class="wowp-php-nav-menu"></ol>
@@ -36,12 +36,12 @@ class SaveGlobal {
                                    id="wpcoder-global-php-enable"<?php
 							checked( $enabled ); ?>>
 							<?php
-							esc_html_e( 'Enable PHP code', 'wpcoder' ); ?>
+							esc_html_e( 'Enable PHP code', 'wp-coder' ); ?>
                         </label>
                     </div>
                     <div class="wowp-field is-full">
 						<?php
-						submit_button( __( 'Save', 'wpcoder' ), 'primary large', 'submit', false ); ?>
+						submit_button( __( 'Save', 'wp-coder' ), 'primary large', 'submit', false ); ?>
                     </div>
 
 					<?php

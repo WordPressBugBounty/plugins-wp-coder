@@ -21,50 +21,50 @@ class SupportForm {
 
             <fieldset>
                 <legend>
-					<?php esc_html_e( 'Support Form', 'wpcoder' ); ?>
+					<?php esc_html_e( 'Support Form', 'wp-coder' ); ?>
                 </legend>
 
                 <div class="wowp-field">
-                    <label for="support-name" class="label"><?php esc_html_e( 'Your Name', 'wpcoder' ); ?></label>
+                    <label for="support-name" class="label"><?php esc_html_e( 'Your Name', 'wp-coder' ); ?></label>
                     <input type="text" name="support[name]" id="support-name">
                 </div>
 
                 <div class="wowp-field">
-                    <label for="support-email" class="label"><?php esc_html_e( 'Contact email', 'wpcoder' ); ?></label>
+                    <label for="support-email" class="label"><?php esc_html_e( 'Contact email', 'wp-coder' ); ?></label>
                     <input type="text" name="support[email]" id="support-email"
                            value="<?php echo sanitize_email( get_option( 'admin_email' ) ); ?>">
                 </div>
 
                 <div class="wowp-field">
                     <label for="support-link"
-                           class="label"><?php esc_html_e( 'Link to the issue', 'wpcoder' ); ?></label>
+                           class="label"><?php esc_html_e( 'Link to the issue', 'wp-coder' ); ?></label>
                     <input type="text" name="support[link]" id="support-link"
                            value="<?php echo esc_url( get_option( 'home' ) ); ?>">
                 </div>
 
                 <div class="wowp-field">
-                    <label for="support-type" class="label"><?php esc_html_e( 'Message type', 'wpcoder' ); ?></label>
+                    <label for="support-type" class="label"><?php esc_html_e( 'Message type', 'wp-coder' ); ?></label>
                     <select name="support[type]" id="support-type">
-                        <option value="Issue"><?php esc_html_e( 'Issue', 'wpcoder' ); ?></option>
-                        <option value="Idea"><?php esc_html_e( 'Idea', 'wpcoder' ); ?></option>
+                        <option value="Issue"><?php esc_html_e( 'Issue', 'wp-coder' ); ?></option>
+                        <option value="Idea"><?php esc_html_e( 'Idea', 'wp-coder' ); ?></option>
                     </select>
                 </div>
 
                 <div class="wowp-field">
-                    <label for="support-plugin" class="label"><?php esc_html_e( 'Plugin', 'wpcoder' ); ?></label>
+                    <label for="support-plugin" class="label"><?php esc_html_e( 'Plugin', 'wp-coder' ); ?></label>
                     <input type="text" readonly name="support[plugin]" id="support-plugin"
                            value="<?php echo esc_attr( $plugin ); ?>">
                 </div>
 
                 <div class="wowp-field">
-                    <label for="support-license" class="label"><?php esc_html_e( 'License Key', 'wpcoder' ); ?></label>
+                    <label for="support-license" class="label"><?php esc_html_e( 'License Key', 'wp-coder' ); ?></label>
                     <input type="text" readonly name="support[license]" id="support-license"
                            value="<?php echo esc_attr( $license ); ?>">
                 </div>
 
                 <div class="wowp-field is-full">
 					<?php
-					$content   = esc_attr__( 'Enter Your Message', 'wpcoder' );
+					$content   = esc_attr__( 'Enter Your Message', 'wp-coder' );
 					$editor_id = 'support-message';
 					$settings  = array(
 						'textarea_name' => 'support[message]',
@@ -73,7 +73,7 @@ class SupportForm {
                 </div>
 
                 <div class="wowp-field">
-					<?php submit_button( __( 'Send to Support', 'wpcoder' ), 'primary', 'submit', false ); ?>
+					<?php submit_button( __( 'Send to Support', 'wp-coder' ), 'primary', 'submit', false ); ?>
                 </div>
 
 				<?php wp_nonce_field( WPCoder::PREFIX . '_nonce_action', WPCoder::PREFIX . '_nonce_name' ); ?>
@@ -130,10 +130,10 @@ class SupportForm {
 		$send         = wp_mail( $to_mail, 'Support Ticket: ' . $type, $message_mail, $headers );
 
 		if ( $send ) {
-			$text = __( 'Your message has been sent to the support team.', 'wpcoder' );
+			$text = __( 'Your message has been sent to the support team.', 'wp-coder' );
 			echo '<p class="wowp-notice wowp-success">' . esc_html( $text ) . '</p>';
 		} else {
-			$text = __( 'Sorry, but message did not send. Please, contact us ', 'wpcoder' ) . $to_mail;
+			$text = __( 'Sorry, but message did not send. Please, contact us ', 'wp-coder' ) . $to_mail;
 			echo '<p class="wowp-notice wowp-error">' . esc_html( $text ) . '</p>';
 		}
 
@@ -148,7 +148,7 @@ class SupportForm {
 
 		foreach ( $fields as $field ) {
 			if ( empty( $support[ $field ] ) ) {
-				return __( 'Please fill in all the form fields below.', 'wpcoder' );
+				return __( 'Please fill in all the form fields below.', 'wp-coder' );
 			}
 		}
 

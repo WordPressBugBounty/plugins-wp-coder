@@ -124,7 +124,7 @@ class Field {
 
 	private static function check_name( $name ) {
 		if ( empty( $name ) ) {
-			wp_die( __( 'Field must have name', 'floating-button' ) );
+			wp_die( __( 'Field must have name', 'wp-coder' ) );
 		}
 	}
 

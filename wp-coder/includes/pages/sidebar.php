@@ -22,7 +22,7 @@ if ( ! empty( $default['id'] ) ) {
     <div class="postbox-header">
         <h2 class="hndle">
 			<?php
-			esc_html_e( 'Publish', 'wpcoder' ); ?>
+			esc_html_e( 'Publish', 'wp-coder' ); ?>
         </h2>
     </div>
 
@@ -36,11 +36,11 @@ if ( ! empty( $default['id'] ) ) {
                     <div class="wowp-field has-checkbox">
                         <label>
                             <span class="label"><?php
-	                            esc_html_e( 'Status', 'wpcoder' ); ?></span>
+	                            esc_html_e( 'Status', 'wp-coder' ); ?></span>
 							<?php
 							Field::checkbox( 'status' ); ?>
                             <span><?php
-								esc_html_e( 'Deactivate', 'wpcoder' ); ?></span>
+								esc_html_e( 'Deactivate', 'wp-coder' ); ?></span>
                         </label>
 
                     </div>
@@ -48,11 +48,11 @@ if ( ! empty( $default['id'] ) ) {
                     <div class="wowp-field has-checkbox">
                         <label>
                             <span class="label"><?php
-	                            esc_html_e( 'Test mode', 'wpcoder' ); ?></span>
+	                            esc_html_e( 'Test mode', 'wp-coder' ); ?></span>
 							<?php
 							Field::checkbox( 'mode' ); ?>
                             <span><?php
-								esc_html_e( 'Activate', 'wpcoder' ); ?></span>
+								esc_html_e( 'Activate', 'wp-coder' ); ?></span>
                         </label>
                     </div>
 
@@ -106,7 +106,7 @@ if ( ! empty( $default['id'] ) ) {
                         <a class="submitdelete deletion" href="<?php
 						echo esc_url( Link::remove( $default['id'] ) ); ?>">
 							<?php
-							esc_html_e( 'Delete', 'floating-button' ); ?>
+							esc_html_e( 'Delete', 'wp-coder' ); ?>
                         </a>
                     </div>
 				<?php

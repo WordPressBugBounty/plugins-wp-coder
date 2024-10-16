@@ -73,7 +73,7 @@ class DashboardInitializer {
 
 			if ( $action === 'update' && $page['file'] === 'settings' ) {
 				$id           = ( isset( $_REQUEST["id"] ) ) ? absint( $_REQUEST["id"] ) : '';
-				$page['name'] = __( 'Update', 'wpcoder' ) . ' #' . $id;
+				$page['name'] = __( 'Update', 'wp-coder' ) . ' #' . $id;
 			} elseif ( $page['file'] === 'settings' && ( $action !== 'new' && $action !== 'duplicate' ) ) {
 				continue;
 			}

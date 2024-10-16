@@ -16,11 +16,11 @@ $opt     = include( 'options/html-code.php' );
     <h4>
         <span class="codericon codericon-filetype-html"></span>
 		<?php
-		esc_html_e( 'HTML Code', 'wpcoder' ); ?>
+		esc_html_e( 'HTML Code', 'wp-coder' ); ?>
     </h4>
 
     <fieldset>
-        <legend><?php esc_html_e( 'Settings', 'wpcoder' ); ?></legend>
+        <legend><?php esc_html_e( 'Settings', 'wp-coder' ); ?></legend>
 		<?php Option::init( [
 			$opt['minified'],
 		] ); ?>

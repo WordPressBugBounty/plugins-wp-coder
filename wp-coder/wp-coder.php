@@ -3,13 +3,13 @@
  * Plugin Name:       WP Coder
  * Plugin URI:        https://wordpress.org/plugins/wp-coder/
  * Description:       Adding custom HTML, CSS, JavaScript and PHP code to your WordPress site.
- * Version:           3.5.1
+ * Version:           3.5.2
  * Author:            WPCoder
  * Author URI:        https://wpcoder.pro
- * Author Email:      dev@wpcoder.pro
+ * Author Email:      hey@wow-company.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wpcoder
+ * Text Domain:       wp-coder
  * Requires at least: 5.4
  * Requires PHP:      7.4
  */
@@ -59,7 +59,6 @@ if ( ! class_exists( 'WPCoder' ) ) :
 				self::$instance->autoloader = new Autoloader( 'WPCoder' );
 				self::$instance->dashboard  = new WOWP_Dashboard();
 				self::$instance->public     = new WOWP_Public();
-
 
 				register_activation_hook( __FILE__, [ self::$instance, 'plugin_activate' ] );
 				add_action( 'plugins_loaded', [ self::$instance, 'loaded' ] );
@@ -129,7 +128,7 @@ if ( ! class_exists( 'WPCoder' ) ) :
 		 */
 		public function __clone() {
 			// Cloning instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'wpcoder' ), '1.0' );
+			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'wp-coder' ), '1.0' );
 		}
 
 		/**
@@ -140,7 +139,7 @@ if ( ! class_exists( 'WPCoder' ) ) :
 		 */
 		public function __wakeup() {
 			// Unserializing instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'wpcoder' ), '1.0' );
+			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'wp-coder' ), '1.0' );
 		}
 
 		public function plugin_activate(): void {
@@ -167,7 +166,7 @@ if ( ! class_exists( 'WPCoder' ) ) :
 		public function loaded(): void {
 			UpdateDB::init();
 			$languages_folder = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
-			load_plugin_textdomain( 'wpcoder', false, $languages_folder );
+			load_plugin_textdomain( 'wp-coder', false, $languages_folder );
 		}
 
 	}

@@ -7,7 +7,7 @@ return [
 	'include' => [
 		'type'    => 'select',
 		'name'    => '[include]',
-		'title'   => __( 'Type', 'wpcoder' ),
+		'title'   => __( 'Type', 'wp-coder' ),
 		'options' => [ 'css' => 'css', 'js' => 'js' ],
 		'class' => 'display-option',
 	],
@@ -15,13 +15,13 @@ return [
 	'include_file' => [
 		'type'  => 'url',
 		'name'  => '[include_file]',
-		'title' => __( 'URL', 'wpcoder' ),
+		'title' => __( 'URL', 'wp-coder' ),
 	],
 
 	'js_attr' => [
 		'type'  => 'select',
 		'name'  => '[file_js_att]',
-		'title' => __( 'Attribute', 'wpcoder' ),
+		'title' => __( 'Attribute', 'wp-coder' ),
 		'options' => [
 			0       => 'none',
 			'defer' => 'defer',
@@ -33,7 +33,7 @@ return [
 	'dequeue' => [
 		'type'    => 'select',
 		'name'    => '[dequeue]',
-		'title'   => __( 'Type', 'wpcoder' ),
+		'title'   => __( 'Type', 'wp-coder' ),
 		'options' => [ 'css' => 'css', 'js' => 'js' ],
 		'class' => 'display-option',
 	],
@@ -41,7 +41,7 @@ return [
 	'handle' => [
 		'type'  => 'text',
 		'name'  => '[handle]',
-		'title' => __( 'ID', 'wpcoder' ),
+		'title' => __( 'ID', 'wp-coder' ),
 	],
 
 

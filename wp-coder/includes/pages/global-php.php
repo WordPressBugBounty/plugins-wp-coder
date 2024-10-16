@@ -6,7 +6,7 @@ use WPCoder\Dashboard\SaveGlobal;
 defined( 'ABSPATH' ) || exit;
 
 if ( ! current_user_can( 'manage_options' ) ) {
-	wp_die( __( 'You do not have sufficient permissions to access this page.', 'wpcoder' ) );
+	wp_die( __( 'You do not have sufficient permissions to access this page.', 'wp-coder' ) );
 }
 
 
@@ -16,7 +16,7 @@ if ( ! current_user_can( 'manage_options' ) ) {
 		<?php DashboardInitializer::header(); ?>
 
         <div class="wowp-header-title">
-            <h2><?php esc_html_e( 'Global PHP', 'wpcoder' ); ?></h2>
+            <h2><?php esc_html_e( 'Global PHP', 'wp-coder' ); ?></h2>
         </div>
 
     </div>

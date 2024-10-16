@@ -48,7 +48,7 @@ final class Wow_Company {
 			'main_page',
 		), $icon );
 		$menu_logo = $this->menu_logo();
-		$menu_title = $menu_logo . __('Welcome', 'wpcoder');
+		$menu_title = $menu_logo . __('Welcome', 'wp-coder');
 
 		add_submenu_page( 'wow-company', 'Welcome to Wow-Company', $menu_title, 'manage_options', 'wow-company' );
 	}
@@ -93,7 +93,7 @@ fill="currentColor" stroke="none">
 
 		if ( $pagenow === 'admin.php' && ( isset( $_GET['page'] ) && $_GET['page'] === 'wow-company' ) ) {
 			$text = __( 'Thank you for using <b>Our plugins</b>! Our website <a href="https://wow-estore.com/" target="_blank">Wow-Estore.com</a>',
-				'wpcoder' );
+				'wp-coder' );
 
 			return str_replace( '</span>', '', $footer_text ) . ' | ' . $text . '</span>';
 		}

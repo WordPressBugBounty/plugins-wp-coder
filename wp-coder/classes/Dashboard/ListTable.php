@@ -47,18 +47,18 @@ class ListTable extends WP_List_Table {
 	}
 
 	public function column_title( $item ): string {
-		$title = ! empty( $item['title'] ) ? $item['title'] : __( 'Untitled', 'wpcoder' );
+		$title = ! empty( $item['title'] ) ? $item['title'] : __( 'Untitled', 'wp-coder' );
 
 		$actions = [
 			'id'        => 'ID: ' . $item['ID'],
 			'edit'      => '<a href="' . esc_url( Link::edit( $item['ID'] ) ) . '">' . esc_attr__( 'Edit',
-					'wpcoder' ) . '</a>',
+					'wp-coder' ) . '</a>',
 			'duplicate' => '<a href="' . esc_url( Link::duplicate( $item['ID'] ) ) . '">' . esc_attr__( 'Duplicate',
-					'wpcoder' ) . '</a>',
+					'wp-coder' ) . '</a>',
 			'delete'    => '<a href="' . esc_url( Link::remove( $item['ID'] ) ) . '" >' . esc_attr__( 'Delete',
-					'wpcoder' ) . '</a>',
+					'wp-coder' ) . '</a>',
 			'export'    => '<a href="' . esc_url( Link::export( $item['ID'] ) ) . '" >' . esc_attr__( 'Export',
-					'wpcoder' ) . '</a>',
+					'wp-coder' ) . '</a>',
 		];
 
 
@@ -89,16 +89,16 @@ class ListTable extends WP_List_Table {
 	public function get_columns(): array {
 		return [
 			'cb'       => '<input type="checkbox" />',
-			'title'    => __( 'Title', 'wpcoder' ),
-			'code'     => __( 'Shortcode', 'wpcoder' ),
-			'code-alt' => __( 'Alternative Shortcode', 'wpcoder' ),
-			'tag'      => __( 'Tag', 'wpcoder' ),
+			'title'    => __( 'Title', 'wp-coder' ),
+			'code'     => __( 'Shortcode', 'wp-coder' ),
+			'code-alt' => __( 'Alternative Shortcode', 'wp-coder' ),
+			'tag'      => __( 'Tag', 'wp-coder' ),
 			'mode'     => __( 'Test mode',
-					'wpcoder' ) . '<sup class="has-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
-					'wpcoder' ) . '">ℹ</sup>',
+					'wp-coder' ) . '<sup class="has-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
+					'wp-coder' ) . '">ℹ</sup>',
 			'status'   => __( 'Status',
-					'wpcoder' ) . '<sup class="has-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
-					'wpcoder' ) . '">ℹ</sup>',
+					'wp-coder' ) . '<sup class="has-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
+					'wp-coder' ) . '">ℹ</sup>',
 		];
 	}
 
@@ -140,22 +140,22 @@ class ListTable extends WP_List_Table {
 
 
 		foreach ( $result as $key => $value ) {
-			$title       = ! empty( $value->title ) ? $value->title : __( 'UnTitle', 'wpcoder' );
-			$tooltip_off = esc_attr__( 'Click for Deactivate.', 'wpcoder' );
-			$tooltip_on  = esc_attr__( 'Click for Activate.', 'wpcoder' );
+			$title       = ! empty( $value->title ) ? $value->title : __( 'UnTitle', 'wp-coder' );
+			$tooltip_off = esc_attr__( 'Click for Deactivate.', 'wp-coder' );
+			$tooltip_on  = esc_attr__( 'Click for Activate.', 'wp-coder' );
 			$status_off  = '<a href="' . esc_url( Link::activate_url( $value->id ) ) . '" class="wowp-toogle is-off" data-tooltip="' . esc_attr( $tooltip_on ) . '"><span>' . esc_attr__( 'OFF',
-					'wpcoder' ) . '</span></a>';
+					'wp-coder' ) . '</span></a>';
 			$status_on   = '<a href="' . esc_url( Link::deactivate_url( $value->id ) ) . '" class="wowp-toogle is-on" data-tooltip="' . esc_attr( $tooltip_off ) . '"><span>' . esc_attr__( 'ON',
-					'wpcoder' ) . '</span></a>';
+					'wp-coder' ) . '</span></a>';
 			$status      = ! empty( $value->status ) ? $status_off : $status_on;
 
-			$mode_tooltip_off = esc_attr__( 'Click for OFF.', 'wpcoder' );
-			$mode_tooltip_on  = esc_attr__( 'Click for ON.', 'wpcoder' );
+			$mode_tooltip_off = esc_attr__( 'Click for OFF.', 'wp-coder' );
+			$mode_tooltip_on  = esc_attr__( 'Click for ON.', 'wp-coder' );
 
 			$mode_off = '<a href="' . esc_url( Link::activate_mode( $value->id ) ) . '" class="wowp-toogle is-off" data-tooltip="' . esc_attr( $mode_tooltip_on ) . '"><span>' . esc_attr__( 'OFF',
-					'wpcoder' ) . '</span></a>';
+					'wp-coder' ) . '</span></a>';
 			$mode_on  = '<a href="' . esc_url( Link::deactivate_mode( $value->id ) ) . '" class="wowp-toogle is-on" data-tooltip="' . esc_attr( $mode_tooltip_off ) . '"><span>' . esc_attr__( 'ON',
-					'wpcoder' ) . '</span></a>';
+					'wp-coder' ) . '</span></a>';
 
 			$mode = empty( $value->mode ) ? $mode_off : $mode_on;
 
@@ -255,11 +255,11 @@ class ListTable extends WP_List_Table {
 
 	public function get_bulk_actions() {
 		$actions = [
-			'delete'     => __( 'Delate', 'wpcoder' ),
-			'activate'   => __( 'Activate', 'wpcoder' ),
-			'deactivate' => __( 'Deactivate', 'wpcoder' ),
-			'test_on'    => __( 'Test mode ON', 'wpcoder' ),
-			'test_off'   => __( 'Test mode OFF', 'wpcoder' ),
+			'delete'     => __( 'Delate', 'wp-coder' ),
+			'activate'   => __( 'Activate', 'wp-coder' ),
+			'deactivate' => __( 'Deactivate', 'wp-coder' ),
+			'test_on'    => __( 'Test mode ON', 'wp-coder' ),
+			'test_off'   => __( 'Test mode OFF', 'wp-coder' ),
 		];
 
 		return $actions;
@@ -308,10 +308,10 @@ class ListTable extends WP_List_Table {
 			$tag_search = ( $tag_search === 'all' ) ? '' : $tag_search;
 
 			echo '<div class="alignleft actions"><label for="filter-by-tag" class="screen-reader-text">' . __( 'Filter by tag',
-					'wpcoder' ) . '</label>';
+					'wp-coder' ) . '</label>';
 			echo '<select name="tag" id="filter-by-tag">';
 			echo '<option value="all"' . selected( 'all', $tag_search, false ) . '>' . __( 'All',
-					'wpcoder' ) . '</option>';
+					'wp-coder' ) . '</option>';
 
 			if ( ! empty( $tags ) ) {
 				foreach ( $tags as $tag ) {
@@ -323,7 +323,7 @@ class ListTable extends WP_List_Table {
 				}
 			}
 			echo '</select>';
-			submit_button( __( 'Filter', 'wpcoder' ), 'secondary', 'action', false );
+			submit_button( __( 'Filter', 'wp-coder' ), 'secondary', 'action', false );
 			echo '</div>';
 		}
 	}

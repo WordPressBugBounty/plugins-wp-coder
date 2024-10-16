@@ -241,7 +241,7 @@ class WPCoder_Lite_Disabled_Snippets {
 		wp_die(
 			sprintf(
 			// Translators: Placeholders for the homepage link.
-				esc_html__( 'No feed available, please visit our %1$shomepage%2$s!', 'wpcoder' ),
+				esc_html__( 'No feed available, please visit our %1$shomepage%2$s!', 'wp-coder' ),
 				' <a href="' . esc_url( home_url( '/' ) ) . '">',
 				'</a>'
 			)

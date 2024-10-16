@@ -552,7 +552,7 @@
   color: var(--wowp-orange);
 }
 
-.nav-tab-wrapper.wowp-tab {
+.wowp-tab .nav-tab {
   cursor: pointer;
 }
 
@@ -572,10 +572,14 @@
 .wowp-tab-content .tab-content {
   position: absolute;
   left: -9999%;
+  top: -9999%;
+  height: 0;
 }
 .wowp-tab-content .tab-content.tab-content-active {
   position: relative;
   left: 0;
+  top: 0;
+  height: auto;
 }
 
 .wowp-text-helper {
@@ -963,16 +967,11 @@ h4.wowp-title {
 .w_card-title {
   font-size: 22px;
   font-weight: 700;
-  margin: 0 0 0 44px;
+  margin: 0;
 }
 .w_card-description {
   font-size: 16px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
   margin: 0;
 }
 .w_card-description.is-open {
@@ -1155,5 +1154,3 @@ h4.wowp-title {
 .wowp-notification.-success:before {
   content: "";
 }
-
-/*# sourceMappingURL=admin.css.map */

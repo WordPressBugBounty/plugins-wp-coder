@@ -21,11 +21,11 @@ if ( ! empty( $default['css_code'] ) ) {
 
     <h4>
         <span class="codericon codericon-filetype-css"></span>
-		<?php esc_html_e( 'CSS Code', 'wpcoder' ); ?>
+		<?php esc_html_e( 'CSS Code', 'wp-coder' ); ?>
     </h4>
 
     <fieldset>
-        <legend><?php esc_html_e( 'Settings', 'wpcoder' ); ?></legend>
+        <legend><?php esc_html_e( 'Settings', 'wp-coder' ); ?></legend>
 		<?php Option::init( [
 			$opt['inline'],
 			$opt['minified'],
@@ -52,7 +52,7 @@ if ( ! empty( $default['css_code'] ) ) {
                 <span class="dashicons dashicons-admin-links"></span>
             </label>
             <input type="url" id="url-css-file" readonly="readonly" value="<?php echo esc_url( $css_link ); ?>">
-            <span class="label"><?php esc_html_e( 'URL to the CSS file', 'wpcoder' ); ?></span>
+            <span class="label"><?php esc_html_e( 'URL to the CSS file', 'wp-coder' ); ?></span>
         </div>
     </div>
 

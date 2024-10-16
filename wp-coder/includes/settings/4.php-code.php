@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 
     <h4>
         <span class="codericon codericon-filetype-php"></span>
-		<?php esc_html_e( 'PHP Code', 'wpcoder' ); ?>
+		<?php esc_html_e( 'PHP Code', 'wp-coder' ); ?>
     </h4>
 
     <fieldset>

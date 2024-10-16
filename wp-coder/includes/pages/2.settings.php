@@ -15,11 +15,11 @@ $default = Field::getDefault();
 
 $action     = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 $item_id    = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : '';
-$item_title = __( 'Add new code', 'wpcoder' );
+$item_title = __( 'Add new code', 'wp-coder' );
 if ( $action === 'update' && ! empty( $item_id ) ) {
-	$item_title = __( 'Update code', 'wpcoder' ) . ' ID: ' . $item_id;
+	$item_title = __( 'Update code', 'wp-coder' ) . ' ID: ' . $item_id;
 } elseif ( $action === 'duplicate' && ! empty( $item_id ) ) {
-	$item_title = __( 'Duplicate the code from', 'wpcoder' ) . ' ID: ' . $item_id;
+	$item_title = __( 'Duplicate the code from', 'wp-coder' ) . ' ID: ' . $item_id;
 }
 $license_page = add_query_arg( ['page' => WPCoder::SLUG . '-license' ], admin_url( 'admin.php' ) );
 $add_url = add_query_arg( [
@@ -36,11 +36,11 @@ $add_url = add_query_arg( [
         <div class="wowp-header-title">
             <h2><?php echo esc_html( $item_title ); ?></h2>
             <a href="<?php echo esc_url( $add_url ); ?>" class="button button-primary button-large">
-		        + <?php esc_html_e( 'Add New', 'wpcoder' ); ?>
+		        + <?php esc_html_e( 'Add New', 'wp-coder' ); ?>
             </a>
 
             <a href="<?php echo esc_url( Link::all_codes() ); ?>" class="button button-secondary button-large">
-                ⇐ <?php esc_html_e( 'Back to Codes', 'wpcoder' ); ?>
+                ⇐ <?php esc_html_e( 'Back to Codes', 'wp-coder' ); ?>
             </a>
 
         </div>
@@ -57,7 +57,7 @@ $add_url = add_query_arg( [
 
                         <div id="titlewrap">
                             <label class="screen-reader-text" id="title-prompt-text"
-                                   for="title"><?php esc_html_e( 'Enter title here', 'wpcoder' ); ?>
+                                   for="title"><?php esc_html_e( 'Enter title here', 'wp-coder' ); ?>
                             </label>
 							<?php Field::text( 'title' ); ?>
                         </div>

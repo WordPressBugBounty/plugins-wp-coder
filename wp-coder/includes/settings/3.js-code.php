@@ -20,11 +20,11 @@ if ( ! empty( $default['js_code'] ) ) {
 ?>
     <h4>
         <span class="codericon codericon-filetype-js"></span>
-		<?php esc_html_e( 'JavaScript Code', 'wpcoder' ); ?>
+		<?php esc_html_e( 'JavaScript Code', 'wp-coder' ); ?>
     </h4>
 
     <fieldset>
-        <legend><?php esc_html_e( 'Settings', 'wpcoder' ); ?></legend>
+        <legend><?php esc_html_e( 'Settings', 'wp-coder' ); ?></legend>
 
 		<?php Option::init( [
 			$opt['jquery'],
@@ -55,7 +55,7 @@ if ( ! empty( $default['js_code'] ) ) {
                 <span class="dashicons dashicons-admin-links"></span>
             </label>
             <input type="url" id="url-css-file" readonly="readonly" value="<?php echo esc_url( $js_link ); ?>">
-            <span class="label"><?php esc_html_e( 'URL to the JS file', 'wpcoder' ); ?></span>
+            <span class="label"><?php esc_html_e( 'URL to the JS file', 'wp-coder' ); ?></span>
         </div>
     </div>
 <?php endif;

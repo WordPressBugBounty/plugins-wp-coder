@@ -15,11 +15,11 @@ $count   = ! empty( $default['param']['include'] ) ? count( $default['param']['i
 
     <h4>
         <span class="codericon codericon-toggles"></span>
-		<?php esc_html_e( 'Assets', 'wpcoder' ); ?>
+		<?php esc_html_e( 'Assets', 'wp-coder' ); ?>
     </h4>
 
     <fieldset id="includes-files">
-        <legend><?php esc_html_e( 'Adding', 'wpcoder' ); ?></legend>
+        <legend><?php esc_html_e( 'Adding', 'wp-coder' ); ?></legend>
 
 		<?php if ( $count > 0 ) :
 			for ( $i = 0; $i < $count; $i ++ ):
@@ -39,7 +39,7 @@ $count   = ! empty( $default['param']['include'] ) ? count( $default['param']['i
 		endif; ?>
 
         <div class="btn-add-display">
-            <a class="button button-primary button-large" id="add-include"><?php esc_html_e( 'Add New' ); ?></a>
+            <a class="button button-primary button-large" id="add-include"><?php esc_html_e( 'Add New', 'wp-coder' ); ?></a>
         </div>
     </fieldset>
 

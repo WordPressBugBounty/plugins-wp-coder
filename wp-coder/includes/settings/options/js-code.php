@@ -7,21 +7,21 @@ return [
 	'jquery' => [
 		'type'  => 'checkbox',
 		'name'  => '[jquery_dependency]',
-		'title' => __( 'JQuery Dependency', 'wpcoder' ),
-		'text'  => __( 'Disable', 'wpcoder' ),
+		'title' => __( 'JQuery Dependency', 'wp-coder' ),
+		'text'  => __( 'Disable', 'wp-coder' ),
 	],
 
 	'inline' => [
 		'type'  => 'checkbox',
 		'name'  => '[inline_js]',
-		'title' => __( 'Inline', 'wpcoder' ),
-		'text'  => __( 'Enable', 'wpcoder' ),
+		'title' => __( 'Inline', 'wp-coder' ),
+		'text'  => __( 'Enable', 'wp-coder' ),
 	],
 
 	'minified'   => [
 		'type'    => 'select',
 		'name'    => '[minified_js]',
-		'title'   => __( 'Minified', 'floating-button' ),
+		'title'   => __( 'Minified', 'wp-coder' ),
 		'default' => 'obfuscate',
 		'options' => [
 			'none'      => 'none',
@@ -33,7 +33,7 @@ return [
 	'attributes'   => [
 		'type'    => 'select',
 		'name'    => '[js_attributes]',
-		'title'   => __( 'Attribute', 'floating-button' ),
+		'title'   => __( 'Attribute', 'wp-coder' ),
 		'options' => [
 			0       => 'none',
 			'defer' => 'defer',

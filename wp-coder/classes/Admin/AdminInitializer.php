@@ -24,7 +24,7 @@ class AdminInitializer {
 			return $links;
 		}
 		$link          = admin_url( 'admin.php?page=' . WPCoder::SLUG );
-		$text          = esc_attr__( 'Settings', 'wpcoder' );
+		$text          = esc_attr__( 'Settings', 'wp-coder' );
 		$settings_link = '<a href="' . esc_url( $link ) . '">' . esc_attr( $text ) . '</a>';
 		array_unshift( $links, $settings_link );
 
@@ -35,8 +35,11 @@ class AdminInitializer {
 		global $pagenow;
 
 		if ( $pagenow === 'admin.php' && ( isset( $_GET['page'] ) && $_GET['page'] === WPCoder::SLUG ) ) {
+
+
 			$text = sprintf(
-				__( 'Thank you for using <b>%2$s</b>! Please <a href="%1$s" target="_blank">rate us</a>', 'wpcoder' ),
+				// Translators: %1$s is the URL, %2$s is the plugin name.
+				__( 'Thank you for using <b>%2$s</b>! Please <a href="%1$s" target="_blank">rate us</a>', 'wp-coder' ),
 				esc_url( WPCoder::PluginURL ),
 				esc_attr( WPCoder::info( 'name' ) )
 			);
@@ -65,6 +68,7 @@ class AdminInitializer {
 		add_submenu_page( $slug, $title, 'Snippets', $capability, $slug . '-snippets', [ __CLASS__, 'snippets' ] );
 		add_submenu_page( $slug, $title, 'Tools', $capability, $slug . '-tools', [ __CLASS__, 'tools' ] );
 		add_submenu_page( $slug, $title, 'Global PHP', $capability, $slug . '-global', [ __CLASS__, 'global_php' ] );
+//		add_submenu_page( $slug, $title, 'PRO Features', $capability, $slug . '-pro', [ __CLASS__, 'pro' ] );
 		add_submenu_page( $slug, $title, 'Import / Export', $capability, $slug . '-import-export', [ __CLASS__, 'import_export' ] );
 		add_submenu_page( $slug, $title, 'Support', $capability, $slug . '-support', [ __CLASS__, 'support' ] );
 		add_submenu_page( $slug, $title, 'Upgrade to Pro', $capability, $url_update );
@@ -100,6 +104,14 @@ class AdminInitializer {
 
 	public static function global_php() {
 		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/global-php.php';
+
+		if ( file_exists( $page_path ) ) {
+			require_once $page_path;
+		}
+	}
+
+	public static function pro() {
+		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/6.pro-features.php';
 
 		if ( file_exists( $page_path ) ) {
 			require_once $page_path;

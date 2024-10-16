@@ -10,9 +10,9 @@
 
     <div class="w_block-titles">
         <div class="w_block-subtitle"><?php
-			esc_html_e( 'What’s New', 'wpcoder' ); ?></div>
+			esc_html_e( 'What’s New', 'wp-coder' ); ?></div>
         <h3 class="w_block-title"><?php
-			esc_html_e( 'Changelog', 'wpcoder' ); ?></h3>
+			esc_html_e( 'Changelog', 'wp-coder' ); ?></h3>
     </div>
 
     <div class="changelog-list">

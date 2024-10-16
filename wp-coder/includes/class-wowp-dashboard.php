@@ -113,17 +113,9 @@ class WOWP_Dashboard {
                target="_blank">
                 <span>Documentation</span>
             </a>
-            <a href="https://wpcoder.pro/category/snippet/?utm_source=wordpress&utm_medium=admin-menu&utm_campaign=snippets"
-               target="_blank">
-                <span>Snippets</span>
-            </a>
             <a href="https://wpcoder.pro/category/tutorials/?utm_source=wordpress&utm_medium=admin-menu&utm_campaign=tutorials"
                target="_blank">
                 <span>Tutorials</span>
-            </a>
-            <a href="https://wpcoder.pro/category/web-items/?utm_source=wordpress&utm_medium=admin-menu&utm_campaign=items"
-               target="_blank">
-                <span>Web Elements</span>
             </a>
             <a href="https://wordpress.org/support/plugin/wp-coder/reviews/" target="_blank">
                 <span>Reviews</span>
