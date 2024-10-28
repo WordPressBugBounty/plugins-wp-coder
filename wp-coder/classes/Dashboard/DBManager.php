@@ -58,7 +58,9 @@ class DBManager {
         status BOOLEAN,
         mode BOOLEAN,
         tag TEXT,
-        PRIMARY KEY (id)
+        php_include int(11) NOT NULL DEFAULT '0',
+		UNIQUE KEY id (id),
+        INDEX id_index (id)
     ) $charset_collate;";
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );

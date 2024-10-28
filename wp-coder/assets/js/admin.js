@@ -7,7 +7,7 @@ const settingTabs = function () {
     }
     const tabsContent = document.querySelectorAll('#settings-content .tab-content');
 
-    const links = tabs.querySelectorAll('a');
+    const links = tabs.querySelectorAll('a, label');
     links.forEach((link) => {
         link.addEventListener('click', function () {
             const attr = link.getAttribute('data-tab');
@@ -20,6 +20,42 @@ const settingTabs = function () {
         });
     });
 
+    hideTabs();
+
+    function hideTabs() {
+        const tabs = document.querySelectorAll('.wowp-hide-tabs input[type="checkbox"]');
+        if (!tabs) {
+            return false;
+        }
+        const tabs_arr = {
+            hide_html: 'html-code',
+            hide_css: 'css-code',
+            hide_js: 'js-code',
+            hide_php: 'php-code',
+            hide_include: 'include',
+            hide_settings: 'settings',
+            hide_attributes: 'attributes',
+        };
+
+        tabs.forEach(el => {
+            el.addEventListener('click', function () {
+                const id = el.id;
+                const key = id.replace('checkbox_', '');
+                const tab = document.querySelector('[data-tab="' + tabs_arr[key] + '"]');
+                const tabcontent = document.querySelector('[data-content="' + tabs_arr[key] + '"]');
+                if (el.checked) {
+                    tab.style.display = 'none';
+                    tabcontent.style.display = 'none';
+                } else {
+                    tab.style.display = 'block';
+                    tabcontent.style.display = 'block';
+                }
+            })
+        })
+
+
+    }
+
     setTabs();
 
     function setTabs() {
@@ -27,6 +63,9 @@ const settingTabs = function () {
             return false;
         }
         const tab = getLocalStorage();
+        if(tab === false) {
+            return false;
+        }
         links.forEach(el => el.classList.remove('nav-tab-active'));
         tabsContent.forEach(el => el.classList.remove('tab-content-active'));
         const link = tabs.querySelector('a[data-tab="' + tab + '"]');
@@ -36,13 +75,22 @@ const settingTabs = function () {
     }
 
     function setLocalStorage(attr) {
-        sessionStorage.setItem("wowpTab", attr);
+        const tool_id = document.getElementById('tool_id');
+        if (!tool_id) {
+            return false;
+        }
+        sessionStorage.setItem("wowpTab_" + tool_id.value, attr);
     }
 
     function getLocalStorage() {
-        const tab = sessionStorage.getItem("wowpTab");
+        const tool_id = document.getElementById('tool_id');
+
+        if (!tool_id) {
+            return false;
+        }
+        const tab = sessionStorage.getItem("wowpTab_" + tool_id.value);
         if (!tab) {
-            return ''
+            return false;
         } else {
             return tab;
         }

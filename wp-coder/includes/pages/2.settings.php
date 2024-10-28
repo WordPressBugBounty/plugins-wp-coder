@@ -72,6 +72,30 @@ $add_url = add_query_arg( [
 
                 <div id="postoptions">
                     <div id="postbox-container-2" class="postbox-container wowp-settings-wrapper">
+                        <fieldset class="wowp-hide-tabs">
+                            <legend><?php esc_html_e( 'Hide Tabs', 'wpcoder' ); ?></span></legend>
+                            <label>
+			                    <?php Field::checkbox( '[hide_html]' ); ?>
+			                    <?php esc_html_e( 'HTML', 'wpcoder' ); ?></span>
+                            </label>
+                            <label>
+			                    <?php Field::checkbox( '[hide_css]' ); ?>
+			                    <?php esc_html_e( 'CSS', 'wpcoder' ); ?></span>
+                            </label>
+                            <label>
+			                    <?php Field::checkbox( '[hide_js]' ); ?>
+			                    <?php esc_html_e( 'JS', 'wpcoder' ); ?></span>
+                            </label>
+                            <label>
+			                    <?php Field::checkbox( '[hide_php]' ); ?>
+			                    <?php esc_html_e( 'PHP', 'wpcoder' ); ?></span>
+                            </label>
+
+                            <label>
+			                    <?php Field::checkbox( '[hide_include]' ); ?>
+			                    <?php esc_html_e( 'Include', 'wpcoder' ); ?></span>
+                            </label>
+                        </fieldset>
 						<?php Settings::init(); ?>
                     </div>
                 </div>

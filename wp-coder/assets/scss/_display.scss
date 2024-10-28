@@ -8,7 +8,7 @@
     cursor: pointer;
     position: absolute;
     right: 0;
-    top: 0;
-    transform: translateX(calc(100% + 5px));
+    top: 50%;
+    transform: translateX(calc(100% + 5px)) translateY(-50%);
   }
 }

@@ -11,10 +11,41 @@ class Settings {
 	public static function init(): void {
 		$pages = DashboardHelper::get_files( 'settings' );
 
+		$default = Field::getDefault();
+
 		$i = 0;
 		echo '<h3 class="nav-tab-wrapper wowp-tab" id="settings-tab">';
 		foreach ( $pages as $key => $page ) {
 			$current = ( $i === 0 ) ? 'nav-tab nav-tab-active' : 'nav-tab';
+
+			if ( $page['file'] === 'html-code' && ! empty( $default['param']['hide_html'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'css-code' && ! empty( $default['param']['hide_css'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'js-code' && ! empty( $default['param']['hide_js'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'php-code' && ! empty( $default['param']['hide_php'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'include' && ! empty( $default['param']['hide_include'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'settings' && ! empty( $default['param']['hide_settings'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'attributes' && ! empty( $default['param']['hide_attributes'] ) ) {
+				continue;
+			}
+
 			echo '<a class="' . esc_attr( $current ) . '" data-tab="' . esc_attr( $page['file'] ) . '">' . esc_html( $page['name'] ) . '</a>';
 			$i ++;
 		}
@@ -26,6 +57,34 @@ class Settings {
 		foreach ( $pages as $key => $page ) {
 			$current = ( $i === 0 ) ? 'tab-content tab-content-active' : 'tab-content';
 			$file    = DashboardHelper::get_folder_path( 'settings' ) . '/' . $key . '.' . $page['file'] . '.php';
+
+			if ( $page['file'] === 'html-code' && ! empty( $default['param']['hide_html'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'css-code' && ! empty( $default['param']['hide_css'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'js-code' && ! empty( $default['param']['hide_js'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'php-code' && ! empty( $default['param']['hide_php'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'include' && ! empty( $default['param']['hide_include'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'settings' && ! empty( $default['param']['hide_settings'] ) ) {
+				continue;
+			}
+
+			if ( $page['file'] === 'attributes' && ! empty( $default['param']['hide_attributes'] ) ) {
+				continue;
+			}
 
 			if ( file_exists( $file ) ) {
 				echo '<div class="' . esc_attr( $current ) . '" data-content="' . esc_attr( $page['file'] ) . '">';

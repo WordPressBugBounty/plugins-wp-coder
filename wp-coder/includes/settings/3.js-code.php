@@ -23,17 +23,30 @@ if ( ! empty( $default['js_code'] ) ) {
 		<?php esc_html_e( 'JavaScript Code', 'wp-coder' ); ?>
     </h4>
 
-    <fieldset>
-        <legend><?php esc_html_e( 'Settings', 'wp-coder' ); ?></legend>
 
-		<?php Option::init( [
-			$opt['jquery'],
-			$opt['inline'],
-			$opt['minified'],
-			$opt['attributes'],
-		] ); ?>
+    <details class="details">
+        <summary><?php esc_html_e( 'Settings', 'wp-coder' ); ?></summary>
+        <div>
+			<?php Option::init( [
+				$opt['jquery'],
+				$opt['inline'],
+				$opt['minified'],
+				$opt['attributes'],
+			] ); ?>
+        </div>
+    </details>
 
-    </fieldset>
+    <details class="details">
+        <summary>
+			<?php esc_html_e( 'Navigation', 'wp-coder' ); ?>
+            <div class="button-group alignright">
+                <button class="button-editor button" id="jsnav">Add NAV Comment</button>
+            </div>
+        </summary>
+        <div class="wowp-field">
+            <ol id="jsNavigationMenu" class="wowp-php-nav-menu"></ol>
+        </div>
+    </details>
 
     <fieldset>
         <div class="wowp-field is-full">

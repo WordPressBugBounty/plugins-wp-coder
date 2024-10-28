@@ -548,14 +548,6 @@
   border-radius: 25px;
 }
 
-.wowp-settings-wrapper {
-  float: none;
-}
-.wowp-settings-wrapper .wowp-tab:after {
-  height: 26px;
-  clear: initial;
-}
-
 .codericon {
   color: var(--wowp-orange);
 }
@@ -825,38 +817,6 @@
   padding-block: 8px;
 }
 
-.details {
-  border: 1px solid var(--wowp-border);
-  background-color: #ffffff;
-  padding-inline: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-.details[open] {
-  padding-block-end: 1.5rem;
-}
-.details[open] > summary {
-  margin-bottom: 0.5rem;
-}
-.details > summary {
-  height: 40px;
-  line-height: 40px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.details > summary .button-group {
-  margin-block: 5px;
-}
-.details > summary a {
-  font-size: 12px;
-  font-weight: 400;
-}
-.details > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
 .wowp-wrap {
   padding: 22px 16px 50px 16px;
 }
@@ -1094,8 +1054,8 @@ h4.wowp-title {
   cursor: pointer;
   position: absolute;
   right: 0;
-  top: 50%;
-  transform: translateX(calc(100% + 5px)) translateY(-50%);
+  top: 0;
+  transform: translateX(calc(100% + 5px));
 }
 
 .CodeMirror {

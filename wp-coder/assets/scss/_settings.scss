@@ -23,6 +23,16 @@
   }
 }
 
+.wowp-settings-wrapper {
+  float: none;
+  .wowp-tab {
+    &:after {
+      height: 26px;
+      clear: initial;
+    }
+  }
+}
+
 .codericon {
   color: var(--wowp-orange);
 }

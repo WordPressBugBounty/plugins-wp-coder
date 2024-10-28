@@ -12,3 +12,41 @@
 .wpcoder-expand__content {
   padding-block: 8px;
 }
+
+.details {
+  border: 1px solid var(--wowp-border);
+  background-color: #ffffff;
+  padding-inline: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  &[open] {
+    padding-block-end: 1.5rem;
+
+    > summary {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  > summary {
+    height: 40px;
+    line-height: 40px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+
+    .button-group {
+      margin-block: 5px;
+    }
+
+    a {
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+
+  > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+}

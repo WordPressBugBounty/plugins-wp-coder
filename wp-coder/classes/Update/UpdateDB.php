@@ -12,14 +12,14 @@ class UpdateDB {
 	public static function init(): void {
 		$current_db_version = get_option( WPCoder::PREFIX . '_db_version' );
 
-		if ( $current_db_version && version_compare( $current_db_version, '3.2', '>=' ) ) {
+		if ( $current_db_version && version_compare( $current_db_version, '3.6', '>=' ) ) {
 			return;
 		}
 
 		self::updateDB();
-		self::updateDBFields();
+//		self::updateDBFields();
 
-		update_option( WPCoder::PREFIX . '_db_version', '3.2' );
+		update_option( WPCoder::PREFIX . '_db_version', '3.6' );
 	}
 
 	private static function updateDB(): void {
@@ -38,7 +38,9 @@ class UpdateDB {
         status BOOLEAN,
         mode BOOLEAN,
         tag TEXT,
-        PRIMARY KEY (id)
+        php_include int(11) NOT NULL DEFAULT '0',
+		UNIQUE KEY id (id),
+        INDEX id_index (id)
     ) $charset_collate;";
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );

@@ -24,20 +24,28 @@ if ( ! empty( $default['css_code'] ) ) {
 		<?php esc_html_e( 'CSS Code', 'wp-coder' ); ?>
     </h4>
 
-    <fieldset>
-        <legend><?php esc_html_e( 'Settings', 'wp-coder' ); ?></legend>
-		<?php Option::init( [
-			$opt['inline'],
-			$opt['minified'],
-		] ); ?>
-    </fieldset>
-
-    <fieldset>
-        <div class="wowp-field is-full">
-            <ol id="cssNavigationMenu" class="wowp-php-nav-menu"></ol>
-            <button class="button-editor button" id="cssnav">Add NAV Comment</button>
+    <details class="details">
+        <summary><?php esc_html_e( 'Settings', 'wp-coder' ); ?></summary>
+        <div>
+			<?php Option::init( [
+				$opt['inline'],
+				$opt['minified'],
+			] ); ?>
         </div>
-    </fieldset>
+    </details>
+
+    <details class="details">
+        <summary>
+			<?php esc_html_e( 'Navigation', 'wpcoderpro' ); ?>
+            <div class="button-group alignright">
+                <button class="button-editor button" id="cssnav">Add NAV Comment</button>
+            </div>
+        </summary>
+        <div class="wowp-field">
+            <ol id="cssNavigationMenu" class="wowp-php-nav-menu"></ol>
+        </div>
+    </details>
+
 
 <?php Option::init( [ $opt['css_code'] ] ); ?>
 

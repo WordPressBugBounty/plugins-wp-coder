@@ -19,24 +19,28 @@ $opt     = include( 'options/html-code.php' );
 		esc_html_e( 'HTML Code', 'wp-coder' ); ?>
     </h4>
 
-    <fieldset>
-        <legend><?php esc_html_e( 'Settings', 'wp-coder' ); ?></legend>
-		<?php Option::init( [
-			$opt['minified'],
-		] ); ?>
+    <details class="details">
+        <summary><?php esc_html_e( 'Settings', 'wp-coder' ); ?></summary>
+        <div>
+			<?php Option::init( [
+				$opt['minified'],
+			] ); ?>
+        </div>
+    </details>
 
-    </fieldset>
 
-    <fieldset>
+    <details class="details">
+        <summary>
+			<?php esc_html_e( 'Navigation', 'wp-coder' ); ?>
+            <div class="button-group alignright">
+                <button class="button-editor button" id="htmlnav">Add NAV Comment</button>
+                <button class="button button-primary button-add-img">Add Image</button>
+            </div>
+        </summary>
         <div class="wowp-field">
             <ol id="htmlNavigationMenu" class="wowp-php-nav-menu"></ol>
-            <button class="button-editor button" id="htmlnav">Add NAV Comment</button>
         </div>
-        <div class="wowp-field add-img-btn _m-is-auto">
-            <button class="button button-primary button-add-img">Add Image</button>
-        </div>
-    </fieldset>
-
+    </details>
 
 <?php Field::textarea( 'html_code' ); ?>
 

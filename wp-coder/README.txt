@@ -3,9 +3,9 @@ Contributors: wpcoderdev, Wpcalc, lobov
 Donate link: https://wpcoder.pro/
 Tags: html, css, javascript, php, snippets
 Requires at least: 3.2
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.5.2
+Stable tag: 3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -192,6 +192,11 @@ The link feature in the 'Publish' block allows you to attach a link to the page 
 [Website](https://wpcoder.pro)
 [Documentation](https://wpcoder.pro/category/documentation/)
 [Upgrade to Pro!](https://wpcoder.pro/pricing/)
+
+= 3.6 =
+* Added: location for include PHP snippet
+* Added: option for hide the tabs in the Settings
+* Fixed: admin style for Safari
 
 = 3.5.2 =
 * Fixed: admin style for plugin

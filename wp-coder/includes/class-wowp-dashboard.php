@@ -60,6 +60,8 @@ class WOWP_Dashboard {
 		$settings['formats'][]         = '%d';
 		$settings['data']['tag']       = ! empty( $request['tag'] ) ? sanitize_textarea_field( wp_unslash( $request['tag'] ) ) : '';
 		$settings['formats'][]         = '%s';
+		$settings['data']['php_include'] = ! empty( $request['php_include'] ) ? sanitize_textarea_field( wp_unslash( $request['php_include'] ) ) : '';
+		$settings['formats'][]         = '%d';
 
 		if ( ! empty( $request['param']['include_file'] ) ) {
 			$param['include_file'] = ! empty( $request['param']['include_file'] ) ? map_deep( $request['param']['include_file'],

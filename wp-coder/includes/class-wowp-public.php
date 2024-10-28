@@ -11,32 +11,18 @@ use WPCoder\Publisher\Conditions;
 use WPCoder\Publisher\EnqueueScript;
 use WPCoder\Publisher\EnqueueStyle;
 use WPCoder\Publisher\Singleton;
+use WPCoder\Publisher\PHPIncludes;
 
 class WOWP_Public {
 
 	public function __construct() {
-		$this->include_global_php();
-
 		add_shortcode( 'WP-Coder', [ $this, 'shortcode' ] );
 		add_shortcode( WPCoder::SHORTCODE, [ $this, 'shortcode' ] );
 
 		add_action( 'wp_footer', [ $this, 'print_footer' ], 50 );
+
+		new PHPIncludes;
 	}
-
-	public function include_global_php() {
-		$page_path = FolderManager::path_upload_dir() . 'global-php.php';
-		$save_mode = isset( $_GET['wpcoder-safe-mode'] ) ? absint( $_GET['wpcoder-safe-mode'] ) : 0;
-
-		if ( $save_mode === 1 ) {
-			return false;
-		}
-		if ( file_exists( $page_path ) && get_option( '_wpcoder_enable_php' ) ) {
-			require_once $page_path;
-		}
-	}
-
-
-
 
 	public function shortcode( $atts, $shortcode_content = null ) {
 		if ( ! empty( $atts['id'] ) ) {
