@@ -41,9 +41,9 @@ $add_url = add_query_arg( [
 		<?php
 		$list_table->search_box( esc_attr__( 'Search', 'wp-coder' ), WPCoder::PREFIX );
 		$list_table->display();
+        $current_page = isset( $_GET['page'] ) ? (wp_unslash($_GET['page'])) : '';
 		?>
-        <input type="hidden" name="page" value="<?php
-		echo sanitize_text_field( $_REQUEST['page'] ); ?>"/>
+        <input type="hidden" name="page" value="<?php echo esc_attr( $current_page ); ?>"/>
 		<?php
 		wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_list_action' ); ?>
     </form>
