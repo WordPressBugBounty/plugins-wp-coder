@@ -1,37 +1,73 @@
 .wowp-list {
-  padding: 50px 36px 50px 16px;
-}
+  padding: 50px 46px 50px 16px;
 
-.wowp-list td.column-mode span {
-  //margin-left: 28px;
-}
-
-@media screen and (max-width: 782px) {
-  .wowp-list td.column-mode span:first-child {
-    margin-left: 0;
+  .wowp-field {
+    input[type="text"] {
+      min-width: unset;
+      width: auto;
+    }
   }
 }
 
-.wowp-list {
-  .row-actions .duplicate a{
-    color: green;
-  }
-  .row-actions .export a {
-    color: orange;
+
+.wowp-toogle {
+  display: flex;
+  align-items: center;
+  position: relative;
+  text-decoration: none;
+  color: #ffffff;
+  width: 40px;
+  height: 28px;
+  border-radius: 50px;
+  padding: 0 4px;
+
+  &:focus,
+  &:hover {
+    color: #ffffff;
   }
 }
 
-.wowp-status-on,
-.wowp-status-off {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
+.wowp-toogle span {
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
+  font-size: 8px;
 }
 
-.wowp-status-on {
-  background-color: green;
+.wowp-toogle.is-on {
+  background-color: color-mix(in srgb, var(--wowp-color-green) 20%, white);
 }
-.wowp-status-off {
-  background-color: red;
+
+.wowp-toogle.is-on {
+  span {
+    background-color: var(--wowp-color-green);
+  }
+
+  &:focus,
+  &:hover {
+    span {
+      background-color: color-mix(in srgb, var(--wowp-color-green) 90%, black);
+    }
+  }
+}
+
+.wowp-toogle.is-off {
+  flex-direction: row-reverse;
+  background-color: color-mix(in srgb, var(--wowp-color-red) 20%, white);
+}
+
+.wowp-toogle.is-off {
+  span {
+    background-color: var(--wowp-color-red);
+  }
+
+  &:focus,
+  &:hover {
+    span {
+      background-color: color-mix(in srgb, var(--wowp-color-red) 90%, black);
+    }
+  }
 }

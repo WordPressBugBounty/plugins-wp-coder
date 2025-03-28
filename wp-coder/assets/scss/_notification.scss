@@ -1,20 +1,20 @@
 .wowp-notification {
-  --notification-color: var(--wowp-dark);
+  --_color: var(--wowp-gray-900);
   position: relative;
-  background-color: color-mix(in srgb, var(--notification-color) 7%, white);
+  background-color: color-mix(in srgb, var(--_color) 7%, white);
   border-width: 1px;
   border-style: solid;
-  border-color: var(--notification-color);
+  border-color: var(--_color);
   padding-block: 1.25rem;
   padding-inline: 3rem 1.25rem;
   border-radius: 4px;
-  margin-block: 15px;
+  margin-block: 1rem;
   &:before {
     position: absolute;
     left: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
-    content: '';
+    content: '\f16d';
     font-family: dashicons;
     font-size: 1.5rem;
     width: 2rem;
@@ -22,7 +22,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--notification-color);
+    color: var(--_color);
+
   }
 
   &:after {
@@ -34,37 +35,37 @@
     height: 2rem;
     width: 3px;
     border-radius: 0 3px 3px 0;
-    background-color: var(--notification-color);
+    background-color: var(--_color);
   }
 
-  &.-info {
-    --notification-color: var(--wowp-blue);
+  &.notification-info {
+    --_color: var(--wowp-color-blue);
     &:before {
       content: "\f348";
     }
   }
-  &.-warning {
-    --notification-color: var(--wowp-yellow);
+  &.notification-warning {
+    --_color: var(--wowp-color-yellow);
     &:before {
       content: "\f534";
     }
   }
-  &.-error {
-    --notification-color: var(--wowp-danger);
+  &.notification-error {
+    --_color: var(--wowp-color-red);
     &:before {
       content: "\f335";
     }
   }
 
-  &.-lock {
-    --notification-color: var(--wowp-danger);
+  &.notification-lock {
+    --_color: var(--wowp-color-red);
     &:before {
       content: "\f160";
     }
   }
 
-  &.-success {
-    --notification-color: var(--wowp-success);
+  &.notification-success {
+    --_color: var(--wowp-color-green);
     &:before {
       content: "\f12a";
     }

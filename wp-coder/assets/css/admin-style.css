@@ -218,8 +218,8 @@ td.column-mode span {
 /*Settins postbox conteiner*/
 
 .wowp-settings-wrapper {
-	display: flex;
-	flex-direction: column
+	/*display: flex;*/
+	/*flex-direction: column*/
 }
 
 .wowp-nav-tab-wrapper .nav-tab-active{

@@ -2,6 +2,7 @@
 
 namespace WPCoder\Publisher;
 
+
 defined( 'ABSPATH' ) || exit;
 
 class Conditions {
@@ -11,6 +12,7 @@ class Conditions {
 		$check = [
 			'status'   => self::status( $result->status ),
 			'mode'     => self::mode( $result->mode ),
+
 		];
 
 		if ( in_array( false, $check, true ) ) {
@@ -28,6 +30,4 @@ class Conditions {
 	private static function mode( $mode ): bool {
 		return empty( $mode ) || current_user_can( 'administrator' );
 	}
-
-
 }

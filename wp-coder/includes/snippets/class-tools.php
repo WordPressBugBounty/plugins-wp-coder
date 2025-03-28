@@ -24,9 +24,7 @@ class WPCoder_Lite_Tools {
 		if ( array_key_exists( 'enable_google_adsense', $options ) ) {
 			add_action( 'wp_head', array( $this, 'add_adsense_code' ) );
 		}
-
 	}
-
 
 	public function add_tracking(): void {
 
@@ -112,11 +110,11 @@ class WPCoder_Lite_Tools {
 		<?php }
 	}
 
-	public function add_adsense_code() {
+	public function add_adsense_code(): void {
 
-        if(empty( $this->options['google_adsense_publisher'] )) {
-            return;
-        }
+		if ( empty( $this->options['google_adsense_publisher'] ) ) {
+			return;
+		}
 
 		$user = wp_get_current_user();
 
@@ -128,9 +126,11 @@ class WPCoder_Lite_Tools {
 			}
 		}
 
-		$output = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-'.esc_attr($this->options['google_adsense_publisher']).'" crossorigin="anonymous"></script>';
-		echo $output;
-    }
+		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
+		echo '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-' . esc_attr( $this->options['google_adsense_publisher'] ) . '" crossorigin="anonymous"></script>';
+		// phpcs:enable
+	}
+
 
 }
 

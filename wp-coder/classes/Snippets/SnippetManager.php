@@ -2,6 +2,8 @@
 
 namespace WPCoder\Snippets;
 
+use WPCoder\Dashboard\Field;
+use WPCoder\Dashboard\FieldHelper;
 use WPCoder\WPCoder;
 
 class SnippetManager {
@@ -9,58 +11,48 @@ class SnippetManager {
 	public static function init(): void {
 		self::send();
 
+		$options = get_option( '_wp_coder_snippets', [] );
+
 		$snippets = [
-			'disable' => [
-				'html-code',
-				__( 'Disable snippets', 'wp-coder' )
-			],
-			'enable'  => [
-				'css-code',
-				__( 'Enabled snippets', 'wp-coder' )
-			],
-			'change'  => [
-				'js-code',
-				__( 'Changed snippets', 'wp-coder' )
-			],
+			'content'      => __( 'Editor & Content', 'wp-coder' ),
+			'admin'        => __( 'Admin Interface Tweaks', 'wp-coder' ),
+			'login'        => __( 'Login & User Access', 'wp-coder' ),
+			'media'        => __( 'Media & Embeds', 'wp-coder' ),
+			'core'         => __( 'Core Functionality', 'wp-coder' ),
+			'comments'     => __( 'Comments & Feedback', 'wp-coder' ),
+			'optimization' => __( ' Cleanup & Optimization', 'wp-coder' ),
 		];
 
 		?>
-        <div class="wrap wowp-wrap wpcoder-snippets-wrap wowp-settings">
+        <div class="wowp-settings wowp-snippets">
             <form method="post">
-                <fieldset style="display: block;">
-                    <legend>
-						<?php esc_html_e( 'Snippets', 'wp-coder' ); ?>
-                    </legend>
 
-                    <h3 class="nav-tab-wrapper wowp-tab" id="settings-tab">
-						<?php
-						foreach ( $snippets as $page => $args ) {
-							$first = ( $page === array_key_first( $snippets ) ) ? ' nav-tab-active' : '';
-							echo '<a class="nav-tab' . esc_attr( $first ) . '" data-tab="' . esc_attr( $args[0] ) . '">' . esc_attr( $args[1] ) . '</a>';
-						}
-						?>
-                    </h3>
 
-                    <div class="tab-content-wrapper wowp-tab-content" id="settings-content">
-						<?php
-						foreach ( $snippets as $page => $args ) {
-							$first = ( $page === array_key_first( $snippets ) ) ? ' tab-content-active' : '';
-							echo '<div class="tab-content' . esc_attr( $first ) . '" data-content="' . esc_attr( $args[0] ) . '">';
-							echo '<h4>' . esc_attr( $args[1] ) . '</h4>';
-							require_once plugin_dir_path( __FILE__ ) . 'pages/' . esc_attr( $page ) . '.php';
-							echo '</div>';
-						}
-						?>
-                    </div>
-
-                    <div class="wowp-field is-full has-mt">
-						<?php
-						submit_button( __( 'Save', 'wp-coder' ), 'primary large', 'submit', false ); ?>
-                    </div>
-
+                <div class="wowp-snippets__tabs" id="wowp-snippets-tabs">
 					<?php
-					wp_nonce_field( WPCoder::PREFIX . '_snippets_action', WPCoder::PREFIX . '_save_snippet' ); ?>
-                </fieldset>
+					foreach ( $snippets as $key => $value ) {
+						$tab = ! empty( $options['snippet_tab'] ) ? $options['snippet_tab'] : 'content';
+						echo '<input type="radio" class="wowp-snippets__tabs-radio" name="wp_coder_snippet[snippet_tab]" value="' . esc_attr( $key ) . '" id="wowp-tab-' . esc_attr( $key ) . '" ' . checked( $tab, $key, false ) . '>';
+					}
+					echo '<div class="wowp-snippets__tabs-labels">';
+					foreach ( $snippets as $key => $value ) {
+						echo '<label  class="wowp-snippets__tabs-tab" for="wowp-tab-' . esc_attr( $key ) . '"><span class="icon icon-' . esc_attr( $key ) . '"></span>' . esc_html( $value ) . '</label>';
+					}
+					echo '</div>';
+					foreach ( $snippets as $key => $value ) {
+
+						echo '<div class="wowp-snippets__tabs-content" data-content="wowp-tab-' . esc_attr( $key ) . '">';
+						require_once plugin_dir_path( __FILE__ ) . 'pages/' . esc_attr( $key ) . '.php';
+						echo '<input type="submit" name="submit" class="wowp-button button button-dark button-hero" value="' . esc_attr__( 'Save', 'wp-coder' ) . '">';
+						echo '</div>';
+					}
+
+					?>
+                </div>
+				<?php
+				//				submit_button( __( 'Save', 'wp-coder' ), 'wowp-button button-dark button-hero', 'submit', false );
+				wp_nonce_field( WPCoder::PREFIX . '_snippets_action', WPCoder::PREFIX . '_save_snippet' );
+				?>
             </form>
 
         </div>
@@ -69,20 +61,37 @@ class SnippetManager {
 
 	private static function create_options( $settings ) {
 		$options = get_option( '_wp_coder_snippets', [] );
-		echo '<dl class="wowp-snippet__list">';
+		echo '<div class="wowp-snippet__list">';
+		$i = 1;
 		foreach ( $settings as $name => $args ) {
-			$checked = array_key_exists( $name, $options ) ? 'checked' : '';
-			echo '<dt><label><input type="checkbox" name="wp_coder_snippet[' . esc_attr( $name ) . ']" ' . esc_attr( $checked ) . ' value="1">' . esc_attr( $args[0] ) . '</label></dt>';
-			echo '<dd>' . esc_attr( $args[1] ) . '</dd>';
+			$checked = array_key_exists( $name, $options ) ? 'checked' : ''; ?>
+            <div class="wowp-snippet__item">
+                <div class="wowp-snippet__item-header">
+                    <label for="wp_coder_snippet-<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $args[0] ); ?></label>
+                    <p class="wowp-snippet__item-description"><?php echo esc_html( $args[1] ); ?></p>
+                </div>
+                <div class="wowp-field has-checkbox">
+                    <label class="switch">
+                        <input type="checkbox"
+                               name="wp_coder_snippet[<?php echo esc_attr( $name ); ?>]" <?php echo esc_attr( $checked ); ?>
+                               value="1" id="wp_coder_snippet-<?php echo esc_attr( $name ); ?>">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+			<?php
+			$i ++;
 		}
-		echo '</dl>';
+		echo '</div>';
 	}
+
 
 	private static function field( $type = 'checkbox', $name = '', $def = '', $placeholder = '' ) {
 		$options = get_option( '_wp_coder_snippets', [] );
 		if ( $type === 'checkbox' ) {
 			$checked = array_key_exists( $name, $options ) ? 'checked' : '';
-			echo '<input type="checkbox" name="wp_coder_snippet[' . esc_attr( $name ) . ']" ' . esc_attr( $checked ) . ' value="1">';
+			echo '<input type="checkbox" name="wp_coder_snippet[' . esc_attr( $name ) . ']" ' . esc_attr( $checked ) . ' value="1" id="' . esc_attr( $name ) . '">';
+			echo '';
 		} elseif ( $type === 'text' ) {
 			$value = ! empty( $options[ $name ] ) ? $options[ $name ] : $def;
 			echo '<input type="text" name="wp_coder_snippet[' . esc_attr( $name ) . ']" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '">';
@@ -103,7 +112,7 @@ class SnippetManager {
 		if ( empty( $_POST['wp_coder_snippet'] ) ) {
 			$snippets = [];
 		} else {
-			$snippets = map_deep( $_POST['wp_coder_snippet'], 'sanitize_text_field' );
+			$snippets = map_deep( wp_unslash( $_POST['wp_coder_snippet'] ), 'sanitize_text_field' );
 		}
 
 		update_option( '_wp_coder_snippets', $snippets );
@@ -117,8 +126,8 @@ class SnippetManager {
 			return false;
 		}
 
-		return isset( $wp_coder ) && wp_verify_nonce( $_POST[ $nonce_name ],
-				$nonce_action ) && current_user_can( 'manage_options' );
+		return isset( $_POST['wp_coder_snippet'] ) && wp_verify_nonce( $_POST[ $nonce_name ],
+				$nonce_action ) && current_user_can( 'unfiltered_html' );
 	}
 
 }

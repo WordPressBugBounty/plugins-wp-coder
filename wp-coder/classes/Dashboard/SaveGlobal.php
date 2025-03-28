@@ -13,42 +13,47 @@ class SaveGlobal {
 		$content = self::get_content();
 		$enabled = get_option( '_wpcoder_enable_php' );
 		?>
-        <div class="wrap wowp-wrap wpcoder-global-php">
+
 
             <form method="post">
-                <fieldset>
-                    <legend>
-						<?php
-						esc_html_e( 'PHP code', 'wp-coder' ); ?>
-                    </legend>
-                    <div class="wowp-field is-full">
-                        <ol id="phpNavigationMenu" class="wowp-php-nav-menu"></ol>
-                        <span class="button-editor button" id="phpglobalnav">Add NAV Comment</span>
+                <div class="wowp-settings">
+
+                    <div class="wowp-settings__page">
+
+
+                        <div class="wowp-settings__page-sidebar">
+
+                            <div class="wowp-field has-checkbox is-reverse">
+                                <span class="label">
+                                    <?php esc_html_e( 'Enable PHP code', 'wp-coder' ); ?>
+                                    <sup class="wowp-tooltip" data-tooltip="Enable execution of this PHP code globally. Be careful: errors may affect your site.">ℹ</sup>
+                                </span>
+                                <label class="switch">
+                                    <input type="checkbox" value="1" name="wp_coder_global_php_enable" id="wpcoder-global-php-enable"<?php checked( $enabled ); ?>>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+	                        <?php submit_button( __( 'Save', 'wp-coder' ), 'wowp-button button button-dark', 'submit', false ); ?>
+
+
+                            <button class="button-editor button" id="phpglobalnav"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
+                            <ol id="phpNavigationMenu" class="wowp-php-nav-menu"></ol>
+
+                        </div>
+
+                        <div class="wowp-settings__page-content">
+                            <textarea name="wp_coder_global_php" id="wpcoder-global-php" cols="40" rows="5"><?php
+	                            echo esc_textarea( $content ); ?></textarea>
+                        </div>
+
+
                     </div>
 
-                    <div class="wowp-field is-full">
-                        <textarea name="wp_coder_global_php" id="wpcoder-global-php" cols="40" rows="5"><?php
-	                        echo esc_textarea( $content ); ?></textarea>
-                    </div>
-                    <div class="wowp-field">
-                        <label>
-                            <input type="checkbox" value="1" name="wp_coder_global_php_enable"
-                                   id="wpcoder-global-php-enable"<?php
-							checked( $enabled ); ?>>
-							<?php
-							esc_html_e( 'Enable PHP code', 'wp-coder' ); ?>
-                        </label>
-                    </div>
-                    <div class="wowp-field is-full">
-						<?php
-						submit_button( __( 'Save', 'wp-coder' ), 'primary large', 'submit', false ); ?>
-                    </div>
-
-					<?php
-					wp_nonce_field( WPCoder::PREFIX . '_global_action', WPCoder::PREFIX . '_save_name' ); ?>
-                </fieldset>
+	            <?php wp_nonce_field( WPCoder::PREFIX . '_global_action', WPCoder::PREFIX . '_save_name' ); ?>
+                </div>
             </form>
-        </div>
+
 
 		<?php
 	}
@@ -91,6 +96,6 @@ class SaveGlobal {
 		}
 
 		return isset( $wp_coder ) && wp_verify_nonce( $_POST[ $nonce_name ],
-				$nonce_action ) && current_user_can( 'manage_options' );
+				$nonce_action ) && current_user_can( 'unfiltered_html' );
 	}
 }

@@ -18,58 +18,41 @@ if ( ! empty( $default['js_code'] ) ) {
 }
 
 ?>
-    <h4>
-        <span class="codericon codericon-filetype-js"></span>
-		<?php esc_html_e( 'JavaScript Code', 'wp-coder' ); ?>
-    </h4>
 
+    <div class="wowp-settings__page">
+        <div class="wowp-settings__page-sidebar">
 
-    <details class="details">
-        <summary><?php esc_html_e( 'Settings', 'wp-coder' ); ?></summary>
-        <div>
-			<?php Option::init( [
-				$opt['jquery'],
-				$opt['inline'],
-				$opt['minified'],
-				$opt['attributes'],
-			] ); ?>
+	        <?php Option::init( [
+		        $opt['jquery'],
+		        $opt['inline'],
+		        $opt['minified'],
+		        $opt['attributes'],
+	        ] ); ?>
+
+            <button class="button-editor button" id="jsnav"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
+            <ol id="jsNavigationMenu" class="wowp-php-nav-menu"></ol>
+
         </div>
-    </details>
+        <div class="wowp-settings__page-content">
+	        <?php Field::textarea( 'js_code' ); ?>
 
-    <details class="details">
-        <summary>
-			<?php esc_html_e( 'Navigation', 'wp-coder' ); ?>
-            <div class="button-group alignright">
-                <button class="button-editor button" id="jsnav">Add NAV Comment</button>
+            <div class="wowp-notification notification-info">
+                Just enter the JavaScript content. You don’t need to include <code>&lt;script&gt;</code> — it's already on the page.
             </div>
-        </summary>
-        <div class="wowp-field">
-            <ol id="jsNavigationMenu" class="wowp-php-nav-menu"></ol>
-        </div>
-    </details>
 
-    <fieldset>
-        <div class="wowp-field is-full">
-            <ol id="jsNavigationMenu" class="wowp-php-nav-menu"></ol>
-            <button class="button-editor button" id="jsnav">Add NAV Comment</button>
-        </div>
-    </fieldset>
+	        <?php if ( ! empty( $js_link ) ): ?>
+                <div class="wowp-field has-addon">
+                    <span class="label"><?php esc_html_e( 'JS File URL', 'wp-coder' ); ?></span>
+                    <label for="tag" class="label is-addon"><span
+                                class="dashicons dashicons-admin-links"></span></label>
+                    <input type="url" id="url-js-file" readonly="readonly" value="<?php echo esc_url( $js_link ); ?>">
+                </div>
+	        <?php endif; ?>
 
-<?php Option::init( [ $opt['js_code'] ] ); ?>
 
-    <div class="wowp-notification -warning">
-        Please input only the JavaScript content, omitting the <code>script</code> tag
-    </div>
-
-<?php if ( ! empty( $js_link ) ): ?>
-    <div class="wowp-fields-group has-mt">
-        <div class="wowp-field is-full has-addon border-default">
-            <label for="url-css-file" class="is-addon">
-                <span class="dashicons dashicons-admin-links"></span>
-            </label>
-            <input type="url" id="url-css-file" readonly="readonly" value="<?php echo esc_url( $js_link ); ?>">
-            <span class="label"><?php esc_html_e( 'URL to the JS file', 'wp-coder' ); ?></span>
         </div>
     </div>
-<?php endif;
+
+<?php
+
 

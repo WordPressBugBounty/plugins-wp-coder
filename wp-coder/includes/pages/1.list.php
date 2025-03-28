@@ -16,35 +16,28 @@ $add_url = add_query_arg( [
 	'action' => 'new'
 ], admin_url( 'admin.php' ) );
 ?>
+    <div class="wowp">
+		<?php DashboardInitializer::header(); ?>
 
-    <div class="wowp-header-wrapper">
-		<?php
-		DashboardInitializer::header(); ?>
-
-        <div class="wowp-header-title">
-            <h2><?php
-				esc_html_e( 'All Codes', 'wp-coder' ); ?></h2>
-            <a href="<?php
-			echo esc_url( $add_url ); ?>" class="button button-primary button-large">
-                + <?php
-				esc_html_e( 'Add New', 'wp-coder' ); ?>
-            </a>
-            <a href="https://wpcoder.pro/snippet/?utm_source=wordpress&utm_medium=admin-menu&utm_campaign=snippets"
-               class="button button-secondary button-large" target="_blank">
-                <?php esc_html_e( 'Find Snippet', 'wp-coder' ); ?>
+        <div class="wowp-page-header">
+            <h2 class="wowp-page-header__title">
+				<?php esc_html_e( 'All Codes', 'wp-coder' ); ?>
+            </h2>
+            <a href="<?php echo esc_url( $add_url ); ?>" class="button button-primary button-large">
+				<?php esc_html_e( 'Add New', 'wp-coder' ); ?>
             </a>
         </div>
 
-    </div>
 
-    <form method="post" class="wowp-list">
-		<?php
-		$list_table->search_box( esc_attr__( 'Search', 'wp-coder' ), WPCoder::PREFIX );
-		$list_table->display();
-        $current_page = isset( $_GET['page'] ) ? (wp_unslash($_GET['page'])) : '';
-		?>
-        <input type="hidden" name="page" value="<?php echo esc_attr( $current_page ); ?>"/>
-		<?php
-		wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_list_action' ); ?>
-    </form>
+        <form method="post" class="wowp-list">
+			<?php
+			$list_table->search_box( esc_attr__( 'Search', 'wp-coder' ), WPCoder::PREFIX );
+			$list_table->display();
+			?>
+            <input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>"/>
+			<?php wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_list_action' ); ?>
+        </form>
+
+    </div>
 <?php
+

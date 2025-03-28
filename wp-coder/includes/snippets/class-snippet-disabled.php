@@ -42,7 +42,6 @@ class WPCoder_Lite_Disabled_Snippets {
 			add_filter( 'show_admin_bar', [ $this, 'disable_admin_bar' ] );
 		}
 
-
 		if ( array_key_exists( 'disable_automatic_updates', $options ) ) {
 			// Disable core auto-updates
 			add_filter( 'auto_update_core', '__return_false' );
@@ -166,15 +165,15 @@ class WPCoder_Lite_Disabled_Snippets {
 		}
 
 		if ( array_key_exists( 'disable_self_pingbacks', $options ) ) {
-			add_action( 'pre_ping', [$this, 'self_pingbacks']);
+			add_action( 'pre_ping', [ $this, 'self_pingbacks' ] );
 		}
 
 		if ( array_key_exists( 'disable_wlwmanifest_link', $options ) ) {
-			remove_action('wp_head', 'wlwmanifest_link');
+			remove_action( 'wp_head', 'wlwmanifest_link' );
 		}
 
 		if ( array_key_exists( 'disable_embeds', $options ) ) {
-			add_action( 'init', [$this, 'disable_embeds'], 9999);
+			add_action( 'init', [ $this, 'disable_embeds' ], 9999 );
 		}
 
 		if ( array_key_exists( 'disable_lazy_load', $options ) ) {
@@ -182,13 +181,24 @@ class WPCoder_Lite_Disabled_Snippets {
 		}
 
 		if ( array_key_exists( 'disable_wp_shortlink', $options ) ) {
-			remove_action('wp_head', 'wp_shortlink_wp_head' );
+			remove_action( 'wp_head', 'wp_shortlink_wp_head' );
 		}
 
 		if ( array_key_exists( 'disable_admin_pass_reset_email', $options ) ) {
 			remove_action( 'after_password_reset', 'wp_password_change_notification' );
 		}
 
+		if ( array_key_exists( 'disable_trackbacks_pingbacks', $options ) ) {
+			add_filter('xmlrpc_methods', static function($methods) {
+				unset($methods['pingback.ping']);
+				return $methods;
+			});
+		}
+
+		if ( array_key_exists( 'disable_comments_html', $options ) ) {
+			remove_filter('comment_text', 'make_clickable', 9);
+			add_filter('pre_comment_content', 'wp_strip_all_tags');
+		}
 
 	}
 
@@ -213,13 +223,14 @@ class WPCoder_Lite_Disabled_Snippets {
 					unset( $rules[ $rule ] );
 				}
 			}
+
 			return $rules;
 		} );
 		// Remove filter of the oEmbed result before any HTTP requests are made.
 		remove_filter( 'pre_oembed_result', 'wp_filter_pre_oembed_result', 10 );
 	}
 
-	public function self_pingbacks(&$links): void {
+	public function self_pingbacks( &$links ): void {
 
 		$home = get_option( 'home' );
 		foreach ( $links as $l => $link ) {

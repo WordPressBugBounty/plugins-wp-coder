@@ -1,24 +1,24 @@
 /*--------------------------------
 
-codericons icon font
+Nucleo icon font
 Generated using nucleoapp.com
 
 -------------------------------- */
 
 @font-face {
-  font-family: 'codericons';
-  src: url('../fonts/codericons.eot');
-  src: url('../fonts/codericons.eot') format('embedded-opentype'),
-       url('../fonts/codericons.woff2') format('woff2'),
-       url('../fonts/codericons.woff') format('woff'),
-       url('../fonts/codericons.ttf') format('truetype'),
-       url('../fonts/codericons.svg') format('svg');
+  font-family: 'Nucleo';
+  src: url('../fonts/Nucleo.eot');
+  src: url('../fonts/Nucleo.eot') format('embedded-opentype'),
+       url('../fonts/Nucleo.woff2') format('woff2'),
+       url('../fonts/Nucleo.woff') format('woff'),
+       url('../fonts/Nucleo.ttf') format('truetype'),
+       url('../fonts/Nucleo.svg') format('svg');
 }
 
 /* base class */
-.codericon {
+.icon {
   display: inline-block;
-  font: normal normal normal 1em/1 'codericons';
+  font: normal normal normal 1em/1 'Nucleo';
   color: inherit;
   flex-shrink: 0;
   -webkit-font-smoothing: antialiased;
@@ -26,29 +26,29 @@ Generated using nucleoapp.com
 }
 
 /* size examples - relative units */
-.codericon-sm {
+.icon-sm {
   font-size: 0.8em;
 }
 
-.codericon-lg {
+.icon-lg {
   font-size: 1.2em;
 }
 
 /* size examples - absolute units */
-.codericon-16 {
+.icon-16 {
   font-size: 16px;
 }
 
-.codericon-32 {
+.icon-32 {
   font-size: 32px;
 }
 
 /* rotate the icon infinitely */
-.codericon-is-spinning {
-  animation: codericon-spin 1s infinite linear;
+.icon-is-spinning {
+  animation: icon-spin 1s infinite linear;
 }
 
-@keyframes codericon-spin {
+@keyframes icon-spin {
   0% {
     transform: rotate(0deg);
   }
@@ -58,67 +58,107 @@ Generated using nucleoapp.com
 }
 
 /* transform */
-.codericon-rotate-90 {
+.icon-rotate-90 {
   transform: rotate(90deg);
 }
 
-.codericon-rotate-180 {
+.icon-rotate-180 {
   transform: rotate(180deg);
 }
 
-.codericon-rotate-270 {
+.icon-rotate-270 {
   transform: rotate(270deg);
 }
 
-.codericon-flip-y {
+.icon-flip-y {
   transform: scaleY(-1);
 }
 
-.codericon-flip-x {
+.icon-flip-x {
   transform: scaleX(-1);
 }
 
 /* icons */
-.codericon-filetype-html::before {
+.icon-content::before {
   content: "\ea02";
 }
 
-.codericon-filetype-js::before {
+.icon-login::before {
   content: "\ea03";
 }
 
-.codericon-filetype-css::before {
+.icon-admin::before {
   content: "\ea04";
 }
 
-.codericon-filetype-php::before {
+.icon-media::before {
   content: "\ea05";
 }
 
-.codericon-toggles::before {
+.icon-core::before {
   content: "\ea06";
 }
 
-.codericon-clipboard-text::before {
+.icon-comments::before {
   content: "\ea07";
 }
 
-.codericon-ui-checks::before {
+.icon-optimization::before {
   content: "\ea08";
 }
 
-.codericon-cogs::before {
+.icon-copy::before {
   content: "\ea09";
 }
 
-.codericon-copy::before {
+.icon-template::before {
   content: "\ea0a";
 }
 
-.codericon-48px_code::before {
+.icon-crosshair::before {
+  content: "\ea0c";
+}
+
+.icon-meeting::before {
+  content: "\ea0d";
+}
+
+.icon-calendar::before {
+  content: "\ea0e";
+}
+
+.icon-lock-portrait::before {
+  content: "\ea10";
+}
+
+.icon-pc::before {
+  content: "\ea11";
+}
+
+.icon-translation::before {
+  content: "\ea12";
+}
+
+.icon-clear::before {
+  content: "\ea13";
+}
+
+.icon-construction::before {
   content: "\ea14";
 }
 
-.codericon-24px_web-design::before {
+.icon-finger-snap::before {
   content: "\ea15";
+}
+
+.icon-document::before {
+  content: "\ea16";
+}
+
+.icon-list::before {
+  content: "\ea17";
+}
+
+.icon-browser-chrome::before {
+  content: "\ea18";
 }

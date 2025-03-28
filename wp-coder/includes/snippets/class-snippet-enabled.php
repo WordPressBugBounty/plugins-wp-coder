@@ -3,8 +3,14 @@
 defined( 'ABSPATH' ) || exit;
 
 class WPCoder_Lite_Enabled_Snippets {
+	/**
+	 * @var false|mixed|null
+	 */
+	private $options;
+
 	public function __construct() {
-		$options = get_option( '_wp_coder_snippets', [] );
+		$options       = get_option( '_wp_coder_snippets', [] );
+		$this->options = $options;
 
 		if ( array_key_exists( 'enable_duplication', $options ) ) {
 			add_filter( 'post_row_actions', [ $this, 'add_duplicate_link' ], 10, 2 );
@@ -45,10 +51,66 @@ class WPCoder_Lite_Enabled_Snippets {
 			add_filter( 'pre_get_avatar_data', [ $this, 'default_alt_to_avatar' ] );
 		}
 
+		if ( array_key_exists( 'enable_force_external_links_new_tab', $options ) ) {
+			add_filter( 'the_content', [ $this, 'force_external_links_new_tab' ] );
+		}
 
+		if ( array_key_exists( 'enable_redirect_404_to_home', $options ) ) {
+			add_action( 'template_redirect', static function () {
+				if ( is_404() ) {
+					wp_redirect( home_url(), 301 );
+					exit;
+				}
+			} );
+		}
+
+		if ( array_key_exists( 'enable_limit_comment_length', $options ) ) {
+			add_filter( 'preprocess_comment', [ $this, 'limit_comment_length' ] );
+		}
+
+		remove_filter( 'comment_text', 'make_clickable', 9 );
+		add_filter( 'pre_comment_content', 'wp_strip_all_tags' );
 
 	}
 
+	public function limit_comment_length( $commentdata ) {
+		$max_length = ! empty( $this->options['limit_comment_length'] ) ? absint( $this->options['limit_comment_length'] ) : 300;
+		$mess       = ! empty( $this->options['limit_comment_mess'] ) ? esc_attr( $this->options['limit_comment_mess'] ) : 'Your comment is too long. Max 300 characters.';
+		if ( strlen( $commentdata['comment_content'] ) > $max_length ) {
+			wp_die( esc_attr( $mess ) );
+		}
+
+		return $commentdata;
+	}
+
+	public function force_external_links_new_tab( $content ) {
+		$site_url = wp_parse_url( home_url());
+
+		return preg_replace_callback(
+			'#<a\s[^>]*href=["\'](https?:\/\/[^"\']+)["\'][^>]*>#i',
+			function ( $matches ) use ( $site_url ) {
+				$href      = $matches[1];
+				$link_host = wp_parse_url( $href );
+
+				if ( $link_host && $link_host !== $site_url ) {
+					$tag = $matches[0];
+
+					if ( stripos( $tag, 'target=' ) === false ) {
+						$tag = str_ireplace( '<a', '<a target="_blank"', $tag );
+					}
+
+					if ( stripos( $tag, 'rel=' ) === false ) {
+						$tag = str_ireplace( '<a', '<a rel="noopener noreferrer nofollow"', $tag );
+					}
+
+					return $tag;
+				}
+
+				return $matches[0];
+			},
+			$content
+		);
+	}
 
 	public function default_alt_to_avatar( $atts ) {
 		if ( empty( $atts['alt'] ) ) {

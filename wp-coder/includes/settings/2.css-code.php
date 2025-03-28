@@ -18,51 +18,40 @@ if ( ! empty( $default['css_code'] ) ) {
 }
 
 ?>
+    <div class="wowp-settings__page">
+        <div class="wowp-settings__page-sidebar">
 
-    <h4>
-        <span class="codericon codericon-filetype-css"></span>
-		<?php esc_html_e( 'CSS Code', 'wp-coder' ); ?>
-    </h4>
-
-    <details class="details">
-        <summary><?php esc_html_e( 'Settings', 'wp-coder' ); ?></summary>
-        <div>
 			<?php Option::init( [
 				$opt['inline'],
 				$opt['minified'],
 			] ); ?>
-        </div>
-    </details>
 
-    <details class="details">
-        <summary>
-			<?php esc_html_e( 'Navigation', 'wpcoderpro' ); ?>
-            <div class="button-group alignright">
-                <button class="button-editor button" id="cssnav">Add NAV Comment</button>
-            </div>
-        </summary>
-        <div class="wowp-field">
+            <button class="button-editor button"
+                    id="cssnav"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
+
             <ol id="cssNavigationMenu" class="wowp-php-nav-menu"></ol>
+
         </div>
-    </details>
 
+        <div class="wowp-settings__page-content">
 
-<?php Option::init( [ $opt['css_code'] ] ); ?>
+			<?php Field::textarea( 'css_code' ); ?>
 
-    <div class="wowp-notification -warning">
-        Please input just the CSS content, leaving out the <code>style</code> tag.
+            <div class="wowp-notification notification-info">
+                Just enter the CSS content. You don’t need to include <code>&lt;style&gt;</code> — it's already on the page.
+            </div>
+
+			<?php if ( ! empty( $css_link ) ): ?>
+                <div class="wowp-field has-addon">
+                    <span class="label"><?php esc_html_e( 'CSS File URL', 'wp-coder' ); ?></span>
+                    <label for="tag" class="label is-addon"><span
+                                class="dashicons dashicons-admin-links"></span></label>
+                    <input type="url" id="url-css-file" readonly="readonly" value="<?php echo esc_url( $css_link ); ?>">
+                </div>
+			<?php endif; ?>
+
+        </div>
     </div>
 
-<?php if ( ! empty( $css_link ) ): ?>
-    <div class="wowp-fields-group has-mt">
-        <div class="wowp-field is-full has-addon border-default">
-            <label for="url-css-file" class="is-addon">
-                <span class="dashicons dashicons-admin-links"></span>
-            </label>
-            <input type="url" id="url-css-file" readonly="readonly" value="<?php echo esc_url( $css_link ); ?>">
-            <span class="label"><?php esc_html_e( 'URL to the CSS file', 'wp-coder' ); ?></span>
-        </div>
-    </div>
-
-<?php endif;
+<?php
 

@@ -14,88 +14,90 @@ class Settings {
 		$default = Field::getDefault();
 
 		$i = 0;
-		echo '<h3 class="nav-tab-wrapper wowp-tab" id="settings-tab">';
+		echo '<div class="wowp-settins__tabs" id="wowp-settings-tabs">';
 		foreach ( $pages as $key => $page ) {
-			$current = ( $i === 0 ) ? 'nav-tab nav-tab-active' : 'nav-tab';
+			$tab = ! empty( $default['param']['tab'] ) ? $default['param']['tab'] : 'html-code';
 
-			if ( $page['file'] === 'html-code' && ! empty( $default['param']['hide_html'] ) ) {
-				continue;
-			}
+			echo '<input type="radio" class="wowp-settins__tabs-radio" name="param[tab]" value="' . esc_attr( $page['file'] ) . '" id="wowp-tab-' . esc_attr( $page['file'] ) . '" ' . checked( $tab, $page['file'], false ) . '>';
+			echo '<label  class="wowp-settins__tabs-tab" for="wowp-tab-' . esc_attr( $page['file'] ) . '">' . esc_html( $page['name'] ) . '</label>';
 
-			if ( $page['file'] === 'css-code' && ! empty( $default['param']['hide_css'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'js-code' && ! empty( $default['param']['hide_js'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'php-code' && ! empty( $default['param']['hide_php'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'include' && ! empty( $default['param']['hide_include'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'settings' && ! empty( $default['param']['hide_settings'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'attributes' && ! empty( $default['param']['hide_attributes'] ) ) {
-				continue;
-			}
-
-			echo '<a class="' . esc_attr( $current ) . '" data-tab="' . esc_attr( $page['file'] ) . '">' . esc_html( $page['name'] ) . '</a>';
 			$i ++;
 		}
-		echo '</h3>';
+		?>
+
+        <div class="popover-container">
+            <button id="popover-toggle" class="wowp-button button button-secondary">Hide Tabs</button>
+
+            <div class="popover" id="popover-box">
+                <div class="wowp-field has-checkbox is-reverse">
+	                <span class="label">
+	                    <?php esc_html_e( 'HTML', 'wp-coder' ); ?>
+	                </span>
+                    <label class="switch">
+						<?php Field::checkbox( '[hide_html]' ); ?>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="wowp-field has-checkbox is-reverse">
+	                <span class="label">
+	                    <?php esc_html_e( 'CSS', 'wp-coder' ); ?>
+	                </span>
+                    <label class="switch">
+						<?php Field::checkbox( '[hide_css]' ); ?>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="wowp-field has-checkbox is-reverse">
+	                <span class="label">
+	                    <?php esc_html_e( 'JS', 'wp-coder' ); ?>
+	                </span>
+                    <label class="switch">
+						<?php Field::checkbox( '[hide_js]' ); ?>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="wowp-field has-checkbox is-reverse">
+	                <span class="label">
+	                    <?php esc_html_e( 'PHP', 'wp-coder' ); ?>
+	                </span>
+                    <label class="switch">
+						<?php Field::checkbox( '[hide_php]' ); ?>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="wowp-field has-checkbox is-reverse">
+	                <span class="label">
+	                    <?php esc_html_e( 'Scripts & Styles', 'wp-coder' ); ?>
+	                </span>
+                    <label class="switch">
+						<?php Field::checkbox( '[hide_include]' ); ?>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+		<?php
 
 		$i = 0;
-
-		echo '<div class="tab-content-wrapper wowp-tab-content" id="settings-content">';
 		foreach ( $pages as $key => $page ) {
-			$current = ( $i === 0 ) ? 'tab-content tab-content-active' : 'tab-content';
-			$file    = DashboardHelper::get_folder_path( 'settings' ) . '/' . $key . '.' . $page['file'] . '.php';
-
-			if ( $page['file'] === 'html-code' && ! empty( $default['param']['hide_html'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'css-code' && ! empty( $default['param']['hide_css'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'js-code' && ! empty( $default['param']['hide_js'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'php-code' && ! empty( $default['param']['hide_php'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'include' && ! empty( $default['param']['hide_include'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'settings' && ! empty( $default['param']['hide_settings'] ) ) {
-				continue;
-			}
-
-			if ( $page['file'] === 'attributes' && ! empty( $default['param']['hide_attributes'] ) ) {
-				continue;
-			}
+			$file = DashboardHelper::get_folder_path( 'settings' ) . '/' . $key . '.' . $page['file'] . '.php';
 
 			if ( file_exists( $file ) ) {
-				echo '<div class="' . esc_attr( $current ) . '" data-content="' . esc_attr( $page['file'] ) . '">';
+
+				echo '<div class="wowp-settins__tabs-content" data-content="wowp-tab-' . esc_attr( $page['file'] ) . '">';
+
 				require_once $file;
+
+				echo '<input type="submit" name="submit_settings" class="wowp-button button button-dark button-hero m-top" value="' . esc_attr__( 'Save', 'wp-coder' ) . '">';
 				echo '</div>';
 			}
 			$i ++;
 		}
 		echo '</div>';
-
 	}
+
 
 	public static function save_item() {
 
@@ -123,7 +125,7 @@ class Settings {
 
 	}
 
-	public static function deactivate_item($id = 0): void {
+	public static function deactivate_item( $id = 0 ): void {
 		$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : $id;
 
 		if ( ! empty( $id ) ) {
@@ -132,7 +134,7 @@ class Settings {
 
 	}
 
-	public static function activate_item($id = 0): void {
+	public static function activate_item( $id = 0 ): void {
 		$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : $id;
 
 		if ( ! empty( $id ) ) {
@@ -141,7 +143,7 @@ class Settings {
 
 	}
 
-	public static function deactivate_mode($id = 0): void {
+	public static function deactivate_mode( $id = 0 ): void {
 		$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : $id;
 
 		if ( ! empty( $id ) ) {
@@ -150,7 +152,7 @@ class Settings {
 
 	}
 
-	public static function activate_mode($id = 0): void {
+	public static function activate_mode( $id = 0 ): void {
 		$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : $id;
 
 		if ( ! empty( $id ) ) {

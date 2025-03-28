@@ -10,44 +10,44 @@ defined( 'ABSPATH' ) || exit;
 
 $default = Field::getDefault();
 $opt     = include( 'options/html-code.php' );
+$options = get_option( '_wp_coder_tools', [] );
 
 ?>
 
-    <h4>
-        <span class="codericon codericon-filetype-html"></span>
-		<?php
-		esc_html_e( 'HTML Code', 'wp-coder' ); ?>
-    </h4>
+    <div class="wowp-settings__page">
 
-    <details class="details">
-        <summary><?php esc_html_e( 'Settings', 'wp-coder' ); ?></summary>
-        <div>
+        <div class="wowp-settings__page-sidebar">
+
+	        <?php Option::init( [
+		        $opt['preview'],
+	        ] ); ?>
+
+            <button class="button button-add-img"><?php esc_html_e( 'Add Image', 'wp-coder' ); ?></button>
+
 			<?php Option::init( [
 				$opt['minified'],
 			] ); ?>
-        </div>
-    </details>
 
+            <button class="button-editor button"
+                    id="htmlnav"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
 
-    <details class="details">
-        <summary>
-			<?php esc_html_e( 'Navigation', 'wp-coder' ); ?>
-            <div class="button-group alignright">
-                <button class="button-editor button" id="htmlnav">Add NAV Comment</button>
-                <button class="button button-primary button-add-img">Add Image</button>
-            </div>
-        </summary>
-        <div class="wowp-field">
             <ol id="htmlNavigationMenu" class="wowp-php-nav-menu"></ol>
+
+
         </div>
-    </details>
 
-<?php Field::textarea( 'html_code' ); ?>
+        <div class="wowp-settings__page-content">
 
-    <div class="wowp-notification -info">
-        Please provide only the inner HTML content, excluding the <code>html</code> and <code>body</code> tags. The page
-        already contains these tags, and your code will be inserted within the <code>body</code> tag directly.
+			<?php Field::textarea( 'html_code' ); ?>
+
+            <div class="wowp-notification notification-info">
+                Just enter the HTML content. You don’t need to include <code>&lt;html&gt;</code> or
+                <code>&lt;body&gt;</code> — it's already on the page.
+            </div>
+        </div>
+
     </div>
+
 
 <?php
 

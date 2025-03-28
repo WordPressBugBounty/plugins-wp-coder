@@ -22,7 +22,6 @@ class EnqueueScript {
 		}
 
 
-
 		add_filter( 'script_loader_tag', [ __CLASS__, 'add_attribute' ], 20, 2 );
 	}
 
@@ -66,7 +65,9 @@ class EnqueueScript {
 		}
 
 		$slug = WPCoder::SLUG . '-js-' . $result->id . '-inline';
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<script id="' . esc_attr( $slug ) . '">' . $js . '</script>';
+		// phpcs:enable
 	}
 
 	private static function include_script( $result, $param ): void {
@@ -74,7 +75,7 @@ class EnqueueScript {
 		$time       = ! empty( $param['time'] ) ? $param['time'] : time();
 		$dependency = ! empty( $param['jquery_dependency'] ) ? [] : [ 'jquery' ];
 		wp_enqueue_script( WPCoder::SLUG . '-script-' . $result->id, $url, $dependency,
-			WPCoder::info('version') . '_' . $time, true );
+			WPCoder::info( 'version' ) . '_' . $time, true );
 	}
 
 	private static function include_scripts( $result ): void {
@@ -105,7 +106,7 @@ class EnqueueScript {
 				$scripts[] = [
 					'url'  => $param['include_file'][ $i ],
 					'slug' => WPCoder::SLUG . '-' . $result->id . '-js-' . $i,
-					'ver'  => WPCoder::info('version') . '_' . $time,
+					'ver'  => WPCoder::info( 'version' ) . '_' . $time,
 				];
 			}
 		}

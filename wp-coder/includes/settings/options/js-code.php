@@ -7,8 +7,10 @@ return [
 	'jquery' => [
 		'type'  => 'checkbox',
 		'name'  => '[jquery_dependency]',
-		'title' => __( 'JQuery Dependency', 'wp-coder' ),
+		'title' => __( 'Disable jQuery', 'wp-coder' ),
 		'text'  => __( 'Disable', 'wp-coder' ),
+		'class' => 'is-reverse',
+		'tooltip' => __( 'Don’t include jQuery as a dependency for this script.', 'wp-coder' ),
 	],
 
 	'inline' => [
@@ -16,6 +18,9 @@ return [
 		'name'  => '[inline_js]',
 		'title' => __( 'Inline', 'wp-coder' ),
 		'text'  => __( 'Enable', 'wp-coder' ),
+		'class' => 'is-reverse',
+		'tooltip' => __( 'Insert JavaScript directly into the page.', 'wp-coder' ),
+
 	],
 
 	'minified'   => [
@@ -28,6 +33,7 @@ return [
 			'minify'    => 'Minify',
 			'obfuscate' => 'Obfuscate'
 		],
+		'tooltip' => __( 'Choose how to minimize or obfuscate the JavaScript code.', 'wp-coder' ),
 	],
 
 	'attributes'   => [
@@ -39,6 +45,7 @@ return [
 			'defer' => 'defer',
 			'async' => 'async'
 		],
+		'tooltip' => __( 'Specify how the script should be loaded.', 'wp-coder' ),
 	],
 
 	'js_code' => [

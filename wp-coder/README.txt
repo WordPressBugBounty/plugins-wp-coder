@@ -1,319 +1,338 @@
-=== WP Coder - Code Snippets + HTML, CSS, JS and PHP Injection  ===
+=== WP Coder - Code Snippets + HTML, CSS, JS and PHP Injection ===
 Contributors: wpcoderdev, Wpcalc, lobov
 Donate link: https://wpcoder.pro/
-Tags: html, css, javascript, php, snippets
+Tags: code snippets, custom css, custom js, php injection, custom php
 Requires at least: 3.2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.6.1
+Stable tag: 4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-WP Coder: A profound WordPress plugin for directly incorporating custom HTML, CSS, JavaScript and PHP codes into your WordPress pages.
+WP Coder: Easily inject custom HTML, CSS, JavaScript, and PHP snippets into your WordPress site—no coding in theme files needed!
 
 == Description ==
-WP Coder can embed HTML, JS, CSS and PHP codes directly into your WordPress pages. This plugin allows you to easily manage style issues, add web forms, or introduce interactive features. For more detailed information on each feature, please consult our [official documentation](https://wpcoder.pro/category/documentation/getting-started/?utm_source=wordpress&utm_medium=site&utm_campaign=readme).
 
-This plugin is an excellent tool for integrating a variety of scripts or styles, which can enhance your website's aesthetics, interaction, and overall appeal.
+Tired of editing theme files to add custom scripts or styles? **WP Coder** lets you effortlessly insert custom HTML, CSS, JavaScript, and PHP snippets right from your dashboard, giving you complete control and flexibility.
 
-WP Coder gives you the freedom to incorporate diverse elements, constructed using scripts, styles and PHP scripts into virtually any part of your website.
+[Documentation](https://wpcoder.pro/documentation/getting-started/install-and-activate/) | [Upgrade to Pro](https://wpcoder.pro/pricing/)
 
-For instance, introducing a pop-up window script or a notifications script to a webpage is effortless, eliminating the need for multiple plugins, thereby avoiding the potential for site performance degradation.
+**WP Coder** is a robust and user-friendly WordPress plugin that allows effortless insertion of custom HTML, CSS, JavaScript, and PHP code directly into your pages, posts, or widgets using powerful shortcodes. No more editing theme files—gain full control over your website’s customization instantly.
 
-### Features ###
+### 🚀 Why WP Coder?
+- **Advanced Code Editor:** CodeMirror-powered editor with syntax highlighting and intuitive navigation.
+- **Shortcode Integration:** Use `[wp_code id="X"]` to embed snippets anywhere easily.
+- **Live HTML & CSS Preview:** Real-time preview without the need to save or reload.
+- **Code Optimization:** Minify and inline your CSS/JS to boost website speed.
 
-1. **Direct Injection of Codes** - Embed HTML, JS, CSS and PHP codes directly to your webpages.
-1. **PHP Global** - Embed PHP functions on your site.
-2. **Test Mode** - Test different codes without affecting your live site.
-3. **Import/Export Functions** - Transfer your code snippets effortlessly across different websites.
-4. **Multifunctional Code Editor** - Enjoy color syntax highlighting, line numbering, and built-in error checking.
-5. **Advanced CSS and JS Options** - Have your CSS and JavaScript inline or minified to optimize page loading times.
-6. **Integration of External Libraries** - With WP Coder, you can tap into the vast pool of third-party libraries, leveraging existing scripts or styles that can significantly optimize your site development. This feature is perfect for not having to reinvent the wheel, and instead, you can build upon the robust releases of global developers to enhance your site's functionality and appeal.
-7. **Easily Embed Shortcodes into HTML Code** - Shortcodes provide a convenient way to add complex features to your website without manually writing them into the HTML. With WP Coder, these shortcodes can be easily inserted into your HTML, improving site development speed and simplicity. Whether you're looking to embed a contact form, add a gallery, or even include custom-designed elements, all these can be done through just a few lines of shortcode, significantly simplifying your website management.
-8. **Shortcode content** - Using the content inside the shortcode in the html code.
+### 🎯 Ideal for:
+- **Developers:** Rapidly test scripts or debug live sites.
+- **Marketers:** Easily integrate analytics, pixels, and ad scripts.
+- **Bloggers & Designers:** Customize styles, enhance layouts, and improve user engagement.
 
+### ⚙️ Features:
+- **Embed HTML, CSS, JS, and PHP:** Easily insert custom code through powerful shortcodes.
+- **Advanced Tabbed Code Editor:** Easily toggle visibility of HTML, CSS, JS, and PHP tabs for focused editing or cleaner visualization.
+- **Syntax Highlighting:** Enhanced code readability with CodeMirror integration.
+- **Live Preview:** Instantly view HTML and CSS output inside the editor.
+- **Minify & Optimize:** Improve loading performance by minifying CSS and JavaScript.
+- **JS Optimization:** Control script attributes (async, defer, disable jQuery).
+- **Smart PHP Handling:** Execute PHP snippets conditionally—run where inserted, run only in the admin area, run only on the front-end, or run everywhere.
+- **External Scripts & Styles:** Include external libraries like Google Fonts or CDN resources.
+- **Test Mode:** Safely preview snippets without affecting your live site.
+- **Import/Export:** Easily transfer snippets and settings between sites.
+- **Visual Snippet Navigation:** Inline NAV comments for easy code section navigation.
+- **Safe and Lightweight:** Built for speed and optimized for security, with zero bloat.
 
-WP Coder is an invaluable tool for all WordPress developers, website owners, and coding enthusiasts. Elevate your WordPress development experience with WP Coder.
+### 💡 Included Snippets:
 
-*Please note:* While WP Coder allows for advanced customization and control, improper use may affect your site. Always backup your site before making significant changes.
+#### Editor & Content
+- Disable Gutenberg Editor
+- Remove Gutenberg Block CSS
+- Disable Widget Blocks
+- Enable Shortcode Execution in Widgets
+- Enable Excerpt for Pages
+- Open External Links in New Tabs
+- Change “Read More” Text
 
-### Video ###
+#### Admin Interface Tweaks
+- Disable Screen Options Tab
+- Disable Welcome Panel
+- Duplicate Posts
+- Disable Admin Bar
 
+#### Login & User Access
+- Disable Login Page Language Switcher
+- Disable Login by Email
+- Disable Admin Password Reset Emails
+- Custom Login Logo
+- Custom Login Redirect URLs
+
+#### Media & Embeds
+- Enable SVG Upload
+- Force Lowercase Filenames
+- Default ALT Text for Avatars
+- Disable Lazy Load
+- Disable Embeds
+- Adjust oEmbed Max Dimensions
+
+#### Core Functionality
+- Disable XML-RPC
+- Disable REST API
+- Disable Automatic Updates
+- Disable Emojis
+- Disable Shortlinks
+- Limit Post Revisions
+
+#### Comments & Feedback
+- Disable Comments Globally
+- Disable Comment URL Field
+- Disable Self Pingbacks
+- Disable Trackbacks & Pingbacks
+- Disable HTML in Comments
+- Limit Comment Length
+
+#### Cleanup & Optimization
+- Remove WP Version
+- Disable Attachment Pages
+- Disable RSS Feeds
+- Disable Built-in Search
+- Disable wlwmanifest Link
+- Disable Automatic Trash Emptying
+- Redirect 404 to Homepage
+
+### 🚨 PRO Features:
+- **Custom Templates:** Create unique page and post templates. Also available for categories, archives, and custom post types.
+- **Conditional Display Rules:** Show snippets based on specific criteria.
+- **Advanced Shortcode Attributes:** Create and use custom shortcode attributes to dynamically adjust snippet content.
+- **Scheduled Visibility:** Set date/time rules for snippet display.
+- **Visibility Control:** Mobile/Desktop-specific visibility settings.
+- **Browser & Language Targeting:** Show or hide snippets based on browser or language.
+- **Maintenance Mode:** Display custom maintenance pages.
+- **Remove Enqueued Scripts & Styles:** Optimize site performance by managing scripts/styles.
+- **QuickCode:** Dynamically insert data like object IDs or site options.
+- **Register Menu:** Automatically add menu support in themes that don't have a registered navigation menu.
+
+WP Coder simplifies your WordPress development workflow and makes customization safe, fast, and flexible!
+
+Get started today and simplify your WordPress development workflow with **WP Coder**!
+
+### 📺 Plugin Demo:
 https://youtu.be/YF4X7sU0iFY?si=327VZduhqu_mh5-N
 
-### Plugin includes following Tools ###
-* Tracking Code Manager - Easily integrate your website with popular platforms like Google Analytics, Facebook Pixel, and Pintrest Pixel.
-* Google AdSense - Easily add Google AdSense to your WordPress site. It is possible to disable advertising for authorized users by role.
+### 🌟 Other Popular Plugins:
+- [Popup Box](https://wordpress.org/plugins/popup-box/)
+- [Counter Box](https://wordpress.org/plugins/counter-box/)
+- [Button Generator](https://wordpress.org/plugins/button-generation/)
+- [Herd Effects](https://wordpress.org/plugins/mwp-herd-effect/)
+- [Floating Button](https://wordpress.org/plugins/floating-button/)
+- [Side Menu Lite](https://wordpress.org/plugins/side-menu-lite/)
+- [Sticky Buttons](https://wordpress.org/plugins/sticky-buttons/)
+- [Bubble Menu](https://wordpress.org/plugins/bubble-menu/)
+- [Float Menu](https://wordpress.org/plugins/float-menu/)
+- [Modal Window](https://wordpress.org/plugins/modal-window/)
 
+Enhance your WordPress site today with **WP Coder**!
 
-### Plugin includes following Snippets ###
-
-#### Disable ####
-* Disable Gutenberg Editor
-* Remove Gutenberg Block CSS
-* Disable Widget Blocks
-* Remove WordPress Version Number
-* Disable XML-RPC
-* Disable Automatic Updates Emails
-* Disable Automatic Updates
-* Disable The WP Admin Bar - show Admin bar only for checked authorized users by role
-* Disable Attachment Pages
-* Disable WordPress REST API
-* Disable Comments
-* Disable Automatic Trash Emptying
-* Disable Emojis
-* Disable ‘Screen Options’ Tab
-* Disable Welcome Panel
-* Disable RSS Feeds
-* Disable Search
-* Disable Login Page Language Switcher
-* Disable Login by Email
-* Disable Comment Form Website URL
-* Disable Self Pingbacks
-* Disable wlwmanifest link
-* Disable Embeds
-* Disable Lazy Load
-* Disable the WordPress Shortlink
-* Disable Admin Password Reset Emails
-
-#### Enable ####
-* Content Duplication
-* Uploading SVG Files
-* Enable excerpt for pages
-* Enable Shortcode Execution in Text Widgets
-* Enable Featured Images to RSS Feeds
-* Enable Page Slug to Body Class
-* Enable Lowercase Filenames for Uploads
-* Enable default ALT to avatar/Gravatar Images
-
-#### Change ####
-* Change logo on Login Page
-* Change URL for logo on Login Page
-* Change Redirect After Login
-* Change Redirect After Logout
-* Change Number of Post Revisions
-* Change oEmbed Max Width and Height
-* Change Read More Text for Excerpts
-* Extend Login Expiration Time
-
-###PRO Features###
-* Create Custom templates - Design custom templates for pages, posts, categories, and more, infusing your unique code for brand-aligned layouts.
-* Dequeue CSS and JS - Increase site speed by adding only selected styles/scripts and removing redundant resources from the queue to optimize user experience.
-* Conditional Logic - Utilize our Conditional Logic rule to dictate where your code will work: Pages Rules, Devices Rules, Scheduled, Browsers Rules, Users Rules, Language Rules.
-* Uses extra Tools - Enable Style and Script on the Login Page, Enable Maintenance Mode, Enable Extra Icon Enable Breadcrumbs.
-* Shortcode Attributes - Add custom attributes for shortcodes. Embed these attributes into your HTML code for tailored content display.
-
-**Pro version** is available at [wpcoder.pro](https://wpcoder.pro/pricing/).
-
-
-### Links: ###
-
-[Website](https://wpcoder.pro)
-[Documentation](https://wpcoder.pro/category/documentation/)
-[Upgrade to Pro!](https://wpcoder.pro/pricing/)
-
-
-### Other Useful Plugins ###
-
-If you find WP Coder useful, you might also want to check out our other plugins:
-
-* [Popup Box – new WordPress popup plugin](https://wordpress.org/plugins/popup-box/)
-* [Counter Box – powerful creator of counters, timers and countdowns](https://wordpress.org/plugins/counter-box/)
-* [Button Generator – easily Button Builder](https://wordpress.org/plugins/button-generation/)
-* [Herd Effects – fake notifications and social proof plugin](https://wordpress.org/plugins/mwp-herd-effect/)
-* [Floating Button](https://wordpress.org/plugins/floating-button/)
-* [Side Menu Lite – add sticky fixed buttons](https://wordpress.org/plugins/side-menu-lite/)
-* [Sticky Buttons – floating buttons builder](https://wordpress.org/plugins/sticky-buttons/)
-* [Bubble Menu – circle floating menu](https://wordpress.org/plugins/bubble-menu/)
-* [Float menu – awesome floating side menu](https://wordpress.org/plugins/float-menu/)
-* [Modal Window – create modal window](https://wordpress.org/plugins/modal-window/)
+= Support =
+Need help? Ask questions and get quick answers in our [support center](https://wordpress.org/support/plugin/wp-coder).
 
 == Installation ==
 
-= Automatic installation =
+### 📌 Option 1: Install via WordPress Admin
+1. Go to **`Plugins` → `Add New`** in your WordPress admin panel.
+2. Search for **"WP Coder"** and click **Install Now**.
+3. Click **Activate** after installation.
 
-1. Log into your WordPress admin
-2. Click __Plugins__
-3. Click __Add New__
-4. Search for __WP Coder__
-5. Click __Install Now__ under "WP Coder"
-6. Activate the plugin
-7. Click link "Settings" or go to the page "Wow Plugins" ⇒ "WP Coder"
+### 📌 Option 2: Install Manually
+1. **Download** the WP Coder plugin ZIP file from [WordPress.org](https://wordpress.org/plugins/wp-coder/).
+2. In WordPress admin, go to **`Plugins` → `Add New`** → **Upload Plugin**.
+3. Click **Choose File**, select the downloaded ZIP file, then click **Install Now**.
+4. After installation, click **Activate**.
 
-= Manual installation =
+### 📌 Option 3: Install via FTP
+1. **Download and unzip** the WP Coder plugin ZIP file.
+2. Upload the extracted **`wp-coder`** folder to `/wp-content/plugins/` via FTP.
+3. Go to **`Plugins`** in WordPress admin and click **Activate**.
 
-1. Download the plugin
-2. Extract the contents of the zip file
-3. Upload the contents of the zip file to the `wp-content/plugins/` folder of your WordPress installation
-4. Activate the WP Coder plugin from 'Plugins' page.
-
-For more detailed instructions on setting up WP Coder, please refer to our [step-by-step guide](https://wpcoder.pro/category/documentation/getting-started/?utm_source=wordpress&utm_medium=site&utm_campaign=readme).
+### 🚀 Getting Started
+1. Navigate to the **`Wow Plugins → WP Coder`** section in your WordPress admin panel.
+2. Click **`Add New Snippet`** to create your first code snippet.
+3. Configure your snippet settings (HTML, CSS, JavaScript, PHP).
+4. Click **Save** to apply your changes.
 
 
 == Frequently Asked Questions ==
 
-= How do I activate WP Coder in Network mode? =
+= Does WP Coder support Network activation? =
 
-If you're using WordPress in Network mode, WP Coder will need to be activated for each individual site within the network. Unfortunately, the plugin does not support network-wide activation at this time.
+Currently, WP Coder doesn't support network-wide activation. If you're using WordPress Multisite, activate the plugin individually on each site within your network.
 
-= Where can I find more detailed documentation? =
-You can find a complete guide and detailed usage instructions in our [official documentation](https://wpcoder.pro/category/documentation/getting-started/?utm_source=wordpress&utm_medium=site&utm_campaign=readme).
+= Where can I find detailed documentation? =
 
+Visit our comprehensive [official documentation](https://wpcoder.pro/documentation/getting-started/install-and-activate/) for detailed guides and step-by-step instructions.
 
-= How use the shortcode content in HTML code? =
-If you use  content inside the shortcode like `[wp_code id="1"]Some Text[/wp_code]`, you can use the text in the HTML code uses the variable `{{$shortcode_content}}`.
+= How can I use shortcode content in HTML code? =
 
-= Can I insert any shortcode into the HTML block content? =
+If you include content within the shortcode like `[wp_code id="1"]Some Text[/wp_code]`, you can insert this content into your HTML snippet using the variable `{{$shortcode_content}}`.
 
-Absolutely, you can embed any shortcode into the HTML block content using WP Coder. This flexibility not only allows you to include shortcodes from other plugins, but you can also use shortcodes specifically from WP Coder itself, adding a layer of convenience to your customization process.
+= Can I use shortcodes from other plugins within WP Coder snippets? =
 
-= How can I use the tag feature in the 'Publish' block? =
+Absolutely! WP Coder allows you to embed shortcodes from any plugin within your HTML snippet content. You can also use WP Coder’s own shortcodes, offering enhanced flexibility for customization.
 
-Tags in WP Coder are useful for categorizing and grouping your code snippets. When you create an item (a code snippet), you have the option to assign a tag to it in the 'Publish' block. This tag can help you organize your snippets and make them easier to filter in the list of items. To assign a tag, simply enter the name of your tag in the 'Tag' field when creating or editing an item.
+= What is the purpose of tags in the 'Publish' block? =
+
+Tags help categorize and organize your snippets. When creating or editing a snippet, assign tags in the 'Publish' block to easily filter and manage your snippets later.
 
 = How do I use the link feature in the 'Publish' block? =
 
-The link feature in the 'Publish' block allows you to attach a link to the page where your shortcode is inserted. This way, you can always track where you've placed a particular shortcode. You can set this by entering the URL of the page in the 'Link' field when creating or editing your code snippet in WP Coder.
+The link feature helps you track where your shortcode is placed. Simply enter the URL of the page where your shortcode is inserted in the 'Link' field when creating or editing your snippet.
+
 
 
 == Screenshots ==
-1. HTML block
-2. CSS Block
-3. JavaScript Block
-4. Include custom CSS and JS files
-5. Publish Information
-6. PHP Block
-7. PHP Global Block
+1. HTML Block – Easily insert custom HTML snippets.
+2. CSS Block – Manage and insert custom CSS snippets.
+3. JavaScript Block – Customize your site's functionality with JS snippets.
+4. PHP Block – Dynamically embed PHP snippets.
+5. Include External CSS & JS – Quickly link external CSS and JavaScript files.
+6. Publish Settings – Configure snippet visibility and publishing options.
+7. Snippets Manager – manage all snippets efficiently.
+8. Tools – Access helpful tools like Tracking Code Manager and Google AdSense integration.
+9. Global PHP – Insert PHP snippets globally across your website.
+10. Export/Import – Easily export and import your snippet settings.
 
 == Changelog ==
 
-### Links: ###
+### Helpful Links ###
+- [Website](https://wpcoder.pro)
+- [Documentation](https://wpcoder.pro/category/documentation/)
+- [Upgrade to Pro!](https://wpcoder.pro/pricing/)
 
-[Website](https://wpcoder.pro)
-[Documentation](https://wpcoder.pro/category/documentation/)
-[Upgrade to Pro!](https://wpcoder.pro/pricing/)
+= 4.0 =
+* Improved: Refreshed interface for better user experience.
+* Added: "Open External Links in New Tab" snippet.
+* Added: "Redirect 404 to Homepage" snippet.
+* Added: "Limit Comment Length" snippet.
+* Added: "Disable HTML in Comments" snippet.
+* Added: "Disable Trackbacks & Pingbacks" snippet.
+* Added: Live preview feature for HTML & CSS snippets.
 
 = 3.6.1 =
-* Fixed: security issue with escaping in 1.list.php
+* Fixed: Security issue in escaping within list files.
 
 = 3.6 =
-* Added: location for include PHP snippet
-* Added: option for hide the tabs in the Settings
-* Fixed: admin style for Safari
+* Added: Custom locations for PHP snippet inclusion.
+* Added: Option to hide tabs in settings.
+* Fixed: Admin style compatibility for Safari browser.
 
 = 3.5.2 =
-* Fixed: admin style for plugin
-* Fixed: minor bugs
+* Fixed: Minor admin style improvements.
+* Fixed: Various minor bugs.
 
 = 3.5.1 =
-* Change: User access for use the plugin
+* Changed: Adjusted user permissions to use the plugin.
 
 = 3.5 =
-* Added: Tool "Tracking Code Manager" for integrate Google Analytics, Facebook Pixel, and Pintrest Pixel;
-* Added: Tool 'Google AdSense' for integrate Google AdSense on the site;
-* Added: users roles for snippet 'Disable The WP Admin Bar';
-* Changed: link to the back;
+* Added: "Tracking Code Manager" tool for easy integration of analytics pixels.
+* Added: "Google AdSense" integration tool.
+* Added: User roles support for "Disable WP Admin Bar" snippet.
+* Improved: Updated back-link functionality.
 
 = 3.4 =
-* Added: Snippets page with pre-set the most popular snippet.
+* Added: Pre-set popular snippets page.
 
 = 3.3 =
-* Added: Button for add image in HTML code
-* Added: HTML Minificator
-* Improvement: CSS Minificator
+* Added: Button to insert images in HTML snippets.
+* Added: HTML Minification tool.
+* Improved: Enhanced CSS Minification tool.
 
 = 3.2.1 =
-* Fixed: minor bug with plugin database.
+* Fixed: Minor database issue.
 
 = 3.2 =
-* Added: the buttons 'Add new' and 'All Codes' in the code editor
-* Fixed: Admin Style
+* Added: "Add New" and "All Codes" buttons in editor.
+* Fixed: Improved admin styling.
 
 = 3.1.1 =
-* Fixed: save into the database
+* Fixed: Database save issue.
 
 = 3.1 =
-* Added: Global PHP block
-* Added: Using the content inside the shortcode in the HTML code
-* Added: Ability to copy the shortcode by clicking on the icon next to the shortcode
-* Changed: Remove any included file, not just the last one in the 'Includes' tab.
-* Changed: Admin Style.
-* Changed: Shortcode from [WP-Coder] on [wp_code]. Old shortcode still work
+* Added: Global PHP snippet feature.
+* Added: Content handling inside shortcodes.
+* Added: Copy shortcode button.
+* Improved: More flexible file inclusion management.
+* Changed: Shortcode updated to `[wp_code]`.
 
 = 3.0.5 =
-* Fixed: minor bug with update
-* Fixed: admin notification
+* Fixed: Minor update bug and admin notifications.
 
 = 3.0.4 =
-* Fixed: updated datatable.
+* Fixed: Updated datatable handling.
 
 = 3.0.3 =
-* Fixed: Inline scripts and styles.
+* Fixed: Inline scripts/styles management.
 
 = 3.0.2 =
-* Fixed: Execution queue for styles and scripts.
+* Fixed: Execution order for scripts and styles.
 
 = 3.0.1 =
-* Fixed: update and save items.
-* Fixed: change the capability for the admin page plugin.
+* Fixed: Updating and saving snippets.
+* Fixed: Admin capability adjustments.
 
 = 3.0 =
-* Added: 'Test Mode' and 'Status' for items.
-* Added: 'Tag' and 'Link Options.'
-* Added: 'Inline' and 'Minified' options to the CSS block.
-* Added: JavaScript (JS) block options include 'JQuery Dependency,' 'Inline,' 'Minified,' and 'Attribute.'
-* Added: Attributes for JavaScript in the 'Includes block.'
-* Added: 'Export/Import' function.
-* Updated: Database structure.
-* Updated: The style of the admin interface.
+* Added: Test Mode and snippet Status.
+* Added: Tagging and Link options.
+* Added: Inline and Minified options for CSS.
+* Added: JavaScript optimization options.
+* Added: Export/Import feature.
+* Improved: Updated database and admin interface.
 
 = 2.5.6 =
-* Fixed: minor bug in page-list
+* Fixed: Minor bug in snippet list.
 
 = 2.5.5 =
-* Fixed: minor bug
+* Fixed: General minor fixes.
 
 = 2.5.4 =
-* Fixed: security update
+* Fixed: Security enhancements.
 
 = 2.5.3 =
-* Fixed: security update
+* Fixed: Additional security improvements.
 
 = 2.5.2 =
-* Fixed: minor bug on main page of the plugin
+* Fixed: Minor issues on main plugin page.
 
 = 2.5.1 =
-* Fixed: minor bug.
+* Fixed: General minor fixes.
 
-= 2.5. =
-* Added: alternative shortcode.
-* Added: processing shortcodes inserted into the HTML code
+= 2.5 =
+* Added: Alternative shortcode option.
+* Added: Shortcode processing within HTML snippets.
 
 = 2.4 =
-* Fixed: Adding tag <textarea> in HTML code
-* Fixed: shortcode code
+* Fixed: Handling of `<textarea>` tags in HTML.
+* Fixed: Shortcode functionality.
 
 = 2.3.2 =
-* Fixed: deleting item
-* Fixed: saving into database
+* Fixed: Snippet deletion and database saving issues.
 
 = 2.3 =
-* Fixed: minor bugs
+* Fixed: Minor bug fixes.
 
 = 2.2 =
-* Fixed: order of connection scripts and styles
+* Fixed: Improved script/style loading order.
 
 = 2.1 =
-* Fixed: Saving in the database
-
+* Fixed: Database save issue resolved.
 
 = 2.0 =
-* Added: Codemirror
-* Optimized: file storage
-* Changed: admin style
+* Added: CodeMirror integration.
+* Optimized: Improved file storage efficiency.
+* Improved: Admin interface styling.
 
 = 1.1 =
-* Fixed: display shortcode in content
+* Fixed: Shortcode display issue in content.
 
 = 1.0 =
-* Initial release
+* Initial release.

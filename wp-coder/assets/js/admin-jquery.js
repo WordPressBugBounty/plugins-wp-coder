@@ -1,10 +1,10 @@
 'use strict';
 
-jQuery(function ($) {
+jQuery(document).ready(function ($) {
 
 
     // All checkboxes
-    $('.wowp-settings').on('click', 'input:checkbox', function () {
+    $('#wowp-settings').on('click', 'input:checkbox', function () {
         checkboxchecked(this);
     });
 
@@ -13,6 +13,31 @@ jQuery(function ($) {
             $(el).next('input[type="hidden"]').val('1');
         } else {
             $(el).next('input[type="hidden"]').val('');
+        }
+    }
+
+    // Preview
+    $('[data-option="preview"] input[type="checkbox"]').each(show_preview).on('click', show_preview);
+
+    function show_preview() {
+        const preview = $('.wowp-preview');
+        if ($(this).is(':checked')) {
+            $(preview).removeClass('is-hidden');
+        } else {
+            $(preview).addClass('is-hidden');
+        }
+    }
+
+    // Browsers options
+    $('[data-option="hide_browsers"] input[type="checkbox"]').each(hide_browsers);
+    $('[data-option="hide_browsers"] input[type="checkbox"]').on('click', hide_browsers);
+
+    function hide_browsers() {
+        const browsers = $(this).parents('.wowp-field').siblings('.wowp-field');
+        if ($(this).is(':checked')) {
+            $(browsers).removeClass('is-hidden');
+        } else {
+            $(browsers).addClass('is-hidden');
         }
     }
 
@@ -58,7 +83,7 @@ jQuery(function ($) {
     $('#schedule').on('click', '.wowp-dates input', datesSchedule);
 
     function datesSchedule() {
-        const parent = $(this).closest('.wowp-fields-group');
+        const parent = $(this).closest('.wowp-fields__group');
         if ($(this).is(':checked')) {
             $(parent).find('.wowp-date-input').removeClass('is-hidden');
         } else {
@@ -76,7 +101,7 @@ jQuery(function ($) {
     });
 
     $('#schedule').on('click', '.dashicons-trash', function () {
-        const parent = $(this).closest('.wowp-fields-group');
+        const parent = $(this).closest('.wowp-fields__group');
         $(parent).remove();
     });
 
@@ -91,8 +116,12 @@ jQuery(function ($) {
     });
 
     $('#display-rules').on('click', '.dashicons-trash', function () {
-        const parent = $(this).closest('.wowp-fields-group');
-        $(parent).remove();
+        const userConfirmed = confirm("Are you sure you want to remove?");
+        if (userConfirmed) {
+            const parent = $(this).closest('.wowp-fields__group');
+            $(parent).remove();
+        }
+
     });
 
     $('#display-rules .display-option select').each(displayRules);
@@ -100,7 +129,7 @@ jQuery(function ($) {
 
     function displayRules() {
         let type = $(this).val();
-        const parent = $(this).closest('.wowp-fields-group');
+        const parent = $(this).closest('.wowp-fields__group');
         $(parent).find('.display-operator, .display-ids, .display-pages').addClass('is-hidden');
         if (type.indexOf('custom_post_selected') !== -1) {
             type = 'post_selected';
@@ -132,8 +161,11 @@ jQuery(function ($) {
     });
 
     $('#includes-files').on('click', '.dashicons-trash', function () {
-        const parent = $(this).closest('.wowp-fields-group');
-        $(parent).remove();
+        const userConfirmed = confirm("Are you sure you want to remove?");
+        if (userConfirmed) {
+            const parent = $(this).closest('.wowp-fields__group');
+            $(parent).remove();
+        }
     });
 
     $('#includes-files .display-option select').each(includeFiles);
@@ -141,11 +173,8 @@ jQuery(function ($) {
 
     function includeFiles() {
         let type = $(this).val();
-        const parent = $(this).closest('.wowp-fields-group');
+        const parent = $(this).closest('.wowp-fields__group');
         $(parent).find('.js-attr').addClass('is-hidden');
-
-        console.log(type);
-
         switch (type) {
             case 'css':
                 $(parent).find('.js-attr').addClass('is-hidden');
@@ -167,7 +196,7 @@ jQuery(function ($) {
     });
 
     $('#dequeue').on('click', '.dashicons-trash', function () {
-        const parent = $(this).closest('.wowp-fields-group');
+        const parent = $(this).closest('.wowp-fields__group');
         $(parent).remove();
     });
 
@@ -179,7 +208,7 @@ jQuery(function ($) {
     });
 
     $('#code-attributes').on('click', '.dashicons-trash', function () {
-        const parent = $(this).closest('.wowp-fields-group');
+        const parent = $(this).closest('.wowp-fields__group');
         $(parent).remove();
     });
 
@@ -205,7 +234,7 @@ jQuery(function ($) {
             let width = attachment.attributes.width;
             let img = `<img src="${url}" alt="${alt}" loading="lazy" width="${width}" height="${height}">`;
             frame.close();
-            const editorElement = $('[data-content="html-code"]').find('.CodeMirror')[0];
+            const editorElement = $('[data-content="wowp-tab-html-code"]').find('.CodeMirror')[0];
             const editor = editorElement.CodeMirror;
             const doc = editor.getDoc();
             const cursor = doc.getCursor();
@@ -219,7 +248,7 @@ jQuery(function ($) {
 
     $('.button-editor').not('#phpglobalnav').on('click', function (event) {
         event.preventDefault();
-        const parent = $(this).closest('.tab-content');
+        const parent = $(this).closest('.wowp-settins__tabs-content');
         const id = $(this).attr('id');
         let comment;
         switch (id) {
@@ -245,7 +274,7 @@ jQuery(function ($) {
 
     $('#phpglobalnav').on('click', function (event) {
         event.preventDefault();
-        const parent = $(this).closest('fieldset');
+        const parent = $(this).closest('.wowp-settings__page');
         let comment = '// NAV: ';
         const editorElement = $(parent).find('.CodeMirror')[0];
         const editor = editorElement.CodeMirror;
@@ -280,5 +309,155 @@ jQuery(function ($) {
         // Alert the copied text
         alert("Copied the shortcode: " + copyText.value);
     });
+
+    $('.quickcode').on('click', function () {
+        const editor = $('[data-content="wowp-tab-html-code"] .CodeMirror')[0].CodeMirror;
+        if (editor) {
+            const text = $(this).data('code');
+            const doc = editor.getDoc();
+            const cursor = doc.getCursor();
+            doc.replaceRange(text, cursor);
+            editor.focus();
+        }
+    });
+
+
+    // Copy
+    $('.can-copy').on('click', function () {
+        const parent = $(this).closest('.wowp-field');
+        const input = $(parent).find('input');
+        const originalTooltip = $(this).attr("data-tooltip");
+        const currentElement = $(this);
+
+        navigator.clipboard.writeText(input.val()).then(() => {
+            currentElement.attr("data-tooltip", "Copied");
+            setTimeout(function () {
+                currentElement.attr("data-tooltip", originalTooltip);
+            }, 1000);
+        });
+    });
+
+    // Quick Code
+
+    const button_quickcodes = document.getElementById('open-quickcodes');
+
+    if (button_quickcodes) {
+        button_quickcodes.addEventListener('click', (e) => {
+            e.preventDefault();
+            const dialog = document.getElementById('quickcodes-dialog');
+            const search = document.getElementById('qc-search');
+            if (dialog && typeof dialog.showModal === 'function') {
+                dialog.showModal();
+                if (search) search.focus();
+            }
+        });
+    }
+
+
+    // Open on Cmd+K
+    document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            document.getElementById('quickcodes-dialog').showModal();
+            document.getElementById('qc-search').focus();
+        }
+    });
+
+// Filter list
+
+    const searchInput = document.getElementById('qc-search');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#qc-list li').forEach(li => {
+                li.style.display = li.textContent.toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        });
+    }
+
+// Insert at cursor position
+    document.querySelectorAll('#qc-list li').forEach(li => {
+        li.addEventListener('click', () => {
+            const code = li.getAttribute('data-code');
+            insertAtCursor(document.querySelector('textarea'), code);
+            document.getElementById('quickcodes-dialog').close();
+        });
+    });
+
+// Helper function
+    function insertAtCursor(el, text) {
+        const start = el.selectionStart;
+        const end = el.selectionEnd;
+        el.value = el.value.slice(0, start) + text + el.value.slice(end);
+        el.selectionStart = el.selectionEnd = start + text.length;
+        el.focus();
+    }
+
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const shortcut = isMac ? 'Cmd + K' : 'Ctrl + K';
+    const quickcode_hotkey = document.querySelector('#quickcode-hotkey');
+    if (quickcode_hotkey) {
+        quickcode_hotkey.textContent = `(${shortcut})`;
+    }
+
+
+    // Stippets control-checkbox
+    $('.wowp-snippet__item > .has-checkbox input[type="checkbox"] ').each(snippet_checkbox).on('click', snippet_checkbox);
+
+    function snippet_checkbox() {
+        const expand = $(this).closest('.wowp-snippet__item').find('.wowp-snippet__item-expand');
+        if ($(this).is(':checked') && expand) {
+            $(expand).removeClass('is-hidden');
+        } else {
+            $(expand).addClass('is-hidden');
+        }
+    }
+
+    // Popover
+
+    const toggleBtn = document.getElementById('popover-toggle');
+    const popover = document.getElementById('popover-box');
+
+    if (toggleBtn) {
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            popover.style.display = popover.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!toggleBtn.contains(e.target) && !popover.contains(e.target)) {
+                popover.style.display = 'none';
+            }
+        });
+
+    }
+
+    // Hide Tabs
+
+    $('#popover-box input[type="checkbox"]').each(hide_tab).on('click', hide_tab);
+
+    function hide_tab() {
+        const types = {
+            checkbox_hide_html: 'wowp-tab-html-code',
+            checkbox_hide_css: 'wowp-tab-css-code',
+            checkbox_hide_js: 'wowp-tab-js-code',
+            checkbox_hide_php: 'wowp-tab-php-code',
+            checkbox_hide_attributes: 'wowp-tab-attributes',
+            checkbox_hide_settings: 'wowp-tab-settings',
+            checkbox_hide_include: 'wowp-tab-include',
+        };
+
+        const id = $(this).attr('id');
+        const tab = types[id];
+        if ($(this).is(':checked')) {
+            $('#'+ tab).prop('checked', false);
+            $(`[for="${tab}"]`).addClass('is-hidden');
+        } else {
+            $(`[for="${tab}"]`).removeClass('is-hidden');
+        }
+    }
+
 
 });

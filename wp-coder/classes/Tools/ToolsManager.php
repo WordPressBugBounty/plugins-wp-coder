@@ -10,23 +10,23 @@ class ToolsManager {
 		self::send();
 
 		?>
-        <div class="wrap wowp-wrap wpcoder-tools-wrap wowp-settings">
-            <form method="post">
-                <fieldset style="display: block;">
-                    <legend>
-						<?php esc_html_e( 'Tools', 'wp-coder' ); ?>
-                    </legend>
-                    <div class="tab-content-wrapper wowp-tab-content">
-						<?php require_once plugin_dir_path( __FILE__ ) . '/page.php'; ?>
-                    </div>
-                    <div class="wowp-field is-full has-mt">
-						<?php
-						submit_button( __( 'Save', 'wp-coder' ), 'primary large', 'submit', false ); ?>
-                    </div>
 
-					<?php
-					wp_nonce_field( WPCoder::PREFIX . '_tools_action', WPCoder::PREFIX . '_save_tools' ); ?>
-                </fieldset>
+        <div class="wowp-settings wowp-tools">
+            <form method="post">
+
+                <div class="wowp-snippets__header">
+                    <h3 class="wowp-snippets__header-title">Tools & Integrations</h3>
+                    <p class="wowp-snippets__header-description">Manage useful features and external service
+                        integrations to enhance your site.</p>
+                </div>
+
+
+				<?php require_once plugin_dir_path( __FILE__ ) . '/page.php'; ?>
+
+				<?php submit_button( __( 'Save', 'wp-coder' ), 'wowp-button button button-dark button-hero', 'submit', false ); ?>
+
+				<?php wp_nonce_field( WPCoder::PREFIX . '_tools_action', WPCoder::PREFIX . '_save_tools' ); ?>
+
             </form>
         </div>
 		<?php
@@ -51,7 +51,7 @@ class ToolsManager {
 		$options = get_option( '_wp_coder_tools', [] );
 		if ( $type === 'checkbox' ) {
 			$checked = array_key_exists( $name, $options ) ? 'checked' : '';
-			echo '<input type="checkbox" name="wp_coder_tool[' . esc_attr( $name ) . ']" ' . esc_attr( $checked ) . ' value="1">';
+			echo '<input type="checkbox" name="wp_coder_tool[' . esc_attr( $name ) . ']" ' . esc_attr( $checked ) . ' value="1" id="' . esc_attr( $name ) . '">';
 		} elseif ( $type === 'textarea' ) {
 			$value = ! empty( $options[ $name ] ) ? $options[ $name ] : $def;
 			echo '<textarea name="wp_coder_tool[' . esc_attr( $name ) . ']" placeholder="' . esc_attr( $placeholder ) . '">' . esc_attr( $value ) . '</textarea>';
@@ -85,6 +85,6 @@ class ToolsManager {
 		}
 
 		return wp_verify_nonce( $_POST[ $nonce_name ],
-				$nonce_action ) && current_user_can( 'manage_options' );
+				$nonce_action ) && current_user_can( 'unfiltered_html' );
 	}
 }

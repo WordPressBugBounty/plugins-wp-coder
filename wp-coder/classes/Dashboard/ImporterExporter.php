@@ -29,17 +29,19 @@ class ImporterExporter {
                 <span class="wowp-file">
                 <input type="file" name="import_file" accept="*.json"/>
                 </span>
+                <br>
+                Upload a valid WP Coder .json file exported from another site.
             </p>
             <p>
                 <label>
                     <input type="checkbox" name="wowp_import_update" value="1">
-					<?php esc_attr_e( 'Update item if item already exists.' , 'wp-coder' ); ?>
+					<?php esc_attr_e( 'Update item if item already exists.', 'wp-coder' ); ?>
                 </label>
 
             </p>
 
             <p>
-				<?php submit_button( __( 'Import', 'wp-coder' ), 'secondary', 'submit', false ); ?>
+				<?php submit_button( __( 'Import Settings', 'wp-coder' ), 'secondary', 'submit', false ); ?>
 				<?php wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_import_data' ); ?>
             </p>
         </form>
@@ -50,7 +52,7 @@ class ImporterExporter {
 	public static function import_data(): void {
 
 		if ( self::get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-			wp_die( __( 'Please upload a valid .json file', 'wp-coder' ), __( 'Error', 'wp-coder' ),
+			wp_die( esc_attr__( 'Please upload a valid .json file', 'wp-coder' ), esc_attr__( 'Error', 'wp-coder' ),
 				[ 'response' => 400 ] );
 		}
 
@@ -112,7 +114,7 @@ class ImporterExporter {
 		return end( $parts );
 	}
 
-	public static function export_item($id = 0,  $action = '') {
+	public static function export_item( $id = 0, $action = '' ) {
 
 		$page   = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : $action;
@@ -129,14 +131,14 @@ class ImporterExporter {
 
 		$name      = trim( $data->title );
 		$name      = str_replace( ' ', '-', $name );
-		$file_name = $name . '-database-' . date( 'm-d-Y' ) . '.json';
+		$file_name = $name . '-database-' . gmdate( 'm-d-Y' ) . '.json';
 		self::export( $file_name, [ $data ] );
 
 		return true;
 	}
 
 	public static function export_data(): bool {
-		$file_name = WPCoder::SHORTCODE . '-database-' . date( 'm-d-Y' ) . '.json';
+		$file_name = WPCoder::SHORTCODE . '-database-' . gmdate( 'm-d-Y' ) . '.json';
 		$data      = DBManager::get_all_data();
 		if ( empty( $data ) ) {
 			return false;

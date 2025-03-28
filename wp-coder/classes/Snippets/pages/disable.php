@@ -19,11 +19,11 @@ $disabled_snippets = [
 		'Disable Widget Blocks',
 		'Use the classic interface instead of Blocks to manage Widgets.',
 	],
-	'remove_wp_version' => [
+	'remove_wp_version'     => [
 		'Remove WordPress Version Number',
 		'Hide the WordPress version number from your site\'s frontend and feeds.',
 	],
-	'disable_XML_RPC' => [
+	'disable_XML_RPC'       => [
 		'Disable XML-RPC',
 		'On sites running WordPress 3.5+, disable XML-RPC completely.',
 	],
@@ -130,35 +130,40 @@ $disabled_snippets = [
 
 ];
 
-self::create_options($disabled_snippets);
+self::create_options( $disabled_snippets );
 
 ?>
+<div class="wowp-snippet__list">
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="disable_admin_bar">Disable The WP Admin Bar</label>
+            <p class="wowp-snippet__item-description">Disable the WordPress Admin Bar for all users in the frontend.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+	            <?php self::field( 'checkbox', 'disable_admin_bar' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="wowp-snippet__item-expand is-hidden">
+            <p class="wowp-snippet__expand-title">Show the sidebar for users:</p>
+            <div class="wowp-fields__group">
+	            <?php foreach ( FieldHelper::user_roles() as $key => $value ) :
+		            if ( $key === 'all' ) {
+			            continue;
+		            }
+		            ?>
+                    <div class="wowp-field has-checkbox">
+                        <span class="label"><?php echo esc_html( $value ); ?></span>
+                        <label class="switch">
+	                        <?php self::field( 'checkbox', 'disable_admin_bar_user_' . $key ); ?>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+	            <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
 
-<dl class="wowp-snippet__list">
-	<dt><label><?php
-			self::field( 'checkbox', 'disable_admin_bar' ); ?>Disable The WP Admin Bar</label></dt>
-	<dd>Disable the WordPress Admin Bar for all users in the frontend.
-		<details class="wpcoder-expand">
-			<summary class="wpcoder-expand__title">Expand</summary>
-			<div class="wpcoder-expand__content">
-				<p><b>Show the sidebar for users:</b></p>
-				<fieldset class="_bg-white">
-					<?php foreach ( FieldHelper::user_roles() as $key => $value ) :
-						if ( $key === 'all' ) {
-							continue;
-						}
-						?>
-						<div class="wowp-field has-checkbox">
-							<label>
-								<span class="label"><?php echo esc_html( $value ); ?></span>
-								<?php self::field( 'checkbox', 'disable_admin_bar_user_' . $key ); ?>
-								<span><?php esc_html_e( 'Enable', 'wp-coder' ); ?></span>
-							</label>
-						</div>
-					<?php endforeach; ?>
-				</fieldset>
-
-			</div>
-		</details>
-	</dd>
-</dl>
+<?php

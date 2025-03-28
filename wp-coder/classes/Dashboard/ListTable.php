@@ -94,10 +94,10 @@ class ListTable extends WP_List_Table {
 			'code-alt' => __( 'Alternative Shortcode', 'wp-coder' ),
 			'tag'      => __( 'Tag', 'wp-coder' ),
 			'mode'     => __( 'Test mode',
-					'wp-coder' ) . '<sup class="has-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
+					'wp-coder' ) . '<sup class="wowp-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
 					'wp-coder' ) . '">ℹ</sup>',
 			'status'   => __( 'Status',
-					'wp-coder' ) . '<sup class="has-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
+					'wp-coder' ) . '<sup class="wowp-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
 					'wp-coder' ) . '">ℹ</sup>',
 		];
 	}
@@ -140,7 +140,7 @@ class ListTable extends WP_List_Table {
 
 
 		foreach ( $result as $key => $value ) {
-			$title       = ! empty( $value->title ) ? $value->title : __( 'UnTitle', 'wp-coder' );
+			$title       = ! empty( $value->title ) ? $value->title : __( 'Untitled', 'wp-coder' );
 			$tooltip_off = esc_attr__( 'Click for Deactivate.', 'wp-coder' );
 			$tooltip_on  = esc_attr__( 'Click for Activate.', 'wp-coder' );
 			$status_off  = '<a href="' . esc_url( Link::activate_url( $value->id ) ) . '" class="wowp-toogle is-off" data-tooltip="' . esc_attr( $tooltip_on ) . '"><span>' . esc_attr__( 'OFF',
@@ -172,8 +172,8 @@ class ListTable extends WP_List_Table {
 			$data[] = array(
 				'ID'       => $value->id,
 				'title'    => '<a href="' . esc_url( $link ) . '">' . esc_attr( $title ) . '</a>',
-				'code'     => '<div class="wowp-input-group"><input type="text" value="[' . esc_attr( $shortcode ) . ' id=&quot;' . absint( $value->id ) . '&quot;]" readonly="readonly"><span class="wowp-copy codericon codericon-copy"></span></div>',
-				'code-alt' => '<div class="wowp-input-group"><input type="text" value="[' . esc_attr( $shortcode ) . ' title=&quot;' . esc_attr( $title ) . '&quot;]" readonly="readonly"><span class="wowp-copy codericon codericon-copy"></span></div>',
+				'code'     => '<div class="wowp-field has-addon"><label for="shortcode" class="label is-addon"><span class="wowp-tooltip on-right is-pointer can-copy" data-tooltip="Copy"><span class="wowp-copy icon icon-copy"></span></span></label><input type="text" value="[' . esc_attr( $shortcode ) . ' id=&quot;' . absint( $value->id ) . '&quot;]" readonly="readonly"></div>',
+				'code-alt' => '<div class="wowp-field has-addon"><label for="shortcode" class="label is-addon"><span class="wowp-tooltip on-right is-pointer can-copy" data-tooltip="Copy"><span class="wowp-copy icon icon-copy"></span></span></label><input type="text" value="[' . esc_attr( $shortcode ) . ' title=&quot;' . esc_attr( $title ) . '&quot;]" readonly="readonly"></div>',
 				'tag'      => $tag,
 				'mode'     => $mode,
 				'status'   => $status,
@@ -219,36 +219,34 @@ class ListTable extends WP_List_Table {
 		$result = '';
 
 		$table = $wpdb->prefix . WPCoder::PREFIX;
-
+// phpcs:disable  WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( empty( $search ) ) {
 			$result = $wpdb->get_results( "SELECT * FROM $table order by id desc" );
 			if ( ! empty( $tag_search ) ) {
-				$result = $wpdb->get_results( "SELECT * FROM $table WHERE tag='$tag_search' order by id desc" );
+				$result = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE tag=%s order by id desc", $tag_search ));
 			}
-		} elseif ( trim( $search ) === 'UnTitle' ) {
+		} elseif ( trim( $search ) === 'Untitled' ) {
 			$result = $wpdb->get_results( "SELECT * FROM $table WHERE title='' order by id desc" );
 			if ( ! empty( $tag_search ) ) {
-				$result = $wpdb->get_results( "SELECT * FROM $table WHERE title='' AND tag='$tag_search' order by id desc" );
+				$result = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE title='' AND tag=%s order by id desc", $tag_search));
 			}
 		} elseif ( is_numeric( $search ) ) {
-			$query = $wpdb->prepare( "SELECT * FROM $table WHERE id=%d", absint( $search ) );
+			$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE id=%d", absint( $search ) ) );
 			if ( ! empty( $tag_search ) ) {
-				$query = $wpdb->prepare( "SELECT * FROM $table WHERE id=%d AND tag='%s'", absint( $search ),
-					$tag_search );
+				$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE id=%d AND tag=%s", absint( $search ),
+					$tag_search ) );
 			}
-			$result = $wpdb->get_results( $query );
 		} else {
-			$wild  = '%';
-			$find  = sanitize_text_field( $search );
-			$like  = $wild . $wpdb->esc_like( $find ) . $wild;
-			$query = $wpdb->prepare( "SELECT * FROM $table WHERE title LIKE %s order by id desc", $like );
+			$wild   = '%';
+			$find   = sanitize_text_field( $search );
+			$like   = $wild . $wpdb->esc_like( $find ) . $wild;
+			$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE title LIKE %s order by id desc", $like ) );
 			if ( ! empty( $tag_search ) ) {
-				$query = $wpdb->prepare( "SELECT * FROM $table WHERE title LIKE %s AND tag='%s' order by id desc",
-					$like, $tag_search );
+				$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE title LIKE %s AND tag=%s order by id desc", $like, $tag_search ) );
 			}
-			$result = $wpdb->get_results( $query );
 		}
 
+// phpcs:enable
 		return $result;
 	}
 
@@ -307,10 +305,10 @@ class ListTable extends WP_List_Table {
 			$tag_search = ( ! empty( $_REQUEST['tag'] ) ) ? sanitize_text_field( $_REQUEST  ['tag'] ) : '';
 			$tag_search = ( $tag_search === 'all' ) ? '' : $tag_search;
 
-			echo '<div class="alignleft actions"><label for="filter-by-tag" class="screen-reader-text">' . __( 'Filter by tag',
+			echo '<div class="alignleft actions"><label for="filter-by-tag" class="screen-reader-text">' . esc_attr__( 'Filter by tag',
 					'wp-coder' ) . '</label>';
 			echo '<select name="tag" id="filter-by-tag">';
-			echo '<option value="all"' . selected( 'all', $tag_search, false ) . '>' . __( 'All',
+			echo '<option value="all"' . selected( 'all', $tag_search, false ) . '>' . esc_attr__( 'All',
 					'wp-coder' ) . '</option>';
 
 			if ( ! empty( $tags ) ) {
@@ -318,8 +316,8 @@ class ListTable extends WP_List_Table {
 					if ( empty( $tag['tag'] ) ) {
 						continue;
 					}
-					echo '<option value="' . trim( esc_attr( $tag['tag'] ) ) . '"' . selected( $tag['tag'], $tag_search,
-							false ) . '>' . esc_attr( $tag['tag'] ) . '</option>';
+					echo '<option value="' . esc_attr( trim( $tag['tag'] ) ) . '"' . selected( $tag['tag'], $tag_search,
+							false ) . '>' . esc_html( $tag['tag'] ) . '</option>';
 				}
 			}
 			echo '</select>';
@@ -345,7 +343,7 @@ class ListTable extends WP_List_Table {
 		$nonce_action = WPCoder::PREFIX . '_nonce';
 
 		return ! ( ! isset( $_POST[ $name ] ) || ! wp_verify_nonce( $_POST[ $name ],
-				$nonce_action ) || ! current_user_can( 'manage_options' ) );
+				$nonce_action ) || ! current_user_can( 'unfiltered_html' ) );
 	}
 
 }

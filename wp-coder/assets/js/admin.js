@@ -1,101 +1,5 @@
 'use strict';
 
-const settingTabs = function () {
-    const tabs = document.getElementById('settings-tab');
-    if (!tabs) {
-        return false;
-    }
-    const tabsContent = document.querySelectorAll('#settings-content .tab-content');
-
-    const links = tabs.querySelectorAll('a, label');
-    links.forEach((link) => {
-        link.addEventListener('click', function () {
-            const attr = link.getAttribute('data-tab');
-            links.forEach(el => el.classList.remove('nav-tab-active'));
-            tabsContent.forEach(el => el.classList.remove('tab-content-active'));
-            link.classList.add('nav-tab-active');
-            const tabContent = document.querySelector('[data-content=' + attr + ']');
-            tabContent.classList.add('tab-content-active');
-            setLocalStorage(attr);
-        });
-    });
-
-    hideTabs();
-
-    function hideTabs() {
-        const tabs = document.querySelectorAll('.wowp-hide-tabs input[type="checkbox"]');
-        if (!tabs) {
-            return false;
-        }
-        const tabs_arr = {
-            hide_html: 'html-code',
-            hide_css: 'css-code',
-            hide_js: 'js-code',
-            hide_php: 'php-code',
-            hide_include: 'include',
-            hide_settings: 'settings',
-            hide_attributes: 'attributes',
-        };
-
-        tabs.forEach(el => {
-            el.addEventListener('click', function () {
-                const id = el.id;
-                const key = id.replace('checkbox_', '');
-                const tab = document.querySelector('[data-tab="' + tabs_arr[key] + '"]');
-                const tabcontent = document.querySelector('[data-content="' + tabs_arr[key] + '"]');
-                if (el.checked) {
-                    tab.style.display = 'none';
-                    tabcontent.style.display = 'none';
-                } else {
-                    tab.style.display = 'block';
-                    tabcontent.style.display = 'block';
-                }
-            })
-        })
-
-
-    }
-
-    setTabs();
-
-    function setTabs() {
-        if (getLocalStorage() === '') {
-            return false;
-        }
-        const tab = getLocalStorage();
-        if(tab === false) {
-            return false;
-        }
-        links.forEach(el => el.classList.remove('nav-tab-active'));
-        tabsContent.forEach(el => el.classList.remove('tab-content-active'));
-        const link = tabs.querySelector('a[data-tab="' + tab + '"]');
-        link.classList.add('nav-tab-active');
-        const cont = document.querySelector('[data-content=' + tab + ']');
-        cont.classList.add('tab-content-active');
-    }
-
-    function setLocalStorage(attr) {
-        const tool_id = document.getElementById('tool_id');
-        if (!tool_id) {
-            return false;
-        }
-        sessionStorage.setItem("wowpTab_" + tool_id.value, attr);
-    }
-
-    function getLocalStorage() {
-        const tool_id = document.getElementById('tool_id');
-
-        if (!tool_id) {
-            return false;
-        }
-        const tab = sessionStorage.getItem("wowpTab_" + tool_id.value);
-        if (!tab) {
-            return false;
-        } else {
-            return tab;
-        }
-    }
-}
 
 const codeEditor = function () {
     const editorSettings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
@@ -129,6 +33,7 @@ const codeEditor = function () {
         };
 
     const html_code = document.getElementById('html_code');
+    let htmleditor;
     if (html_code) {
         let codemirror_el =
             {
@@ -150,7 +55,8 @@ const codeEditor = function () {
 
         editorSettings.codemirror = _.extend({}, editorSettings.codemirror, codemirror_gen, codemirror_el,);
 
-        const htmleditor = wp.codeEditor.initialize(html_code, editorSettings);
+        htmleditor = wp.codeEditor.initialize(html_code, editorSettings);
+
 
         const htmlNavigationMenu = document.getElementById("htmlNavigationMenu");
 
@@ -188,12 +94,13 @@ const codeEditor = function () {
     }
 
     const css_code = document.getElementById('css_code');
+    let csseditor;
     if (css_code) {
         let codemirror_el = {"mode": 'css',};
         editorSettings.codemirror = _.extend({}, editorSettings.codemirror, codemirror_gen, codemirror_el,);
         // const tab = document.querySelector('[data-content="css-code"]');
         // tab.classList.add('tab-content-active');
-        const csseditor = wp.codeEditor.initialize(css_code, editorSettings);
+        csseditor = wp.codeEditor.initialize(css_code, editorSettings);
         // tab.classList.remove('tab-content-active');
 
         const cssNavigationMenu = document.getElementById("cssNavigationMenu");
@@ -232,6 +139,7 @@ const codeEditor = function () {
     }
 
     const js_code = document.getElementById('js_code');
+    let jseditor;
     if (js_code) {
         let codemirror_el = {
             "boss": true,
@@ -261,7 +169,7 @@ const codeEditor = function () {
         editorSettings.codemirror = _.extend({}, editorSettings.codemirror, codemirror_gen, codemirror_el,);
         // const tab = document.querySelector('[data-content="js-code"]');
         // tab.classList.add('tab-content-active');
-        const jseditor = wp.codeEditor.initialize(js_code, editorSettings);
+        jseditor = wp.codeEditor.initialize(js_code, editorSettings);
         // tab.classList.remove('tab-content-active');
 
         const jsNavigationMenu = document.getElementById("jsNavigationMenu");
@@ -396,6 +304,53 @@ const codeEditor = function () {
 
     }
 
+
+    // Live Preview
+    let timeout;
+    const previewCheckbox = document.getElementById('checkbox_preview');
+
+    function initPreviewListener() {
+        document.querySelectorAll('.wowp-settings__page-content').forEach(editor => {
+            editor.addEventListener('keydown', () => {
+                clearTimeout(timeout);
+                if (previewCheckbox.checked) {
+                    timeout = setTimeout(updatePreview, 500);
+                }
+            });
+        });
+    }
+
+
+    if (previewCheckbox) {
+        updatePreview();
+
+        previewCheckbox.addEventListener('change', () => {
+            if (previewCheckbox.checked) {
+                updatePreview();
+            }
+        });
+    }
+
+    initPreviewListener();
+
+    function updatePreview() {
+        const html = htmleditor.codemirror.getValue();
+        const css = csseditor.codemirror.getValue();
+
+        const iframe = document.getElementById('wowp-preview');
+        iframe.setAttribute("srcdoc", `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>body{margin:0;padding:0;box-sizing:border-box;}</style>
+            <style>${css}</style>
+          </head>
+          <body>${html}</body>
+        </html>
+    `);
+    }
+
+
 }
 
 
@@ -426,6 +381,7 @@ const changeTemplate = function () {
             case 'page_selected':
             case 'archive_category':
             case 'archive_tag':
+            case 'archive_author':
                 elements[1].classList.remove('is-hidden');
                 elements[2].classList.remove('is-hidden');
                 elements[3].classList.add('is-hidden');
@@ -478,7 +434,7 @@ const feature = function () {
 document.addEventListener('DOMContentLoaded', function () {
 
     new codeEditor;
-    new settingTabs;
     new changeTemplate;
     new feature;
+
 })

@@ -5,20 +5,24 @@ use WPCoder\Tools\ToolsManager;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! current_user_can( 'manage_options' ) ) {
-	wp_die( __( 'You do not have sufficient permissions to access this page.', 'wp-coder' ) );
+if ( ! current_user_can( 'unfiltered_html' ) ) {
+	wp_die( esc_attr__( 'You do not have sufficient permissions to access this page.', 'wp-coder' ) );
 }
 
 ?>
 
-    <div class="wowp-header-wrapper">
-		<?php
-		DashboardInitializer::header(); ?>
+    <div class="wowp">
+		<?php DashboardInitializer::header(); ?>
 
-        <div class="wowp-header-title">
-            <h2><?php esc_html_e( 'Tools', 'wp-coder' ); ?></h2>
+        <div class="wowp-page-header">
+            <h2 class="wowp-page-header__title">
+				<?php esc_html_e( 'Tools', 'wp-coder' ); ?>
+            </h2>
         </div>
+
+		<?php ToolsManager::init(); ?>
 
     </div>
 
-<?php ToolsManager::init();
+
+<?php

@@ -10,8 +10,8 @@ use WPCoder\Optimization\HTMLMinifier;
 use WPCoder\Publisher\Conditions;
 use WPCoder\Publisher\EnqueueScript;
 use WPCoder\Publisher\EnqueueStyle;
-use WPCoder\Publisher\Singleton;
 use WPCoder\Publisher\PHPIncludes;
+use WPCoder\Publisher\Singleton;
 
 class WOWP_Public {
 

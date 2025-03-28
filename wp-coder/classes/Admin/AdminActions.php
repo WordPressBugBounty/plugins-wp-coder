@@ -52,7 +52,7 @@ class AdminActions {
 	private function verify( $name ): bool {
 		$nonce_action = WPCoder::PREFIX . '_nonce';
 
-		return ! ( ! isset( $_REQUEST[ $name ] ) || ! wp_verify_nonce( $_REQUEST[ $name ], $nonce_action ) || ! current_user_can( 'manage_options' ) );
+		return ! ( ! isset( $_REQUEST[ $name ] ) || ! wp_verify_nonce( $_REQUEST[ $name ], $nonce_action ) || ! current_user_can( 'unfiltered_html' ) );
 	}
 
 	private function check_name( $request ) {

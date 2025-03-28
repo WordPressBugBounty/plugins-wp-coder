@@ -9,10 +9,11 @@ use WPCoder\WPCoder;
 class DBManager {
 
 	public static function remove_item() {
-		$page   = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
-		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$page   = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash($_GET['page']) ) : '';
+		$action = isset( $_GET['action'] ) ? sanitize_text_field(wp_unslash( $_GET['action']) ) : '';
 		$id     = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : '';
-
+		// phpcs:enable
 		if ( ( $page !== WPCoder::SLUG ) || ( $action !== 'delete' ) || empty( $id ) ) {
 			return false;
 		}
@@ -42,26 +43,13 @@ class DBManager {
 		return $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] );
 	}
 
-	public static function create(): void {
+	public static function create( $columns ): void {
 		global $wpdb;
-		$table_name      = $wpdb->prefix . WPCoder::PREFIX;
+		$table = $wpdb->prefix . WPCoder::PREFIX;
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE $table_name (
-        id mediumint(9) NOT NULL AUTO_INCREMENT,
-        title VARCHAR(200) NOT NULL,
-        html_code LONGTEXT,
-        css_code LONGTEXT,
-        js_code LONGTEXT,
-        php_code LONGTEXT,
-        param LONGTEXT,
-        status BOOLEAN,
-        mode BOOLEAN,
-        tag TEXT,
-        php_include int(11) NOT NULL DEFAULT '0',
-		UNIQUE KEY id (id),
-        INDEX id_index (id)
-    ) $charset_collate;";
+		$sql = "CREATE TABLE $table ($columns) $charset_collate;";
+
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 	}
@@ -79,10 +67,10 @@ class DBManager {
 			return false;
 		}
 		global $wpdb;
-		$table = $wpdb->prefix . WPCoder::PREFIX;
-		$query = $wpdb->prepare( "SELECT * FROM $table WHERE id=%d", absint( $id ) );
+		$table    = esc_sql($wpdb->prefix . WPCoder::PREFIX);
 
-		return $wpdb->get_row( $query );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE id=%d", absint( $id ) ) );
 	}
 
 	public static function get_data_by_title( $title = '' ) {
@@ -91,14 +79,14 @@ class DBManager {
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . WPCoder::PREFIX;
-		$query = $wpdb->prepare( "SELECT * FROM $table WHERE title=%s", sanitize_text_field( $title ) );
+		$table    = esc_sql($wpdb->prefix . WPCoder::PREFIX);
 
-		return $wpdb->get_row( $query );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE title=%s", esc_attr( $title ) ) );
 	}
 
 	public static function update( $data, $where, $data_formats ): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'unfiltered_html' ) ) {
 			return;
 		}
 
@@ -108,7 +96,7 @@ class DBManager {
 	}
 
 	public static function insert( $data, $data_formats ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'unfiltered_html' ) ) {
 			return false;
 		}
 

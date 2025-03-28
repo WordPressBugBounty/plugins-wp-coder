@@ -35,10 +35,8 @@ class AdminInitializer {
 		global $pagenow;
 
 		if ( $pagenow === 'admin.php' && ( isset( $_GET['page'] ) && $_GET['page'] === WPCoder::SLUG ) ) {
-
-
 			$text = sprintf(
-				// Translators: %1$s is the URL, %2$s is the plugin name.
+			/* translators: 1. link to the plugin page 2. plugin name */
 				__( 'Thank you for using <b>%2$s</b>! Please <a href="%1$s" target="_blank">rate us</a>', 'wp-coder' ),
 				esc_url( WPCoder::PluginURL ),
 				esc_attr( WPCoder::info( 'name' ) )
@@ -54,13 +52,11 @@ class AdminInitializer {
 		$icon       = 'data:image/svg+xml;base64,' . base64_encode( self::icon() );
 		$parent     = 'wp-coder';
 		$title      = WPCoder::info( 'name' ) . ' version ' . WPCoder::info( 'version' );
-		$main_title      = WPCoder::info( 'name' );
 		$menu_title = 'All Codes';
-		$capability = 'manage_options';
+		$capability = 'unfiltered_html';
 		$slug       = WPCoder::SLUG;
-		$url_update = 'https://wpcoder.pro/pricing/?utm_source=wordpress&utm_medium=admin-menu&utm_campaign=upgrade-to-pro';
 
-		add_menu_page( $main_title, $main_title, 'manage_options', $slug, [ __CLASS__, 'plugin_page' ], $icon );
+		add_menu_page( 'WP Coder Pro', 'WP Coder', 'unfiltered_html', $slug, [ __CLASS__, 'plugin_page' ], $icon );
 
 		add_submenu_page( $slug, $title, $menu_title, $capability, $slug, [ __CLASS__, 'plugin_page' ] );
 
@@ -68,10 +64,8 @@ class AdminInitializer {
 		add_submenu_page( $slug, $title, 'Snippets', $capability, $slug . '-snippets', [ __CLASS__, 'snippets' ] );
 		add_submenu_page( $slug, $title, 'Tools', $capability, $slug . '-tools', [ __CLASS__, 'tools' ] );
 		add_submenu_page( $slug, $title, 'Global PHP', $capability, $slug . '-global', [ __CLASS__, 'global_php' ] );
-//		add_submenu_page( $slug, $title, 'PRO Features', $capability, $slug . '-pro', [ __CLASS__, 'pro' ] );
 		add_submenu_page( $slug, $title, 'Import / Export', $capability, $slug . '-import-export', [ __CLASS__, 'import_export' ] );
 		add_submenu_page( $slug, $title, 'Support', $capability, $slug . '-support', [ __CLASS__, 'support' ] );
-		add_submenu_page( $slug, $title, 'Upgrade to Pro', $capability, $url_update );
 	}
 
 	public static function icon(): string {
@@ -102,22 +96,6 @@ class AdminInitializer {
 		}
 	}
 
-	public static function global_php() {
-		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/global-php.php';
-
-		if ( file_exists( $page_path ) ) {
-			require_once $page_path;
-		}
-	}
-
-	public static function pro() {
-		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/6.pro-features.php';
-
-		if ( file_exists( $page_path ) ) {
-			require_once $page_path;
-		}
-	}
-
 	public static function tools() {
 		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/4.tools.php';
 
@@ -126,8 +104,17 @@ class AdminInitializer {
 		}
 	}
 
+	public static function global_php() {
+		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/5.global-php.php';
+
+		if ( file_exists( $page_path ) ) {
+			require_once $page_path;
+		}
+	}
+
+
 	public static function import_export() {
-		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/4.import-export.php';
+		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/6.import-export.php';
 
 		if ( file_exists( $page_path ) ) {
 			require_once $page_path;
@@ -135,12 +122,13 @@ class AdminInitializer {
 	}
 
 	public static function support() {
-		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/4.support.php';
+		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/7.support.php';
 
 		if ( file_exists( $page_path ) ) {
 			require_once $page_path;
 		}
 	}
+
 
 	public static function admin_scripts( $hook ): void {
 //		$page       = 'toplevel_page_' . WPCoder::SLUG;

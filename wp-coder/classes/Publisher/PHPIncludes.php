@@ -66,8 +66,10 @@ class PHPIncludes {
 			$file_name = end( $parts );
 			if ( $file_name === 'global-php.php' ) {
 				$page_url = admin_url() . 'admin.php?page=' . WPCoder::SLUG . '-global';
+
 				$message  = sprintf(
-					__( 'An error occurred while loading the PHP script from <a href="%1$s">Global PHP</a>. Error: %2$s', 'wpcoder' ),
+				/* translators: 1. link to the page 2. error name. */
+					__( 'An error occurred while loading the PHP script from <a href="%1$s">Global PHP</a>. Error: %2$s', 'wp-coder' ),
 					esc_url( $page_url ),
 					esc_attr( $e->getMessage() )
 				);
@@ -78,7 +80,8 @@ class PHPIncludes {
 				$page_url = admin_url() . 'admin.php?page=' . WPCoder::SLUG . '-settings&action=update&id='.absint($id);
 
 				$message  = sprintf(
-					__( 'An error occurred while loading the PHP script from <a href="%1$s">WP Code ID %2$d</a>. Error: %3$s', 'wpcoder' ),
+				/* translators: 1. link to the code 2. code ID. 3. error message */
+					__( 'An error occurred while loading the PHP script from <a href="%1$s">WP Code ID %2$d</a>. Error: %3$s', 'wp-coder' ),
 					esc_url( $page_url ),
 					absint($id),
 					esc_attr( $e->getMessage() ),

@@ -60,12 +60,16 @@ class Option {
 		$id      = Field::get_id( $id_name );
 		$default = ! empty( $values['default'] ) ? $values['default'] : '';
 		$options = ! empty( $values['options'] ) ? $values['options'] : [];
+		$tooltip = ! empty( $values['tooltip'] ) ? $values['tooltip'] : '';
 		?>
         <div class="<?php echo esc_attr( $class ); ?>" data-option="<?php echo esc_attr( $id ); ?>">
             <label>
 				<?php if ( ! empty( $values['title'] ) ) : ?>
                     <span class="label">
                         <?php echo esc_html( $values['title'] ); ?>
+	                    <?php if ( ! empty( $tooltip ) ) : ?>
+                            <sup class="wowp-tooltip" data-tooltip="<?php echo esc_attr($tooltip);?>">ℹ</sup>
+	                    <?php endif; ?>
                     </span>
 				<?php endif; ?>
 
@@ -81,23 +85,22 @@ class Option {
 		$name    = $values['name'];
 		$id_name = self::get_id_name( $name, $i );
 		$id      = Field::get_id( $id_name );
+		$tooltip = ! empty( $values['tooltip'] ) ? $values['tooltip'] : '';
 		?>
         <div class="<?php echo esc_attr( $class ); ?>" data-option="<?php echo esc_attr( $id ); ?>">
-            <label>
-				<?php if ( ! empty( $values['title'] ) ) : ?>
+			<?php if ( ! empty( $values['title'] ) ) : ?>
                 <span class="label">
-			        <?php echo esc_html( $values['title'] ); ?>
+                    <?php echo esc_html( $values['title'] ); ?>
+					<?php if ( ! empty( $tooltip ) ) : ?>
+                        <sup class="wowp-tooltip" data-tooltip="<?php echo esc_attr($tooltip);?>">ℹ</sup>
+					<?php endif; ?>
                 </span>
-				<?php endif; ?>
+			<?php endif; ?>
+            <label class="switch">
 				<?php Field::checkbox( $name, $i ); ?>
-				<?php if ( ! empty( $values['text'] ) ) : ?>
-                <span>
-					<?php echo esc_html( $values['text'] ); ?>
-                </span>
-				<?php endif; ?>
+                <span class="slider">
             </label>
         </div>
-
 		<?php
 
 	}
@@ -112,12 +115,12 @@ class Option {
 		$info_class = ! empty( $values['info'] ) ? ' wowp-info' : '';
 		?>
         <div class="<?php echo esc_attr( $class ); ?>" data-option="<?php echo esc_attr( $id ); ?>">
-				<?php if ( ! empty( $values['title'] ) ) : ?>
-                    <span class="label<?php echo esc_attr( $info_class ); ?>" data-info="<?php echo esc_attr( $title ); ?>">
+			<?php if ( ! empty( $values['title'] ) ) : ?>
+                <span class="label<?php echo esc_attr( $info_class ); ?>" data-info="<?php echo esc_attr( $title ); ?>">
 					<?php echo esc_html( $values['title'] ); ?>
                 </span>
-				<?php endif; ?>
-				<?php Field::text( $name, $default, $values['type'], $i ); ?>
+			<?php endif; ?>
+			<?php Field::text( $name, $default, $values['type'], $i ); ?>
 
         </div>
 		<?php
@@ -134,16 +137,17 @@ class Option {
 		?>
         <div class="<?php echo esc_attr( $class ); ?>" data-option="<?php echo esc_attr( $id ); ?>">
             <label>
-			<?php if ( ! empty( $values['title'] ) ) : ?>
-                <span class="label<?php echo esc_attr( $info_class ); ?>" data-info="<?php echo esc_attr( $title ); ?>">
+				<?php if ( ! empty( $values['title'] ) ) : ?>
+                    <span class="label<?php echo esc_attr( $info_class ); ?>"
+                          data-info="<?php echo esc_attr( $title ); ?>">
 					<?php echo esc_html( $values['title'] ); ?>
                 </span>
-			<?php endif; ?>
+				<?php endif; ?>
 
-			<?php Field::text( $name, $default, $values['type'], $i ); ?>
-			<?php if ( ! empty( $values['addon'] ) ) : ?>
-                <span class="is-addon"><?php echo esc_html( $values['addon'] ); ?></span>
-			<?php endif; ?>
+				<?php Field::text( $name, $default, $values['type'], $i ); ?>
+				<?php if ( ! empty( $values['addon'] ) ) : ?>
+                    <span class="is-addon"><?php echo esc_html( $values['addon'] ); ?></span>
+				<?php endif; ?>
             </label>
         </div>
 		<?php

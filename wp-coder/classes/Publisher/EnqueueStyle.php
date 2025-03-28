@@ -58,7 +58,6 @@ class EnqueueStyle {
 		if ( empty( $styles ) ) {
 			return;
 		}
-
 		foreach ( $styles as $style ) {
 			if ( empty( $style['att'] ) ) {
 				wp_enqueue_style( $style['slug'], $style['url'], null, $style['ver'] );

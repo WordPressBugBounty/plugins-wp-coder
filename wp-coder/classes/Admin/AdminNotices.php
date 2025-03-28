@@ -33,13 +33,13 @@ class AdminNotices {
 	}
 
 	public function save_item() {
-		$text = __( 'Item saved.', 'wp-coder' );
-		echo '<div class="wowp-notice notice notice-success is-dismissible">' . esc_html( $text ) . '</div>';
+		$text = __( 'Item saved successfully.', 'wp-coder' );
+		echo '<div class="wowp-notification notification-success notice notice-success is-dismissible">' . esc_html( $text ) . '</div>';
 	}
 
 	public function remove_item() {
-		$text = __( 'Item delete.', 'wp-coder' );
-		echo '<div class="wowp-notice notice notice-warning is-dismissible">' . esc_html( $text ) . '</div>';
+		$text = __( 'Item has been deleted', 'wp-coder' );
+		echo '<div class="wowp-notification notification-warning notice notice-warning is-dismissible">' . esc_html( $text ) . '</div>';
 	}
 
 }

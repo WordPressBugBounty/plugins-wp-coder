@@ -3,7 +3,7 @@
  * Plugin Name:       WP Coder
  * Plugin URI:        https://wordpress.org/plugins/wp-coder/
  * Description:       Adding custom HTML, CSS, JavaScript and PHP code to your WordPress site.
- * Version:           3.6.1
+ * Version:           4.0
  * Author:            WPCoder
  * Author URI:        https://wpcoder.pro
  * Author Email:      hey@wow-company.com
@@ -101,7 +101,6 @@ if ( ! class_exists( 'wpcoder' ) ) :
 			$plugin_data = get_file_data( __FILE__, $data, false );
 
 			return $plugin_data[ $show ] ?? '';
-
 		}
 
 		/**
@@ -143,9 +142,26 @@ if ( ! class_exists( 'wpcoder' ) ) :
 		}
 
 		public function plugin_activate(): void {
-			DBManager::create();
+			$columns = "
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			title VARCHAR(200) NOT NULL,
+			html_code LONGTEXT,
+			css_code LONGTEXT,
+			js_code LONGTEXT,
+			php_code LONGTEXT,
+			param LONGTEXT,
+			status BOOLEAN,
+			mode BOOLEAN,
+			tag TEXT,
+			php_include int(11) NOT NULL DEFAULT '0',
+			UNIQUE KEY id (id),
+            INDEX id_index (id)
+			";
+
+
+			DBManager::create( $columns );
 			FolderManager::create();
-			update_option( self::PREFIX . '_db_version', '3.6' );
+			update_option( self::PREFIX . '_db_version', '4.0' );
 
 			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 			if ( is_plugin_active( 'wp-coder-pro/wp-coder-pro.php' ) ) {
@@ -154,7 +170,6 @@ if ( ! class_exists( 'wpcoder' ) ) :
 			if ( is_plugin_active( 'wpcoderpro/wpcoderpro.php' ) ) {
 				deactivate_plugins( 'wpcoderpro/wpcoderpro.php' );
 			}
-
 		}
 
 		/**
