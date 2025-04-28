@@ -10,6 +10,7 @@ const codeEditor = function () {
             "inputStyle": "contenteditable",
             "lineNumbers": true,
             "lineWrapping": true,
+            "matchBrackets": true,
             "styleActiveLine": true,
             "continueComments": true,
             "extraKeys": {
