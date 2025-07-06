@@ -5,7 +5,7 @@ Tags: code snippets, custom css, custom js, php injection, custom php
 Requires at least: 3.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -208,6 +208,11 @@ The link feature helps you track where your shortcode is placed. Simply enter th
 - [Website](https://wpcoder.pro)
 - [Documentation](https://wpcoder.pro/category/documentation/)
 - [Upgrade to Pro!](https://wpcoder.pro/pricing/)
+
+= 4.0.2 =
+* Improved: Reorganized method order in DBManager class for better readability and maintenance
+* Improved: Minor SQL formatting for consistency
+* Cleaned: Minor code style improvements according to WordPress Coding Standards (WPCS)
 
 = 4.0.1 =
 * Improved: Added `matchBrackets: true` option for the JavaScript editor to highlight matching brackets when editing code.
