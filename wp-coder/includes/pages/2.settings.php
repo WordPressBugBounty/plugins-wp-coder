@@ -28,6 +28,12 @@ $add_url      = add_query_arg( [
 	'action' => 'new'
 ], admin_url( 'admin.php' ) );
 
+$duplicate_url = add_query_arg( [
+	'page'   => WPCoder::SLUG . '-settings',
+	'action' => 'duplicate',
+	'id'     => $item_id,
+], admin_url( 'admin.php' ) );
+
 ?>
 
     <div class="wowp">
@@ -46,6 +52,12 @@ $add_url      = add_query_arg( [
             <a href="<?php echo esc_url( $add_url ); ?>" class="button button-primary button-small">
                 + <?php esc_html_e( 'Add New', 'wp-coder' ); ?>
             </a>
+
+	        <?php if ( ! empty( $item_id ) ) : ?>
+                <a href="<?php echo esc_url( $duplicate_url ); ?>" class="button button-secondary button-small">
+                    <span class="icon icon-copy"></span> <?php esc_html_e( 'Duplicate', 'wp-coder' ); ?>
+                </a>
+	        <?php endif; ?>
         </div>
 
         <form action="" id="wowp-settings" method="post" >
@@ -56,6 +68,19 @@ $add_url      = add_query_arg( [
                 <h3 class="wowp-preview__title">Live Preview</h3>
                 <p class="wowp-preview__subtitle">This area shows a live rendering of your HTML and CSS code. JavaScript and shortcodes are not supported.</p>
                 <div class="wowp-preview__iframe">
+                    <div class="wowp-preview__top">
+                        <label for="checkbox_preview" class="wowp-preview__dot is-close">
+                            <span class="dashicons dashicons-no"></span>
+                        </label>
+                        <div class="wowp-preview__dot is-toggle">
+                            <span class="dashicons dashicons-minus"></span>
+                            <span class="dashicons dashicons-plus is-hidden"></span>
+                        </div>
+                        <div class="wowp-preview__dot is-reset">
+                            <span class="dashicons dashicons-image-rotate"></span>
+                        </div>
+                        <div class="wowp-preview__size"></div>
+                    </div>
                     <iframe id="wowp-preview" sandbox></iframe>
                 </div>
             </div>

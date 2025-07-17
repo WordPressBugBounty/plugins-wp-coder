@@ -338,12 +338,23 @@ const codeEditor = function () {
         const html = htmleditor.codemirror.getValue();
         const css = csseditor.codemirror.getValue();
 
+        let styleLinks = [];
+
+        document.querySelectorAll('input[id*="include_file_"]').forEach(input => {
+            const url = input.value.trim();
+
+            if (url.endsWith('.css')) {
+                styleLinks.push(`<link rel="stylesheet" href="${url}">`);
+            }
+        });
+
         const iframe = document.getElementById('wowp-preview');
         iframe.setAttribute("srcdoc", `
         <!DOCTYPE html>
         <html>
           <head>
             <style>body{margin:0;padding:0;box-sizing:border-box;}</style>
+             ${styleLinks.join('\n')}
             <style>${css}</style>
           </head>
           <body>${html}</body>
@@ -351,6 +362,37 @@ const codeEditor = function () {
     `);
     }
 
+    jQuery('.wowp-preview__dot.is-toggle').on('click', function () {
+        jQuery(this).toggleClass('is-active');
+        jQuery(this).find('.dashicons').toggleClass('is-hidden');
+        jQuery('.wowp-preview__iframe #wowp-preview').toggleClass('is-hidden');
+        jQuery('.wowp-preview__iframe').toggleClass('is-toggled');
+    });
+
+    jQuery('.wowp-preview__dot.is-reset').on('click', function () {
+        jQuery('.wowp-preview__iframe').removeAttr('style');
+        updatePreview();
+    });
+
+    const iframe = jQuery('.wowp-preview__iframe');
+    const $size = iframe.find('.wowp-preview__size');
+    // let timeout;
+
+    if (iframe.length && $size.length) {
+        const observer = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                const width = Math.round(entry.contentRect.width);
+                const height = Math.round(entry.contentRect.height) - 50;
+
+                $size.text(`${width}px × ${height}px`).fadeIn(150);
+
+                clearTimeout(timeout);
+                // timeout = setTimeout(() => $size.fadeOut(300), 3000);
+            }
+        });
+
+        observer.observe(iframe[0]);
+    }
 
 }
 
