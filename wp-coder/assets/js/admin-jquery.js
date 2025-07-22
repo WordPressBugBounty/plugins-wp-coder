@@ -174,13 +174,15 @@ jQuery(document).ready(function ($) {
     function includeFiles() {
         let type = $(this).val();
         const parent = $(this).closest('.wowp-fields__group');
-        $(parent).find('.js-attr').addClass('is-hidden');
+        const js = $(parent).find('.js-attr');
+        const css =  $(parent).find('.css-only-preview');
+        $(js).add(css).addClass('is-hidden');
         switch (type) {
             case 'css':
-                $(parent).find('.js-attr').addClass('is-hidden');
+                $(css).removeClass('is-hidden');
                 break;
             case 'js':
-                $(parent).find('.js-attr').removeClass('is-hidden');
+                $(js).removeClass('is-hidden');
                 break;
         }
 

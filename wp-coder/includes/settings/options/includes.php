@@ -18,6 +18,15 @@ return [
 		'title' => __( 'URL', 'wp-coder' ),
 	],
 
+	'css_only_preview' => [
+		'type'    => 'checkbox',
+		'name'    => '[css_only_preview]',
+		'title'   => __( 'Preview Only', 'wp-coder' ),
+		'text'  => __( 'Enable', 'wpcoderpro' ),
+		'class' => 'is-reverse css-only-preview',
+		'tooltip' => __( 'This CSS file will be used only in the Live Preview. It won’t be included on the actual website.', 'wp-coder' ),
+	],
+
 	'js_attr' => [
 		'type'  => 'select',
 		'name'  => '[file_js_att]',

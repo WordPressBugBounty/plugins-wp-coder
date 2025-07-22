@@ -27,81 +27,10 @@ use WPCoder\WPCoder;
 
 class DBManager {
 
-	/**
-	 * Create database table.
-	 */
-	public static function create( $columns ): void {
-		global $wpdb;
-		$table = $wpdb->prefix . WPCoder::PREFIX;
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE $table ($columns) $charset_collate;";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
-	}
-
-	/**
-	 * Get table columns.
-	 */
-	public static function get_columns() {
-		global $wpdb;
-		$table_name = esc_sql($wpdb->prefix . WPCoder::PREFIX);
-
-		return $wpdb->get_results( "DESCRIBE $table_name" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	}
-
-	/**
-	 * Insert new row.
-	 */
-	public static function insert( $data, $data_formats ) {
-		if ( ! current_user_can( 'unfiltered_html' ) ) {
-			return false;
-		}
-
-		global $wpdb;
-		$table = esc_sql($wpdb->prefix . WPCoder::PREFIX);
-
-		$wpdb->insert( $table, $data, $data_formats ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-
-		return $wpdb->insert_id ?: false;
-	}
-
-	/**
-	 * Update row.
-	 */
-	public static function update( $data, $where, $data_formats ): void {
-		if ( ! current_user_can( 'unfiltered_html' ) ) {
-			return;
-		}
-
-		global $wpdb;
-		$table  = esc_sql($wpdb->prefix . WPCoder::PREFIX);
-
-		$wpdb->update( $table, $data, $where, $data_formats ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	}
-
-	/**
-	 * Delete row by ID.
-	 */
-	public static function delete( $id ) {
-		if ( empty( $id ) ) {
-			return false;
-		}
-
-		global $wpdb;
-		$table = $wpdb->prefix . WPCoder::PREFIX;
-
-		return $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	}
-
-	/**
-	 * Remove item via GET request with nonce verification.
-	 */
 	public static function remove_item() {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$page   = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash($_GET['page']) ) : '';
-		$action = isset( $_GET['action'] ) ? sanitize_text_field(wp_unslash( $_GET['action']) ) : '';
+		$page   = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 		$id     = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : '';
 		// phpcs:enable
 		if ( ( $page !== WPCoder::SLUG ) || ( $action !== 'delete' ) || empty( $id ) ) {
@@ -111,7 +40,7 @@ class DBManager {
 		global $wpdb;
 		$table = $wpdb->prefix . WPCoder::PREFIX;
 
-		$result = $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result = $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] );
 
 		if ( $result ) {
 			wp_safe_redirect( Link::remove_item() );
@@ -121,85 +50,152 @@ class DBManager {
 		return false;
 	}
 
-	/**
-	 * Get all rows.
-	 */
+
+	public static function delete( $id ) {
+		if ( ! isset( $id ) ) {
+			return false;
+		}
+
+		global $wpdb;
+		$table = $wpdb->prefix . WPCoder::PREFIX;
+
+		return $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] );
+	}
+
+	public static function create( $columns ): void {
+		global $wpdb;
+		$table           = $wpdb->prefix . WPCoder::PREFIX;
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE $table ($columns) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+	}
+
 	public static function get_all_data() {
 		global $wpdb;
-
-		$table  = esc_sql($wpdb->prefix . WPCoder::PREFIX);
-		$result = $wpdb->get_results( "SELECT * FROM $table ORDER BY id ASC" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table  = $wpdb->prefix . WPCoder::PREFIX;
+		$result = $wpdb->get_results( "SELECT * FROM $table ORDER BY id ASC" );
 
 		return ! empty( $result ) ? $result : false;
 	}
 
-	/**
-	 * Get row by ID.
-	 */
+	public static function get_data_by_tag( $tag = '' ) {
+		if ( empty( $tag ) ) {
+			return false;
+		}
+
+		global $wpdb;
+		$table  = esc_sql( $wpdb->prefix . WPCoder::PREFIX );
+		$query  = $wpdb->prepare( "SELECT * FROM {$table} WHERE tag = %s ORDER BY id ASC", sanitize_text_field( $tag ) );
+		$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.*
+
+		return ! empty( $result ) ? $result : false;
+	}
+
 	public static function get_data_by_id( $id = '' ) {
 		if ( empty( $id ) ) {
 			return false;
 		}
 		global $wpdb;
-		$table    = esc_sql($wpdb->prefix . WPCoder::PREFIX);
+		$table = esc_sql( $wpdb->prefix . WPCoder::PREFIX );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE id=%d", absint( $id ) ) );
 	}
 
-	/**
-	 * Get row by title.
-	 */
+	public static function get_data_by_ids( $ids = [] ) {
+		if ( empty( $ids ) || ! is_array( $ids ) ) {
+			return false;
+		}
+
+		global $wpdb;
+		$table = esc_sql( $wpdb->prefix . WPCoder::PREFIX );
+
+		$ids = array_filter( array_map( 'absint', $ids ) );
+
+		if ( empty( $ids ) ) {
+			return false;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$query        = $wpdb->prepare(
+			"SELECT * FROM {$table} WHERE id IN ($placeholders)",
+			...$ids
+		);
+
+		$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.*
+
+		return ! empty( $result ) ? $result : false;
+	}
+
 	public static function get_data_by_title( $title = '' ) {
 		if ( empty( $title ) ) {
 			return false;
 		}
 
 		global $wpdb;
-		$table    = esc_sql($wpdb->prefix . WPCoder::PREFIX);
+		$table = esc_sql( $wpdb->prefix . WPCoder::PREFIX );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE title=%s", esc_attr( $title ) ) );
 	}
 
-	/**
-	 * Check if row exists by ID.
-	 */
-	public static function check_row( $id = '' ): bool {
-		if ( empty( $id ) ) {
+	public static function update( $data, $where, $data_formats ): void {
+		if ( ! current_user_can( 'unfiltered_html' ) ) {
+			return;
+		}
+
+		global $wpdb;
+		$table  = $wpdb->prefix . WPCoder::PREFIX;
+		$result = $wpdb->update( $table, $data, $where, $data_formats );
+	}
+
+	public static function insert( $data, $data_formats ) {
+		if ( ! current_user_can( 'unfiltered_html' ) ) {
 			return false;
 		}
 
 		global $wpdb;
-		$table = esc_sql($wpdb->prefix . WPCoder::PREFIX);
+		$table = $wpdb->prefix . WPCoder::PREFIX;
 
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result = $wpdb->insert( $table, $data, $data_formats );
 
-		return ! empty( $row );
+		if ( $result ) {
+			return $wpdb->insert_id;
+		}
+
+		return false;
 	}
 
-	/**
-	 * Get unique tags from the table.
-	 */
-	public static function get_tags_from_table() {
+	public static function check_row( $id = '' ): bool {
 		global $wpdb;
-		$table    = esc_sql($wpdb->prefix . WPCoder::PREFIX);
+		$table = $wpdb->prefix . WPCoder::PREFIX;
+		if ( empty( $id ) ) {
+			return false;
+		}
 
-		$all_tags = $wpdb->get_results( "SELECT DISTINCT tag FROM $table ORDER BY tag ASC", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$check_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) );
+		if ( ! empty( $check_row ) ) {
+			return true;
+		}
 
-		return ! empty( $all_tags ) ? $all_tags : false;
+		return false;
 	}
 
-	/**
-	 * Output <option> tags for unique tags.
-	 */
+	public static function get_columns() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . WPCoder::PREFIX;
+
+		return $wpdb->get_results( "DESCRIBE $table_name" );
+	}
+
 	public static function display_tags(): void {
 		global $wpdb;
-		$table  = esc_sql($wpdb->prefix . WPCoder::PREFIX);
+		$table  = $wpdb->prefix . WPCoder::PREFIX;
+		$result = $wpdb->get_results( "SELECT * FROM $table order by tag desc", ARRAY_A );
 		$tags   = [];
-
-		$result = $wpdb->get_results( "SELECT * FROM $table order by tag DESC", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-
 		if ( ! empty( $result ) ) {
 			foreach ( $result as $column ) {
 				if ( ! empty( $column['tag'] ) ) {
@@ -209,11 +205,17 @@ class DBManager {
 		}
 		if ( ! empty( $tags ) ) {
 			foreach ( $tags as $tag ) {
-				printf( '<option value="%s"></option>', esc_attr( $tag ) );
+				echo '<option value="' . esc_attr( $tag ) . '">';
 			}
 		}
 	}
 
+	public static function get_tags_from_table() {
+		global $wpdb;
+		$table    = $wpdb->prefix . WPCoder::PREFIX;
+		$all_tags = $wpdb->get_results( "SELECT DISTINCT tag FROM $table ORDER BY tag ASC", ARRAY_A );
 
+		return ! empty( $all_tags ) ? $all_tags : false;
+	}
 
 }

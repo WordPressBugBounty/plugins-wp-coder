@@ -5,7 +5,7 @@ Tags: code snippets, custom css, custom js, wp code, custom php
 Requires at least: 3.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.0.3
+Stable tag: 4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -208,6 +208,11 @@ The link feature helps you track where your shortcode is placed. Simply enter th
 - [Website](https://wpcoder.pro)
 - [Documentation](https://wpcoder.pro/category/documentation/)
 - [Upgrade to Pro!](https://wpcoder.pro/pricing/)
+
+= 4.1 =
+* Added: Export snippets by tags
+* Added: Export selected snippets
+* Added: Option to use CSS files only in Live Preview without loading them on the site
 
 = 4.0.3 =
 * Added: duplicate button for each item

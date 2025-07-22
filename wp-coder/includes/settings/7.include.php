@@ -35,6 +35,7 @@ $count   = ! empty( $default['param']['include'] ) ? count( $default['param']['i
 						$opt['include'],
 						$opt['include_file'],
 						$opt['js_attr'],
+						$opt['css_only_preview'],
 					], $i ); ?>
 
                 </div>
@@ -54,6 +55,7 @@ $count   = ! empty( $default['param']['include'] ) ? count( $default['param']['i
 				$opt['include'],
 				$opt['include_file'],
 				$opt['js_attr'],
+				$opt['css_only_preview'],
 			], - 1 ); ?>
 
         </div>

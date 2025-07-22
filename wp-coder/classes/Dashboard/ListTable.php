@@ -258,6 +258,7 @@ class ListTable extends WP_List_Table {
 			'deactivate' => __( 'Deactivate', 'wp-coder' ),
 			'test_on'    => __( 'Test mode ON', 'wp-coder' ),
 			'test_off'   => __( 'Test mode OFF', 'wp-coder' ),
+			'export'     => __( 'Export', 'wp-coder' ),
 		];
 
 		return $actions;

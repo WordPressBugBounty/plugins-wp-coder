@@ -78,7 +78,7 @@ class EnqueueStyle {
 		}
 
 		for ( $i = 0; $i < $count; $i ++ ) {
-			if ( $param['include'][ $i ] === 'css' && ! empty( $param['include_file'][ $i ] ) ) {
+			if ( $param['include'][ $i ] === 'css' && ! empty( $param['include_file'][ $i ] ) && empty( $param['css_only_preview'][ $i ] ) ) {
 				$styles[] = [
 					'url'  => $param['include_file'][ $i ],
 					'slug' => WPCoder::SLUG . '-' . $result->id . '-css-' . $i,

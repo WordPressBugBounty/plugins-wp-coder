@@ -9,14 +9,38 @@ use WPCoder\WPCoder;
 class ImporterExporter {
 	private $settings;
 
+
+
 	public static function form_export(): void {
 		?>
         <form method="post">
-            <p></p>
-            <p>
-				<?php submit_button( __( 'Export All Data', 'wp-coder' ), 'secondary', 'submit', false ); ?>
-				<?php wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_export_data' ); ?>
-            </p>
+            <p/>
+			<?php
+			$tags = DBManager::get_tags_from_table();
+
+			$tag_search = ( ! empty( $_REQUEST['tag'] ) ) ? sanitize_text_field( $_REQUEST  ['tag'] ) : '';
+			$tag_search = ( $tag_search === 'all' ) ? '' : $tag_search;
+
+			echo '<div class="actions"><label for="filter-by-tag" class="screen-reader-text">' . esc_attr__( 'Filter by tag',
+					'wpcoderpro' ) . '</label>';
+			echo '<select name="tag" id="filter-by-tag">';
+			echo '<option value="all"' . selected( 'all', $tag_search, false ) . '>' . esc_attr__( 'All',
+					'wpcoderpro' ) . '</option>';
+
+			if ( ! empty( $tags ) ) {
+				foreach ( $tags as $tag ) {
+					if ( empty( $tag['tag'] ) ) {
+						continue;
+					}
+					echo '<option value="' . esc_attr( trim( $tag['tag'] ) ) . '"' . selected( $tag['tag'], $tag_search,
+							false ) . '>' . esc_html( $tag['tag'] ) . '</option>';
+				}
+			}
+			echo '</select>';
+			submit_button( __( 'Export Data', 'wpcoderpro' ), 'secondary', 'submit', false );
+			echo '</div>';
+			wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_export_data' );
+			?>
         </form>
 
 		<?php
@@ -30,18 +54,18 @@ class ImporterExporter {
                 <input type="file" name="import_file" accept="*.json"/>
                 </span>
                 <br>
-                Upload a valid WP Coder .json file exported from another site.
+                Upload a valid WP Coder Pro .json file exported from another site.
             </p>
             <p>
                 <label>
                     <input type="checkbox" name="wowp_import_update" value="1">
-					<?php esc_attr_e( 'Update item if item already exists.', 'wp-coder' ); ?>
+					<?php esc_attr_e( 'Update item if item already exists.', 'wpcoderpro' ); ?>
                 </label>
 
             </p>
 
             <p>
-				<?php submit_button( __( 'Import Settings', 'wp-coder' ), 'secondary', 'submit', false ); ?>
+				<?php submit_button( __( 'Import Settings', 'wpcoderpro' ), 'secondary', 'submit', false ); ?>
 				<?php wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_import_data' ); ?>
             </p>
         </form>
@@ -52,7 +76,7 @@ class ImporterExporter {
 	public static function import_data(): void {
 
 		if ( self::get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-			wp_die( esc_attr__( 'Please upload a valid .json file', 'wp-coder' ), esc_attr__( 'Error', 'wp-coder' ),
+			wp_die( esc_attr__( 'Please upload a valid .json file', 'wpcoderpro' ), esc_attr__( 'Error', 'wpcoderpro' ),
 				[ 'response' => 400 ] );
 		}
 
@@ -114,7 +138,7 @@ class ImporterExporter {
 		return end( $parts );
 	}
 
-	public static function export_item( $id = 0, $action = '' ) {
+	public static function export_item( $id = 0, $action = '' ): bool {
 
 		$page   = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : $action;
@@ -131,15 +155,57 @@ class ImporterExporter {
 
 		$name      = trim( $data->title );
 		$name      = str_replace( ' ', '-', $name );
-		$file_name = $name . '-database-' . gmdate( 'm-d-Y' ) . '.json';
+		$file_name = WPCoder::info( 'data' ) . '-' . $name . '-id-' . $id . '-' . gmdate( 'Y-m-d-H-i-s' ) . '.json';
 		self::export( $file_name, [ $data ] );
 
 		return true;
 	}
 
+	public static function export_items(): bool {
+
+		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
+			return false;
+		}
+
+		if ( !isset( $_REQUEST['action'] ) || 'export' !== $_REQUEST['action'] ) {
+			return false;
+		}
+
+		$name         = WPCoder::PREFIX . '_list_action';
+		$nonce_action = WPCoder::PREFIX . '_nonce';
+
+		if( ! isset( $_POST[ $name ] ) || ! wp_verify_nonce( $_POST[ $name ], $nonce_action ) || ! current_user_can( 'unfiltered_html' ) ) {
+			return false;
+		}
+
+		$ids    = isset( $_POST['ID'] ) ? ( map_deep( $_POST['ID'], 'absint' ) ) : false;
+
+
+		if ( empty( $ids ) || ! is_array( $ids ) ) {
+			return false;
+		}
+
+		$data = DBManager::get_data_by_ids( $ids );
+		if ( ! $data ) {
+			return false;
+		}
+
+		$file_name = WPCoder::info( 'data' ) . '-items-' . implode( '-', array_slice( $ids, 0, 3 ) ) . '-' . gmdate( 'Y-m-d-H-i-s' ) . '.json';
+		self::export( $file_name, $data );
+
+		return true;
+	}
+
 	public static function export_data(): bool {
-		$file_name = WPCoder::SHORTCODE . '-database-' . gmdate( 'm-d-Y' ) . '.json';
-		$data      = DBManager::get_all_data();
+		$tag = isset( $_POST['tag'] ) ? sanitize_text_field( wp_unslash( $_POST['tag'] ) ) : '';
+		if ( ! empty( $tag ) ) {
+			$file_name = WPCoder::info( 'data' ) . '-tag-' . esc_attr( $tag ) . '-' . gmdate( 'Y-m-d-H-i-s' ) . '.json';
+			$data      = DBManager::get_data_by_tag( $tag );
+		} else {
+			$file_name = WPCoder::info( 'data' ) . '-database-' . gmdate( 'Y-m-d-H-i-s' ) . '.json';
+			$data      = DBManager::get_all_data();
+		}
+
 		if ( empty( $data ) ) {
 			return false;
 		}

@@ -4,6 +4,7 @@ namespace WPCoder;
 
 use WPCoder\Admin\AdminInitializer;
 use WPCoder\Dashboard\DashboardInitializer;
+use WPCoder\Dashboard\ImporterExporter;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,6 +18,7 @@ class WOWP_Dashboard {
 		add_filter( WPCoder::PREFIX . '_save_settings', [ $this, 'save_settings' ], 10, 2 );
 		add_filter( WPCoder::PREFIX . '_default_custom_post', [ $this, 'default_custom_post' ] );
 		AdminInitializer::init();
+		add_action( 'admin_init', [ ImporterExporter::class, 'export_items' ] );
 	}
 
 	public function menu_logo( $logo ): string {
