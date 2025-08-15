@@ -5,7 +5,7 @@ Tags: code snippets, custom css, custom js, wp code, custom php
 Requires at least: 3.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.1
+Stable tag: 4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,6 +100,11 @@ Tired of editing theme files to add custom scripts or styles? **WP Coder** lets 
 - Disable wlwmanifest Link
 - Disable Automatic Trash Emptying
 - Redirect 404 to Homepage
+
+### 💡 Included Tools:
+- Google Analytics, Facebook Pixel, and Pinterest Pixel integration.
+- Google AdSense integration with the option to disable ads for selected user roles.
+- Debug Log management (enable/disable and clear log).
 
 ### 🚨 PRO Features:
 - **Custom Templates:** Create unique page and post templates. Also available for categories, archives, and custom post types.
@@ -208,6 +213,10 @@ The link feature helps you track where your shortcode is placed. Simply enter th
 - [Website](https://wpcoder.pro)
 - [Documentation](https://wpcoder.pro/category/documentation/)
 - [Upgrade to Pro!](https://wpcoder.pro/pricing/)
+
+= 4.2 =
+* Added: Debug Log page in WP Coder admin menu with options to enable/disable logging and clear log.
+* Added: Admin bar indicator with link to Debug Log when entries are present.
 
 = 4.1 =
 * Added: Export snippets by tags

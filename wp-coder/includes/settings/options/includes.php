@@ -22,7 +22,7 @@ return [
 		'type'    => 'checkbox',
 		'name'    => '[css_only_preview]',
 		'title'   => __( 'Preview Only', 'wp-coder' ),
-		'text'  => __( 'Enable', 'wpcoderpro' ),
+		'text'  => __( 'Enable', 'wp-coder' ),
 		'class' => 'is-reverse css-only-preview',
 		'tooltip' => __( 'This CSS file will be used only in the Live Preview. It won’t be included on the actual website.', 'wp-coder' ),
 	],

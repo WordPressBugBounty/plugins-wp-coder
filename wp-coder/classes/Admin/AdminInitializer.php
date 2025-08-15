@@ -64,8 +64,10 @@ class AdminInitializer {
 		add_submenu_page( $slug, $title, 'Snippets', $capability, $slug . '-snippets', [ __CLASS__, 'snippets' ] );
 		add_submenu_page( $slug, $title, 'Tools', $capability, $slug . '-tools', [ __CLASS__, 'tools' ] );
 		add_submenu_page( $slug, $title, 'Global PHP', $capability, $slug . '-global', [ __CLASS__, 'global_php' ] );
+		add_submenu_page( $slug, $title, 'Debug Log', $capability, $slug . '-debug', [ __CLASS__, 'debug_log' ] );
 		add_submenu_page( $slug, $title, 'Import / Export', $capability, $slug . '-import-export', [ __CLASS__, 'import_export' ] );
 		add_submenu_page( $slug, $title, 'Support', $capability, $slug . '-support', [ __CLASS__, 'support' ] );
+
 	}
 
 	public static function icon(): string {
@@ -129,6 +131,13 @@ class AdminInitializer {
 		}
 	}
 
+	public static function debug_log() {
+		$page_path = DashboardHelper::get_folder_path( 'pages' ) . '/10.debug-log.php';
+
+		if ( file_exists( $page_path ) ) {
+			require_once $page_path;
+		}
+	}
 
 	public static function admin_scripts( $hook ): void {
 //		$page       = 'toplevel_page_' . WPCoder::SLUG;

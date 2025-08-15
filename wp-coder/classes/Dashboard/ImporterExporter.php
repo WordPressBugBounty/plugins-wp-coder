@@ -22,10 +22,10 @@ class ImporterExporter {
 			$tag_search = ( $tag_search === 'all' ) ? '' : $tag_search;
 
 			echo '<div class="actions"><label for="filter-by-tag" class="screen-reader-text">' . esc_attr__( 'Filter by tag',
-					'wpcoderpro' ) . '</label>';
+					'wp-coder' ) . '</label>';
 			echo '<select name="tag" id="filter-by-tag">';
 			echo '<option value="all"' . selected( 'all', $tag_search, false ) . '>' . esc_attr__( 'All',
-					'wpcoderpro' ) . '</option>';
+					'wp-coder' ) . '</option>';
 
 			if ( ! empty( $tags ) ) {
 				foreach ( $tags as $tag ) {
@@ -37,7 +37,7 @@ class ImporterExporter {
 				}
 			}
 			echo '</select>';
-			submit_button( __( 'Export Data', 'wpcoderpro' ), 'secondary', 'submit', false );
+			submit_button( __( 'Export Data', 'wp-coder' ), 'secondary', 'submit', false );
 			echo '</div>';
 			wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_export_data' );
 			?>
@@ -59,13 +59,13 @@ class ImporterExporter {
             <p>
                 <label>
                     <input type="checkbox" name="wowp_import_update" value="1">
-					<?php esc_attr_e( 'Update item if item already exists.', 'wpcoderpro' ); ?>
+					<?php esc_attr_e( 'Update item if item already exists.', 'wp-coder' ); ?>
                 </label>
 
             </p>
 
             <p>
-				<?php submit_button( __( 'Import Settings', 'wpcoderpro' ), 'secondary', 'submit', false ); ?>
+				<?php submit_button( __( 'Import Settings', 'wp-coder' ), 'secondary', 'submit', false ); ?>
 				<?php wp_nonce_field( WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_import_data' ); ?>
             </p>
         </form>
@@ -76,7 +76,7 @@ class ImporterExporter {
 	public static function import_data(): void {
 
 		if ( self::get_file_extension( $_FILES['import_file']['name'] ) != 'json' ) {
-			wp_die( esc_attr__( 'Please upload a valid .json file', 'wpcoderpro' ), esc_attr__( 'Error', 'wpcoderpro' ),
+			wp_die( esc_attr__( 'Please upload a valid .json file', 'wp-coder' ), esc_attr__( 'Error', 'wp-coder' ),
 				[ 'response' => 400 ] );
 		}
 

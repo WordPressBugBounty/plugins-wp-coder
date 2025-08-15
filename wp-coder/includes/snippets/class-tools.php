@@ -24,6 +24,38 @@ class WPCoder_Lite_Tools {
 		if ( array_key_exists( 'enable_google_adsense', $options ) ) {
 			add_action( 'wp_head', array( $this, 'add_adsense_code' ) );
 		}
+
+		$enabled = (bool) get_option( '_wpcoder_enable_debug_log' );
+		if ( $enabled ) {
+			add_action( 'plugins_loaded', [ $this, 'debug_log' ] );
+			add_action( 'admin_bar_menu', [ $this, 'admin_menu_debug' ], 90 );
+		}
+	}
+
+	public function debug_log(): void {
+		error_reporting( E_ALL );
+		ini_set( 'log_errors', 1 );
+		ini_set( 'error_log', WP_CONTENT_DIR . '/debug.log' ); // Log file path
+	}
+
+	public function admin_menu_debug( $wp_admin_bar ): void {
+		if ( ! current_user_can( 'unfiltered_html' ) ) {
+			return;
+		}
+
+		$log_file = WP_CONTENT_DIR . '/debug.log';
+		if ( ! file_exists( $log_file ) || filesize( $log_file ) === 0 ) {
+			return;
+		}
+
+		$wp_admin_bar->add_node( [
+			'id'    => 'wpcoder-debug-log-link',
+			'title' => '<span class="ab-icon dashicons-admin-tools" aria-hidden="true"></span><span class="ab-label">Debug Log</span>',
+			'href'  => admin_url( 'admin.php?page=' . WPCoder::SLUG . '-debug' ),
+			'meta'  => [
+				'title' => 'View Debug Log', // tooltip
+			],
+		] );
 	}
 
 	public function add_tracking(): void {

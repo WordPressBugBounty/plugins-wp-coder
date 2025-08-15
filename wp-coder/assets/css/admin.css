@@ -426,6 +426,21 @@
   min-width: 200px;
   padding-inline-start: 12px;
 }
+.wowp .wowp-field textarea {
+  width: 100%;
+  min-height: 400px;
+  padding: 12px;
+  resize: vertical;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow: var(--wowp-shadow-sm);
+  border: 1px solid var(--wowp-gray-100);
+  border-radius: 0.5rem;
+}
+.wowp .wowp-field textarea[readonly] {
+  color: var(--wowp-gray-400);
+  background-color: #ffffff;
+}
 .wowp .wowp-field .label {
   position: absolute;
   top: 0;
@@ -636,6 +651,15 @@
 }
 .wowp .wowp-button.button-dark:hover {
   background-color: var(--wowp-gray-700);
+}
+.wowp .wowp-button.button-red {
+  font-weight: 500;
+  border-color: transparent;
+  background-color: var(--wowp-color-red);
+  color: #ffffff;
+}
+.wowp .wowp-button.button-red:hover {
+  background-color: color-mix(in srgb, var(--wowp-color-red) 61.54%, black);
 }
 .wowp .wowp-tooltip {
   position: relative;

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Coder\n"
-"POT-Creation-Date: 2025-03-28 11:39+0200\n"
+"POT-Creation-Date: 2025-08-15 13:37+0300\n"
 "PO-Revision-Date: 2025-03-28 11:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -43,6 +43,20 @@ msgstr ""
 
 #: classes/Dashboard/DashboardInitializer.php:75
 msgid "Update"
+msgstr ""
+
+#: classes/Dashboard/DebugLog.php:43
+msgid "Enable Debug Log"
+msgstr ""
+
+#: classes/Dashboard/DebugLog.php:52 classes/Dashboard/SaveGlobal.php:37
+#: classes/Dashboard/Settings.php:93 classes/Snippets/SnippetManager.php:46
+#: classes/Tools/ToolsManager.php:26 includes/pages/sidebar.php:29
+msgid "Save"
+msgstr ""
+
+#: classes/Dashboard/DebugLog.php:53
+msgid "Clear Log "
 msgstr ""
 
 #: classes/Dashboard/Field.php:141
@@ -757,24 +771,34 @@ msgstr ""
 msgid "All Users"
 msgstr ""
 
-#: classes/Dashboard/ImporterExporter.php:17
-msgid "Export All Data"
+#: classes/Dashboard/ImporterExporter.php:24
+#: classes/Dashboard/ListTable.php:309
+msgid "Filter by tag"
 msgstr ""
 
-#: classes/Dashboard/ImporterExporter.php:38
+#: classes/Dashboard/ImporterExporter.php:27
+#: classes/Dashboard/ListTable.php:312
+msgid "All"
+msgstr ""
+
+#: classes/Dashboard/ImporterExporter.php:40
+msgid "Export Data"
+msgstr ""
+
+#: classes/Dashboard/ImporterExporter.php:62
 msgid "Update item if item already exists."
 msgstr ""
 
-#: classes/Dashboard/ImporterExporter.php:44
+#: classes/Dashboard/ImporterExporter.php:68
 #: includes/pages/6.import-export.php:42
 msgid "Import Settings"
 msgstr ""
 
-#: classes/Dashboard/ImporterExporter.php:55
+#: classes/Dashboard/ImporterExporter.php:79
 msgid "Please upload a valid .json file"
 msgstr ""
 
-#: classes/Dashboard/ImporterExporter.php:55
+#: classes/Dashboard/ImporterExporter.php:79
 msgid "Error"
 msgstr ""
 
@@ -786,7 +810,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: classes/Dashboard/ListTable.php:56
+#: classes/Dashboard/ListTable.php:56 includes/pages/2.settings.php:58
 msgid "Duplicate"
 msgstr ""
 
@@ -794,7 +818,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: classes/Dashboard/ListTable.php:60
+#: classes/Dashboard/ListTable.php:60 classes/Dashboard/ListTable.php:261
 msgid "Export"
 msgstr ""
 
@@ -870,26 +894,12 @@ msgstr ""
 msgid "Test mode OFF"
 msgstr ""
 
-#: classes/Dashboard/ListTable.php:308
-msgid "Filter by tag"
-msgstr ""
-
-#: classes/Dashboard/ListTable.php:311
-msgid "All"
-msgstr ""
-
-#: classes/Dashboard/ListTable.php:324
+#: classes/Dashboard/ListTable.php:325
 msgid "Filter"
 msgstr ""
 
 #: classes/Dashboard/SaveGlobal.php:28
 msgid "Enable PHP code"
-msgstr ""
-
-#: classes/Dashboard/SaveGlobal.php:37 classes/Dashboard/Settings.php:93
-#: classes/Snippets/SnippetManager.php:46 classes/Tools/ToolsManager.php:26
-#: includes/pages/sidebar.php:29
-msgid "Save"
 msgstr ""
 
 #: classes/Dashboard/SaveGlobal.php:40 includes/settings/1.html-code.php:32
@@ -1036,13 +1046,22 @@ msgstr ""
 msgid "All Codes"
 msgstr ""
 
-#: includes/pages/1.list.php:27 includes/pages/2.settings.php:47
+#: includes/pages/1.list.php:27 includes/pages/2.settings.php:53
 #: includes/settings/7.include.php:24
 msgid "Add New"
 msgstr ""
 
 #: includes/pages/1.list.php:34
 msgid "Search"
+msgstr ""
+
+#: includes/pages/10.debug-log.php:9 includes/pages/3.snippets.php:9
+#: includes/pages/4.tools.php:9 includes/pages/5.global-php.php:9
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: includes/pages/10.debug-log.php:18
+msgid "Debug"
 msgstr ""
 
 #: includes/pages/2.settings.php:19
@@ -1057,13 +1076,8 @@ msgstr ""
 msgid "Duplicate the code from"
 msgstr ""
 
-#: includes/pages/2.settings.php:43
+#: includes/pages/2.settings.php:49
 msgid "Back to Codes"
-msgstr ""
-
-#: includes/pages/3.snippets.php:9 includes/pages/4.tools.php:9
-#: includes/pages/5.global-php.php:9
-msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #: includes/pages/3.snippets.php:20
@@ -1338,6 +1352,7 @@ msgstr ""
 #: includes/settings/options/css-code.php:20
 #: includes/settings/options/html-code.php:11
 #: includes/settings/options/html-code.php:20
+#: includes/settings/options/includes.php:25
 #: includes/settings/options/js-code.php:20
 msgid "Enable"
 msgstr ""
@@ -1369,7 +1384,7 @@ msgid "Minify the HTML output for better performance."
 msgstr ""
 
 #: includes/settings/options/includes.php:10
-#: includes/settings/options/includes.php:36
+#: includes/settings/options/includes.php:45
 msgid "Type"
 msgstr ""
 
@@ -1378,11 +1393,21 @@ msgid "URL"
 msgstr ""
 
 #: includes/settings/options/includes.php:24
+msgid "Preview Only"
+msgstr ""
+
+#: includes/settings/options/includes.php:27
+msgid ""
+"This CSS file will be used only in the Live Preview. It won’t be included on "
+"the actual website."
+msgstr ""
+
+#: includes/settings/options/includes.php:33
 #: includes/settings/options/js-code.php:42
 msgid "Attribute"
 msgstr ""
 
-#: includes/settings/options/includes.php:44
+#: includes/settings/options/includes.php:53
 msgid "ID"
 msgstr ""
 
@@ -1415,7 +1440,7 @@ msgstr ""
 msgid "No feed available, please visit our %1$shomepage%2$s!"
 msgstr ""
 
-#: wp-coder.php:130 wp-coder.php:141
+#: wp-coder.php:131 wp-coder.php:142
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
