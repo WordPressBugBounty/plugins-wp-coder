@@ -118,9 +118,9 @@ class WOWP_Dashboard {
             <span class="dashicons dashicons-star-filled"></span> Reviews
         </a>
 
-        <a href="https://wpcoder.pro/pricing/" target="_blank"
+        <a href="https://wpcoder.pro/" target="_blank"
            class="wowp-button button button-dark">
-            <span>🚀</span> Get WP Coder Pro
+            <span>⭐</span> See PRO Features
         </a>
 		<?php
 	}

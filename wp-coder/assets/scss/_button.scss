@@ -49,3 +49,14 @@
     background-color: var(--wowp-gray-700);
   }
 }
+
+.wowp-button.button-red {
+  font-weight: 500;
+  border-color: transparent;
+  background-color: var(--wowp-color-red);
+  color: #ffffff;
+  &:hover {
+    background-color: color-mix(in srgb, var(--wowp-color-red) 61.54%, black);
+
+  }
+}

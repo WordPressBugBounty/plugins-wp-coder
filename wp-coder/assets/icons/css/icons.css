@@ -1,24 +1,24 @@
 /*--------------------------------
 
-Nucleo icon font
+WPCoderIcon icon font
 Generated using nucleoapp.com
 
 -------------------------------- */
 
 @font-face {
-  font-family: 'Nucleo';
-  src: url('../fonts/Nucleo.eot');
-  src: url('../fonts/Nucleo.eot') format('embedded-opentype'),
-       url('../fonts/Nucleo.woff2') format('woff2'),
-       url('../fonts/Nucleo.woff') format('woff'),
-       url('../fonts/Nucleo.ttf') format('truetype'),
-       url('../fonts/Nucleo.svg') format('svg');
+  font-family: 'WPCoderIcon';
+  src: url('../fonts/WPCoderIcon.eot');
+  src: url('../fonts/WPCoderIcon.eot') format('embedded-opentype'),
+       url('../fonts/WPCoderIcon.woff2') format('woff2'),
+       url('../fonts/WPCoderIcon.woff') format('woff'),
+       url('../fonts/WPCoderIcon.ttf') format('truetype'),
+       url('../fonts/WPCoderIcon.svg') format('svg');
 }
 
 /* base class */
 .icon {
   display: inline-block;
-  font: normal normal normal 1em/1 'Nucleo';
+  font: normal normal normal 1em/1 'WPCoderIcon';
   color: inherit;
   flex-shrink: 0;
   -webkit-font-smoothing: antialiased;
@@ -161,4 +161,12 @@ Generated using nucleoapp.com
 
 .icon-browser-chrome::before {
   content: "\ea18";
+}
+
+.icon-integrations::before {
+  content: "\ea1a";
+}
+
+.icon-developer::before {
+  content: "\ea1b";
 }

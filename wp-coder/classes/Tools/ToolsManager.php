@@ -9,6 +9,14 @@ class ToolsManager {
 	public static function init(): void {
 		self::send();
 
+		$options = get_option( '_wp_coder_tools', [] );
+
+		$tools = [
+			'integrations' => __( 'Integrations', 'wpcoderpro' ),
+			'content'      => __( 'Content & Templates', 'wpcoderpro' ),
+			'developer'    => __( 'Developer', 'wpcoderpro' ),
+		];
+
 		?>
 
         <div class="wowp-settings wowp-tools">
@@ -20,17 +28,41 @@ class ToolsManager {
                         integrations to enhance your site.</p>
                 </div>
 
+                <div class="wowp-snippets__tabs" id="wowp-snippets-tabs">
+					<?php
+					foreach ( $tools as $key => $value ) {
+						$tab = ! empty( $options['tool_tab'] ) ? $options['tool_tab'] : 'integrations';
+						echo '<input type="radio" class="wowp-snippets__tabs-radio" name="wp_coder_tool[tool_tab]" value="' . esc_attr( $key ) . '" id="wowp-tab-' . esc_attr( $key ) . '" ' . checked( $tab,
+								$key, false ) . '>';
+					}
+					echo '<div class="wowp-snippets__tabs-labels">';
+					foreach ( $tools as $key => $value ) {
+						echo '<label  class="wowp-snippets__tabs-tab" for="wowp-tab-' . esc_attr( $key ) . '"><span class="icon icon-' . esc_attr( $key ) . '"></span>' . esc_html( $value ) . '</label>';
+					}
+					echo '</div>';
+					foreach ( $tools as $key => $value ) {
+						echo '<div class="wowp-snippets__tabs-content" data-content="wowp-tab-' . esc_attr( $key ) . '">';
+						require_once plugin_dir_path( __FILE__ ) . 'pages/' . esc_attr( $key ) . '.php';
+						echo '<input type="submit" name="submit" class="wowp-button button button-dark button-hero" value="' . esc_attr__( 'Save',
+								'wpcoderpro' ) . '">';
+						echo '</div>';
+					}
 
-				<?php require_once plugin_dir_path( __FILE__ ) . '/page.php'; ?>
+					?>
+                </div>
 
-				<?php submit_button( __( 'Save', 'wp-coder' ), 'wowp-button button button-dark button-hero', 'submit', false ); ?>
+				<?php
+				// require_once plugin_dir_path( __FILE__ ) . '/page.php'; ?>
 
-				<?php wp_nonce_field( WPCoder::PREFIX . '_tools_action', WPCoder::PREFIX . '_save_tools' ); ?>
+				<?php
+				// submit_button( __( 'Save', 'wpcoderpro' ), 'wowp-button button button-dark button-hero', 'submit', false ); ?>
+
+				<?php
+				wp_nonce_field( WPCoder::PREFIX . '_tools_action', WPCoder::PREFIX . '_save_tools' ); ?>
 
             </form>
         </div>
 		<?php
-
 	}
 
 	private static function option( $name = '', $def = '' ) {

@@ -138,7 +138,7 @@
   }
 }
 
-$tabs: 'content', 'admin', 'login', 'media', 'core', 'comments', 'optimization';
+$tabs: 'content', 'admin', 'login', 'media', 'core', 'comments', 'optimization', 'contenttools', 'site-tools', 'integrations', 'developer';
 
 @each $tab in $tabs {
   ##{'wowp-tab-' + $tab}:checked ~ [data-content='#{'wowp-tab-' + $tab}'] {

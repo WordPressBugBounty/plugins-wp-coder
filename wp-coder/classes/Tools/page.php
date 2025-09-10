@@ -94,6 +94,185 @@ defined( 'ABSPATH' ) || exit;
         </div>
     </div>
 
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_login_style">Enable Style and Script on Login Page </label>
+            <p class="wowp-snippet__item-description">Add Login page custom Style and Script</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'enable_login_style' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="wowp-snippet__item-expand is-hidden">
+            <div class="wowp-field">
+                <label>
+                    <span class="label">Code ID</span>
+					<?php self::field( 'number', 'enable_login_code_id', '', 1 ); ?>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_maintenance_mode">Enable Maintenance Mode</label>
+            <p class="wowp-snippet__item-description">Show a customizable maintenance page on the frontend while
+                performing a brief maintenance to your site. Logged-in administrators can still view the site as
+                usual.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'enable_maintenance_mode' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="wowp-snippet__item-expand is-hidden">
+            <div class="wowp-field">
+                <label><span class="label">Code ID</span>
+					<?php
+					self::field( 'number', 'enable_maintenance_mode_id', '', 2 ); ?>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_tax_icon">Enable Extra Icon</label>
+            <p class="wowp-snippet__item-description">Enable Extra Icon for categories/tags and pages/posts.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'enable_tax_icon' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_breadcrumbs">Enable Breadcrumbs</label>
+            <p class="wowp-snippet__item-description">You can use the function <code>wpc_get_breadcrumbs()</code> on
+                the template for display breadcrumbs.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'enable_breadcrumbs' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_quickcode">Enable QuickCode</label>
+            <p class="wowp-snippet__item-description">Enable tool for uses QuickCodes in the Items.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'enable_quickcode' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_page_template">Create Page Templates</label>
+            <p class="wowp-snippet__item-description">Define custom page templates by name.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'enable_page_template' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="wowp-snippet__item-expand is-hidden">
+            <div class="wowp-field is-column">
+                <label><span class="label">Template Names</span>
+				    <?php self::field( 'text', 'enable_custom_page_templates', '', 'Home, About Us, Contact' ); ?>
+                </label>
+                <small>Separate multiple templates with commas (e.g. Full Width, Landing Page).</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_menu">Register Menu</label>
+            <p class="wowp-snippet__item-description">Automatically register a WordPress menu if it doesn’t exist.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'enable_menu' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="show_page_debug_info">Show Page Debug Info</label>
+            <p class="wowp-snippet__item-description">
+                Display technical info for the current request in the Admin Bar (template, query type, object, body classes). Admins only.
+            </p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'show_page_debug_info' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="test_users">Test Users</label>
+            <p class="wowp-snippet__item-description">
+                Quickly test other user roles from a super admin account, to see what other users experience.
+            </p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'test_users' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="theme_switcher">Theme Switcher</label>
+            <p class="wowp-snippet__item-description">
+                Quickly switch between installed themes directly from the admin bar.
+            </p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'theme_switcher' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="plugin_switcher">Plugin Switcher</label>
+            <p class="wowp-snippet__item-description">
+                Quickly activate or deactivate installed plugins directly from the admin bar.
+            </p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+				<?php self::field( 'checkbox', 'plugin_switcher' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+
 </div>
 
 <?php

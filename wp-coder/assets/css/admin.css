@@ -1017,6 +1017,30 @@
 .wowp #wowp-tab-optimization:checked ~ .wowp-snippets__tabs-labels [for=wowp-tab-optimization] {
   background-color: var(--wowp-gray-100);
 }
+.wowp #wowp-tab-contenttools:checked ~ [data-content=wowp-tab-contenttools] {
+  position: static;
+}
+.wowp #wowp-tab-contenttools:checked ~ .wowp-snippets__tabs-labels [for=wowp-tab-contenttools] {
+  background-color: var(--wowp-gray-100);
+}
+.wowp #wowp-tab-site-tools:checked ~ [data-content=wowp-tab-site-tools] {
+  position: static;
+}
+.wowp #wowp-tab-site-tools:checked ~ .wowp-snippets__tabs-labels [for=wowp-tab-site-tools] {
+  background-color: var(--wowp-gray-100);
+}
+.wowp #wowp-tab-integrations:checked ~ [data-content=wowp-tab-integrations] {
+  position: static;
+}
+.wowp #wowp-tab-integrations:checked ~ .wowp-snippets__tabs-labels [for=wowp-tab-integrations] {
+  background-color: var(--wowp-gray-100);
+}
+.wowp #wowp-tab-developer:checked ~ [data-content=wowp-tab-developer] {
+  position: static;
+}
+.wowp #wowp-tab-developer:checked ~ .wowp-snippets__tabs-labels [for=wowp-tab-developer] {
+  background-color: var(--wowp-gray-100);
+}
 .wowp .popover-container {
   position: relative;
   display: inline-block;

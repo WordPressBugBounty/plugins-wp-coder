@@ -30,6 +30,19 @@ class WPCoder_Lite_Tools {
 			add_action( 'plugins_loaded', [ $this, 'debug_log' ] );
 			add_action( 'admin_bar_menu', [ $this, 'admin_menu_debug' ], 90 );
 		}
+
+		if ( array_key_exists( 'show_page_debug_info', $options ) ) {
+			new WPCoder_Page_Info;
+		}
+
+		if ( array_key_exists( 'theme_switcher', $options ) ) {
+			new WPCoder_Theme_Switcher;
+		}
+
+		if ( array_key_exists( 'markdown_editor', $options ) ) {
+			new WPCoder_Markdown_Editor($options);
+		}
+
 	}
 
 	public function debug_log(): void {

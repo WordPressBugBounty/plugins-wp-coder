@@ -1,50 +1,58 @@
-=== WP Coder – Insert Custom PHP, HTML, CSS & JS in WordPress ===
-Contributors: wpcoderdev, Wpcalc, lobov
+=== WP Coder – Insert & Manage Code Snippets ===
+Contributors: Wpcalc, lobov
 Donate link: https://wpcoder.pro/
-Tags: code snippets, custom css, custom js, wp code, custom php
+Tags: snippets, custom js, code editor, custom php, custom html
 Requires at least: 3.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.2
+Stable tag: 4.3
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-WP Coder: Easily inject custom HTML, CSS, JavaScript, and PHP snippets into your WordPress site—no coding in theme files needed!
+Snippets made simple — easily insert and manage custom PHP, CSS, JS & HTML without coding in theme files.
 
 == Description ==
 
-Tired of editing theme files to add custom scripts or styles? **WP Coder** lets you effortlessly insert custom HTML, CSS, JavaScript, and PHP snippets right from your dashboard, giving you complete control and flexibility.
+Tired of editing theme files to add custom scripts or styles?
+**WP Coder** lets you insert custom HTML, CSS, JavaScript, and PHP snippets directly from your dashboard — no coding in theme files required. Gain full control and flexibility over your site.
 
-[Documentation](https://wpcoder.pro/documentation/getting-started/install-and-activate/) | [Upgrade to Pro](https://wpcoder.pro/pricing/)
+[Documentation](https://wpcoder.pro/category/documentation/) | [Upgrade to Pro](https://wpcoder.pro/)
 
-**WP Coder** is a robust and user-friendly WordPress plugin that allows effortless insertion of custom HTML, CSS, JavaScript, and PHP code directly into your pages, posts, or widgets using powerful shortcodes. No more editing theme files—gain full control over your website’s customization instantly.
+### Why WP Coder?
+- **All-in-One Code Editor:** Tabbed editor for HTML, CSS, JS & PHP with CodeMirror syntax highlighting.
+- **Shortcode Integration:** Use `[wp_code id="X"]` to embed snippets anywhere.
+- **Live Preview:** Instantly preview HTML & CSS without reloads.
+- **Performance Ready:** Minify CSS/JS and control script loading with `async` / `defer`.
 
-### 🚀 Why WP Coder?
-- **Advanced Code Editor:** CodeMirror-powered editor with syntax highlighting and intuitive navigation.
-- **Shortcode Integration:** Use `[wp_code id="X"]` to embed snippets anywhere easily.
-- **Live HTML & CSS Preview:** Real-time preview without the need to save or reload.
-- **Code Optimization:** Minify and inline your CSS/JS to boost website speed.
+### Ideal For
+- **Developers:** Test snippets, hooks, and debug quickly.
+- **Marketers:** Insert tracking pixels, analytics, and ad scripts.
+- **Designers & Bloggers:** Customize layouts, styles, and enhance engagement.
 
-### 🎯 Ideal for:
-- **Developers:** Rapidly test scripts or debug live sites.
-- **Marketers:** Easily integrate analytics, pixels, and ad scripts.
-- **Bloggers & Designers:** Customize styles, enhance layouts, and improve user engagement.
+### Key Features
+- Insert **HTML, CSS, JS, and PHP** via powerful shortcodes.
+- Smart PHP handling: run in admin, front-end, everywhere, or only where inserted.
+- Include external libraries (Google Fonts, CDN scripts & styles).
+- **Test Mode:** Preview snippets safely before going live.
+- Import/Export snippets and settings between sites.
+- **NAV comments:** Add inline navigation markers for faster code editing.
+- Lightweight & secure — built for performance.
 
-### ⚙️ Features:
-- **Embed HTML, CSS, JS, and PHP:** Easily insert custom code through powerful shortcodes.
-- **Advanced Tabbed Code Editor:** Easily toggle visibility of HTML, CSS, JS, and PHP tabs for focused editing or cleaner visualization.
-- **Syntax Highlighting:** Enhanced code readability with CodeMirror integration.
-- **Live Preview:** Instantly view HTML and CSS output inside the editor.
-- **Minify & Optimize:** Improve loading performance by minifying CSS and JavaScript.
-- **JS Optimization:** Control script attributes (async, defer, disable jQuery).
-- **Smart PHP Handling:** Execute PHP snippets conditionally—run where inserted, run only in the admin area, run only on the front-end, or run everywhere.
-- **External Scripts & Styles:** Include external libraries like Google Fonts or CDN resources.
-- **Test Mode:** Safely preview snippets without affecting your live site.
-- **Import/Export:** Easily transfer snippets and settings between sites.
-- **Visual Snippet Navigation:** Inline NAV comments for easy code section navigation.
-- **Safe and Lightweight:** Built for speed and optimized for security, with zero bloat.
+### Included Tools:
 
-### 💡 Included Snippets:
+#### Integrations
+- Google Analytics, Facebook Pixel, and Pinterest Pixel integration.
+- Google AdSense integration with the option to disable ads for selected user roles.
+
+#### Content & Templates
+- Markdown Editor - Disables Gutenberg and TinyMCE, replacing them with a Markdown editor powered by CodeMirror.
+
+#### Developer Tools
+- Debug Log management (enable/disable and clear log).
+- Show Page Debug Info - Display technical info for the current request in the Admin Bar (template, query type, object, body classes). Admins only.
+- Theme Switcher -  Quickly switch between installed themes directly from the admin bar.
+
+### Included Snippets:
 
 #### Editor & Content
 - Disable Gutenberg Editor
@@ -67,6 +75,8 @@ Tired of editing theme files to add custom scripts or styles? **WP Coder** lets 
 - Disable Admin Password Reset Emails
 - Custom Login Logo
 - Custom Login Redirect URLs
+- Change Redirect After Login
+- Change Redirect After Logout
 
 #### Media & Embeds
 - Enable SVG Upload
@@ -101,43 +111,12 @@ Tired of editing theme files to add custom scripts or styles? **WP Coder** lets 
 - Disable Automatic Trash Emptying
 - Redirect 404 to Homepage
 
-### 💡 Included Tools:
-- Google Analytics, Facebook Pixel, and Pinterest Pixel integration.
-- Google AdSense integration with the option to disable ads for selected user roles.
-- Debug Log management (enable/disable and clear log).
-
-### 🚨 PRO Features:
-- **Custom Templates:** Create unique page and post templates. Also available for categories, archives, and custom post types.
-- **Conditional Display Rules:** Show snippets based on specific criteria.
-- **Advanced Shortcode Attributes:** Create and use custom shortcode attributes to dynamically adjust snippet content.
-- **Scheduled Visibility:** Set date/time rules for snippet display.
-- **Visibility Control:** Mobile/Desktop-specific visibility settings.
-- **Browser & Language Targeting:** Show or hide snippets based on browser or language.
-- **Maintenance Mode:** Display custom maintenance pages.
-- **Remove Enqueued Scripts & Styles:** Optimize site performance by managing scripts/styles.
-- **QuickCode:** Dynamically insert data like object IDs or site options.
-- **Register Menu:** Automatically add menu support in themes that don't have a registered navigation menu.
-
 WP Coder simplifies your WordPress development workflow and makes customization safe, fast, and flexible!
 
 Get started today and simplify your WordPress development workflow with **WP Coder**!
 
-### 📺 Plugin Demo:
+### Plugin Demo:
 https://youtu.be/YF4X7sU0iFY?si=327VZduhqu_mh5-N
-
-### 🌟 Other Popular Plugins:
-- [Popup Box](https://wordpress.org/plugins/popup-box/)
-- [Counter Box](https://wordpress.org/plugins/counter-box/)
-- [Button Generator](https://wordpress.org/plugins/button-generation/)
-- [Herd Effects](https://wordpress.org/plugins/mwp-herd-effect/)
-- [Floating Button](https://wordpress.org/plugins/floating-button/)
-- [Side Menu Lite](https://wordpress.org/plugins/side-menu-lite/)
-- [Sticky Buttons](https://wordpress.org/plugins/sticky-buttons/)
-- [Bubble Menu](https://wordpress.org/plugins/bubble-menu/)
-- [Float Menu](https://wordpress.org/plugins/float-menu/)
-- [Modal Window](https://wordpress.org/plugins/modal-window/)
-
-Enhance your WordPress site today with **WP Coder**!
 
 = Support =
 Need help? Ask questions and get quick answers in our [support center](https://wordpress.org/support/plugin/wp-coder).
@@ -175,7 +154,7 @@ Currently, WP Coder doesn't support network-wide activation. If you're using Wor
 
 = Where can I find detailed documentation? =
 
-Visit our comprehensive [official documentation](https://wpcoder.pro/documentation/getting-started/install-and-activate/) for detailed guides and step-by-step instructions.
+Visit our comprehensive [official documentation](https://wpcoder.pro/category/documentation/) for detailed guides and step-by-step instructions.
 
 = How can I use shortcode content in HTML code? =
 
@@ -212,7 +191,15 @@ The link feature helps you track where your shortcode is placed. Simply enter th
 ### Helpful Links ###
 - [Website](https://wpcoder.pro)
 - [Documentation](https://wpcoder.pro/category/documentation/)
-- [Upgrade to Pro!](https://wpcoder.pro/pricing/)
+- [Upgrade to Pro!](https://wpcoder.pro/)
+
+= 4.3 =
+* Added: **Markdown Editor** in Tools for writing with Markdown syntax.
+* Added: **Debug Tools** section in Tools, including:
+  - Show Page Debug Info
+  - Theme Switcher
+  - Plugin Switcher
+* Improved: Tools page layout – tools are now grouped into sections for easier navigation.
 
 = 4.2 =
 * Added: Debug Log page in WP Coder admin menu with options to enable/disable logging and clear log.

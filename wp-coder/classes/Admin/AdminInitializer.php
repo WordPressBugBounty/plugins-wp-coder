@@ -71,7 +71,13 @@ class AdminInitializer {
 	}
 
 	public static function icon(): string {
-		return '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><title>48px_code</title><g><path d="M14.562 14.75a1.998 1.998 0 0 0-2.811-.312l-10.001 8a2 2 0 0 0 0 3.124l10 8a1.997 1.997 0 0 0 2.811-.312 2 2 0 0 0-.312-2.81L6.201 24l8.048-6.438a2 2 0 0 0 .312-2.81v-.003h.001z" fill="url(#1699598250888-4824476_nc-code-0_linear_235_116)"></path><path d="M36.25 14.438a2 2 0 0 0-2.499 3.123L41.799 24l-8.048 6.438a2 2 0 0 0 2.499 3.123l10-8a2 2 0 0 0 0-3.124l-10-8v.002z" fill="url(#1699598250888-4824476_nc-code-1_linear_235_116)"></path><path d="M29.535 4.073a2.003 2.003 0 0 0-2.462 1.392l-10 36a2 2 0 0 0 3.854 1.07l10-36a2 2 0 0 0-1.392-2.462z" fill="url(#1699598250888-4824476_nc-code-2_linear_235_116)"></path><defs><linearGradient id="1699598250888-4824476_nc-code-0_linear_235_116" x1="8" y1="13.999" x2="8" y2="34" gradientUnits="userSpaceOnUse"><stop stop-color="#5B5E71"></stop><stop offset="1" stop-color="#393A46"></stop></linearGradient><linearGradient id="1699598250888-4824476_nc-code-1_linear_235_116" x1="40" y1="13.999" x2="40" y2="33.998" gradientUnits="userSpaceOnUse"><stop stop-color="#5B5E71"></stop><stop offset="1" stop-color="#393A46"></stop></linearGradient><linearGradient id="1699598250888-4824476_nc-code-2_linear_235_116" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse"><stop stop-color="#E0E0E6"></stop><stop offset="1" stop-color="#C2C3CD"></stop></linearGradient></defs></g></svg>';
+		return '<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <path id="1728127909379-8007129Oval-Copy" fill="#2b7fff" fill-rule="evenodd" stroke="none" d="M 496 101 C 496 128.614227 473.614227 151 446 151 C 418.385773 151 396 128.614227 396 101 C 396 73.385773 418.385773 51 446 51 C 473.614227 51 496 73.385773 496 101 Z"/>
+    <g id="window-code">
+        <path id="Path" fill="#212121" stroke="none" d="M 245.714279 232.714294 L 74.285713 61.285736 C 60.571426 47.571411 40 47.571411 26.285713 61.285736 C 12.571427 75 12.571427 95.571442 26.285713 109.285706 L 173.714279 256.714294 L 26.285713 404.142853 C 12.571427 417.857147 12.571427 438.428589 26.285713 452.142853 C 33.142857 459 40 462.428558 50.285713 462.428558 C 60.571426 462.428558 67.428574 459 74.285713 452.142853 L 245.714279 280.714294 C 259.428589 267 259.428589 246.428558 245.714279 232.714294 Z"/>
+        <path id="Rounded-Rectangle" fill="#212121" fill-rule="evenodd" stroke="none" d="M 256 431 C 256 448.673096 270.326874 463 288 463 L 464 463 C 481.673096 463 496 448.673096 496 431 L 496 429 C 496 411.326904 481.673096 397 464 397 L 288 397 C 270.326874 397 256 411.326904 256 429 Z"/>
+    </g>
+</svg>';
 	}
 
 	public static function plugin_page(): void {
