@@ -343,7 +343,7 @@ const codeEditor = function () {
         document.querySelectorAll('input[id*="include_file_"]').forEach(input => {
             const url = input.value.trim();
 
-            if (url.endsWith('.css')) {
+          if (url.includes('.css')) {
                 styleLinks.push(`<link rel="stylesheet" href="${url}">`);
             }
         });
