@@ -3,7 +3,7 @@
  * Plugin Name:       WP Coder
  * Plugin URI:        https://wordpress.org/plugins/wp-coder/
  * Description:       Adding custom HTML, CSS, JavaScript and PHP code to your WordPress site.
- * Version:           4.3.1
+ * Version:           4.4
  * Author:            WPCoder
  * Author URI:        https://wpcoder.pro
  * Author Email:      hey@wow-company.com
@@ -17,6 +17,7 @@
 namespace WPCoder;
 
 // Exit if accessed directly.
+use WPCoder\Block\WPCoder_Block;
 use WPCoder\Dashboard\DBManager;
 use WPCoder\Dashboard\FolderManager;
 use WPCoder\Update\UpdateDB;
@@ -180,6 +181,7 @@ if ( ! class_exists( 'wpcoder' ) ) :
 		 * @return void
 		 */
 		public function loaded(): void {
+			new WPCoder_Block();
 			UpdateDB::init();
 			$languages_folder = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
 			load_plugin_textdomain( 'wp-coder', false, $languages_folder );

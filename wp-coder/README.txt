@@ -5,7 +5,7 @@ Tags: snippets, custom js, code editor, custom php, custom html
 Requires at least: 3.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.3.1
+Stable tag: 4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -192,6 +192,9 @@ The link feature helps you track where your shortcode is placed. Simply enter th
 - [Website](https://wpcoder.pro)
 - [Documentation](https://wpcoder.pro/category/documentation/)
 - [Upgrade to Pro!](https://wpcoder.pro/)
+
+= 4.4 =
+* Added: **Gutenberg block** – insert and manage WP Coder snippets directly inside the WordPress block editor.
 
 = 4.3.1 =
 * Fixed: includes css to Live preview
