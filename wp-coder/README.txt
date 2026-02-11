@@ -3,7 +3,7 @@ Contributors: Wpcalc, lobov
 Donate link: https://wpcoder.pro/
 Tags: snippets, custom js, code editor, custom php, custom html
 Requires at least: 3.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 4.4
 License: GPLv2 or later
@@ -114,6 +114,9 @@ Tired of editing theme files to add custom scripts or styles?
 WP Coder simplifies your WordPress development workflow and makes customization safe, fast, and flexible!
 
 Get started today and simplify your WordPress development workflow with **WP Coder**!
+
+### Quick Start Video
+https://youtu.be/BgY3R8j1uWM
 
 ### Plugin Demo:
 https://youtu.be/YF4X7sU0iFY?si=327VZduhqu_mh5-N
