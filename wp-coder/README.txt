@@ -1,11 +1,11 @@
 === WP Coder – Insert & Manage Code Snippets ===
 Contributors: Wpcalc, lobov
 Donate link: https://wpcoder.pro/
-Tags: snippets, custom js, code editor, custom php, custom html
-Requires at least: 3.2
+Tags: code snippets, code, snippets, shortcode, code
+Requires at least: 5.4
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.4
+Stable tag: 4.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,9 +20,10 @@ Tired of editing theme files to add custom scripts or styles?
 
 ### Why WP Coder?
 - **All-in-One Code Editor:** Tabbed editor for HTML, CSS, JS & PHP with CodeMirror syntax highlighting.
+- **Gutenberg Block:** Insert snippets directly in the block editor with live preview and custom attribute support.
 - **Shortcode Integration:** Use `[wp_code id="X"]` to embed snippets anywhere.
-- **Live Preview:** Instantly preview HTML & CSS without reloads.
-- **Performance Ready:** Minify CSS/JS and control script loading with `async` / `defer`.
+- **Live Preview:** Instantly preview HTML & CSS without reloads in both the backend and Gutenberg.
+- **Performance Ready:** Minify CSS/JS, obfuscate JavaScript, and control script loading with `async` / `defer`.
 
 ### Ideal For
 - **Developers:** Test snippets, hooks, and debug quickly.
@@ -35,12 +36,15 @@ Tired of editing theme files to add custom scripts or styles?
 - Include external libraries (Google Fonts, CDN scripts & styles).
 - **Test Mode:** Preview snippets safely before going live.
 - Import/Export snippets and settings between sites.
+- **JavaScript Obfuscation:** Protect your scripts with Dean Edwards' Packer.
+- **Customizable Interface:** Hide unused editor tabs (HTML, CSS, JS, etc.) for a cleaner workflow.
 - **NAV comments:** Add inline navigation markers for faster code editing.
 - Lightweight & secure — built for performance.
 
 ### Included Tools:
 
 #### Integrations
+- Google Tag Manager (GTM) integration with user role controls.
 - Google Analytics, Facebook Pixel, and Pinterest Pixel integration.
 - Google AdSense integration with the option to disable ads for selected user roles.
 
@@ -82,7 +86,7 @@ Tired of editing theme files to add custom scripts or styles?
 - Enable SVG Upload
 - Force Lowercase Filenames
 - Default ALT Text for Avatars
-- Disable Lazy Load
+- Enable/Disable Lazy Load
 - Disable Embeds
 - Adjust oEmbed Max Dimensions
 
@@ -90,6 +94,7 @@ Tired of editing theme files to add custom scripts or styles?
 - Disable XML-RPC
 - Disable REST API
 - Disable Automatic Updates
+- Disable Automatic Updates Emails
 - Disable Emojis
 - Disable Shortlinks
 - Limit Post Revisions
@@ -196,8 +201,13 @@ The link feature helps you track where your shortcode is placed. Simply enter th
 - [Documentation](https://wpcoder.pro/category/documentation/)
 - [Upgrade to Pro!](https://wpcoder.pro/)
 
+= 4.5 =
+* Added: Lazy load option for images
+* Added: Google Tag Manager integration in Tools & Integrations
+* Fixed: Snippet **Open External Links in New Tab** now correctly identifies internal links
+
 = 4.4 =
-* Added: **Gutenberg block** – insert and manage WP Coder snippets directly inside the WordPress block editor.
+* Added: **Gutenberg block** – insert and manage WP Coder snippets directly inside the WordPress block editor with live preview.
 
 = 4.3.1 =
 * Fixed: includes css to Live preview

@@ -41,6 +41,11 @@ $snippets = [
 		'Redirect 404 to Homepage',
 		'Automatically redirect all 404 error pages to the homepage using a 301 redirect.',
 	],
+
+    'enable_image_lazy_load' => [
+            'Enable Image Lazy Load',
+            'Lazy load images on the frontend for better performance.',
+    ],
 ];
 
 self::create_options( $snippets );

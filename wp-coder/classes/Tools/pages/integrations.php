@@ -57,6 +57,47 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 	</div>
 
+    <div class="wowp-snippet__item">
+        <div class="wowp-snippet__item-header">
+            <label for="enable_gtm">Google Tag Manager</label>
+            <p class="wowp-snippet__item-description">Add Google Tag Manager to your site for advanced tag management and tracking.</p>
+        </div>
+        <div class="wowp-field has-checkbox">
+            <label class="switch">
+                <?php self::field( 'checkbox', 'enable_gtm' ); ?>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="wowp-snippet__item-expand is-hidden">
+            <div class="wowp-field is-column">
+                <label>
+                    <span class="label">Container ID</span>
+                    <?php self::field( 'text', 'gtm_container_id', '', 'e.g. GTM-XXXXXXX' ); ?>
+                </label>
+                <a target="_blank"
+                   href="https://support.google.com/tagmanager/answer/6103696?hl=en" rel="noopener noreferrer nofollow">How to find your GTM Container ID</a>
+            </div>
+
+            <p><b>Disable Google Tag Manager for these user roles:</b></p>
+
+            <div class="wowp-fields__group">
+                <?php foreach ( FieldHelper::user_roles() as $key => $value ) :
+                    if ( $key === 'all' ) {
+                        continue;
+                    }
+                    ?>
+                    <div class="wowp-field has-checkbox">
+                        <span class="label"><?php echo esc_html( $value ); ?></span>
+                        <label class="switch">
+                            <?php self::field( 'checkbox', 'disable_gtm_user_' . $key ); ?>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
 	<div class="wowp-snippet__item">
 		<div class="wowp-snippet__item-header">
 			<label for="enable_google_adsense">Google AdSense</label>

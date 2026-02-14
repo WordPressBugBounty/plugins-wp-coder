@@ -25,6 +25,11 @@ class WPCoder_Lite_Tools {
 			add_action( 'wp_head', array( $this, 'add_adsense_code' ) );
 		}
 
+        if ( array_key_exists( 'enable_gtm', $options ) ) {
+            add_action( 'wp_head', [ $this, 'add_gtm_head' ], 1 );
+            add_action( 'wp_body_open', [ $this, 'add_gtm_body' ], 1 );
+        }
+
 		$enabled = (bool) get_option( '_wpcoder_enable_debug_log' );
 		if ( $enabled ) {
 			add_action( 'plugins_loaded', [ $this, 'debug_log' ] );
@@ -176,6 +181,58 @@ class WPCoder_Lite_Tools {
 		// phpcs:enable
 	}
 
+    public function add_gtm_head(): void {
+
+        if ( empty( $this->options['gtm_container_id'] ) ) {
+            return;
+        }
+
+        $user = wp_get_current_user();
+
+        if ( ! empty( $user->roles ) ) {
+            foreach ( $user->roles as $role ) {
+                if ( array_key_exists( 'disable_gtm_user_' . $role, $this->options ) ) {
+                    return;
+                }
+            }
+        }
+
+        $container_id = esc_attr( $this->options['gtm_container_id'] );
+        ?>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','<?php echo $container_id; ?>');</script>
+        <!-- End Google Tag Manager -->
+        <?php
+    }
+
+    public function add_gtm_body(): void {
+
+        if ( empty( $this->options['gtm_container_id'] ) ) {
+            return;
+        }
+
+        $user = wp_get_current_user();
+
+        if ( ! empty( $user->roles ) ) {
+            foreach ( $user->roles as $role ) {
+                if ( array_key_exists( 'disable_gtm_user_' . $role, $this->options ) ) {
+                    return;
+                }
+            }
+        }
+
+        $container_id = esc_attr( $this->options['gtm_container_id'] );
+        ?>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo $container_id; ?>"
+                          height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        <?php
+    }
 
 }
 

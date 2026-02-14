@@ -68,6 +68,36 @@ class WPCoder_Lite_Enabled_Snippets {
 			add_filter( 'preprocess_comment', [ $this, 'limit_comment_length' ] );
 		}
 
+        if ( array_key_exists( 'enable_image_lazy_load', $options ) ) {
+            add_filter( 'wp_content_img_tag', static function( $html, $context, $id ) {
+                $has_loading  = strpos( $html, ' loading=' ) !== false;
+                $has_decoding = strpos( $html, ' decoding=' ) !== false;
+                $has_high_priority = strpos( $html, 'fetchpriority="high"' ) !== false
+                        || strpos( $html, "fetchpriority='high'" ) !== false;
+
+                // If both attributes already exist, return unchanged
+                if ( $has_loading && $has_decoding ) {
+                    return $html;
+                }
+
+                // Build attributes to add
+                $attributes = '';
+                // Don't add lazy loading to high priority images (LCP images)
+                if ( ! $has_loading && ! $has_high_priority ) {
+                    $attributes .= ' loading="lazy"';
+                }
+                if ( ! $has_decoding ) {
+                    $attributes .= ' decoding="async"';
+                }
+
+                if ( ! empty( $attributes ) ) {
+                    $html = preg_replace( '/<img\b/i', '<img' . $attributes, $html, 1 );
+                }
+
+                return $html;
+            }, 10, 3 );
+        }
+
 		remove_filter( 'comment_text', 'make_clickable', 9 );
 		add_filter( 'pre_comment_content', 'wp_strip_all_tags' );
 
@@ -83,34 +113,34 @@ class WPCoder_Lite_Enabled_Snippets {
 		return $commentdata;
 	}
 
-	public function force_external_links_new_tab( $content ) {
-		$site_url = wp_parse_url( home_url());
+    public function force_external_links_new_tab( $content ) {
+        $site_host = wp_parse_url( home_url(), PHP_URL_HOST );
 
-		return preg_replace_callback(
-			'#<a\s[^>]*href=["\'](https?:\/\/[^"\']+)["\'][^>]*>#i',
-			function ( $matches ) use ( $site_url ) {
-				$href      = $matches[1];
-				$link_host = wp_parse_url( $href );
+        return preg_replace_callback(
+                '#<a\s[^>]*href=["\'](https?:\/\/[^"\']+)["\'][^>]*>#i',
+                function ( $matches ) use ( $site_host ) {
+                    $href      = $matches[1];
+                    $link_host = wp_parse_url( $href, PHP_URL_HOST );
 
-				if ( $link_host && $link_host !== $site_url ) {
-					$tag = $matches[0];
+                    if ( $link_host && $link_host !== $site_host ) {
+                        $tag = $matches[0];
 
-					if ( stripos( $tag, 'target=' ) === false ) {
-						$tag = str_ireplace( '<a', '<a target="_blank"', $tag );
-					}
+                        if ( stripos( $tag, 'target=' ) === false ) {
+                            $tag = str_ireplace( '<a', '<a target="_blank"', $tag );
+                        }
 
-					if ( stripos( $tag, 'rel=' ) === false ) {
-						$tag = str_ireplace( '<a', '<a rel="noopener noreferrer nofollow"', $tag );
-					}
+                        if ( stripos( $tag, 'rel=' ) === false ) {
+                            $tag = str_ireplace( '<a', '<a rel="noopener noreferrer nofollow"', $tag );
+                        }
 
-					return $tag;
-				}
+                        return $tag;
+                    }
 
-				return $matches[0];
-			},
-			$content
-		);
-	}
+                    return $matches[0];
+                },
+                $content
+        );
+    }
 
 	public function default_alt_to_avatar( $atts ) {
 		if ( empty( $atts['alt'] ) ) {
