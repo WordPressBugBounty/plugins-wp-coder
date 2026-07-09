@@ -61,16 +61,20 @@ class WPCoder_Block {
 	}
 
 	public function rest_api(): void {
+		$permission = static function () {
+			return current_user_can( 'edit_posts' );
+		};
+
 		register_rest_route( 'wpcoder/v1', '/preview', array(
 			'methods'  => 'POST',
 			'callback' => [ $this, 'preview_callback' ],
-			'permission_callback' => '__return_true'
+			'permission_callback' => $permission
 		));
 
 		register_rest_route( 'wpcoder/v1', '/attributes', array(
 			'methods'  => 'POST',
 			'callback' => [ $this, 'attributes_callback' ],
-			'permission_callback' => '__return_true'
+			'permission_callback' => $permission
 		));
 	}
 

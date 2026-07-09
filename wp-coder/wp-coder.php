@@ -3,7 +3,7 @@
  * Plugin Name:       WP Coder
  * Plugin URI:        https://wordpress.org/plugins/wp-coder/
  * Description:       Adding custom HTML, CSS, JavaScript and PHP code to your WordPress site.
- * Version:           4.5
+ * Version:           4.5.1
  * Author:            WPCoder
  * Author URI:        https://wpcoder.pro
  * Author Email:      hey@wow-company.com
