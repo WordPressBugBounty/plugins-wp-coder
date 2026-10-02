@@ -5,7 +5,7 @@ Tags: code snippets, code, snippets, shortcode, code
 Requires at least: 5.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.5.1
+Stable tag: 4.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -200,6 +200,9 @@ The link feature helps you track where your shortcode is placed. Simply enter th
 - [Website](https://wpcoder.pro)
 - [Documentation](https://wpcoder.pro/category/documentation/)
 - [Upgrade to Pro!](https://wpcoder.pro/)
+
+= 4.5.2 =
+* Fixed: Security – the WP Coder admin pages and all save handlers (Global PHP, snippets with PHP code, tools, import/export, debug log) are now restricted to administrators (`manage_options` together with `unfiltered_html`). Previously, users with the Editor role on single-site installs could save and execute arbitrary PHP. Thanks to Ayush Srivastava for responsibly reporting this issue.
 
 = 4.5.1 =
 * Fixed: Security – restricted the Gutenberg block REST endpoints (snippet preview and attributes) to logged-in users with the `edit_posts` capability, preventing unauthenticated access.

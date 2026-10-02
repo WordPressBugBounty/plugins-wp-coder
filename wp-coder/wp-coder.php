@@ -3,7 +3,7 @@
  * Plugin Name:       WP Coder
  * Plugin URI:        https://wordpress.org/plugins/wp-coder/
  * Description:       Adding custom HTML, CSS, JavaScript and PHP code to your WordPress site.
- * Version:           4.5.1
+ * Version:           4.5.2
  * Author:            WPCoder
  * Author URI:        https://wpcoder.pro
  * Author Email:      hey@wow-company.com
@@ -89,6 +89,14 @@ if ( ! class_exists( 'wpcoder' ) ) :
 			return plugin_dir_url( __FILE__ );
 		}
 
+
+		// Capability required to access the plugin (it can execute PHP, so administrators only).
+		public const CAPABILITY = 'manage_options';
+
+		// Check if the current user can manage codes. On multisite, unfiltered_html is limited to super admins.
+		public static function user_can_manage(): bool {
+			return current_user_can( self::CAPABILITY ) && current_user_can( 'unfiltered_html' );
+		}
 
 		// Get Plugin Info
 		public static function info( $show = '' ): string {

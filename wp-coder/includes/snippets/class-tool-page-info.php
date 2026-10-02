@@ -10,13 +10,13 @@ class  WPCoder_Page_Info {
 
 
 		add_action( 'template_redirect', static function () {
-			if ( is_user_logged_in() && current_user_can( 'unfiltered_html' ) ) {
+			if ( is_user_logged_in() && WPCoder::user_can_manage() ) {
 				$GLOBALS['wpcoder_render_start'] = microtime( true );
 			}
 		} );
 		add_action( 'init', static function () {
 			if ( ! defined( 'SAVEQUERIES' ) ) {
-				if ( is_user_logged_in() && current_user_can( 'unfiltered_html' ) ) {
+				if ( is_user_logged_in() && WPCoder::user_can_manage() ) {
 					define( 'SAVEQUERIES', true );
 				}
 			}
@@ -25,7 +25,7 @@ class  WPCoder_Page_Info {
 	}
 
 	public function add_admin_bar_template_info( $wp_admin_bar ): void {
-		if ( ! is_user_logged_in() || ! current_user_can( 'unfiltered_html' ) ) {
+		if ( ! is_user_logged_in() || ! WPCoder::user_can_manage() ) {
 			return;
 		}
 		if ( is_admin() ) {

@@ -57,7 +57,7 @@ class WPCoder_Lite_Tools {
 	}
 
 	public function admin_menu_debug( $wp_admin_bar ): void {
-		if ( ! current_user_can( 'unfiltered_html' ) ) {
+		if ( ! WPCoder::user_can_manage() ) {
 			return;
 		}
 

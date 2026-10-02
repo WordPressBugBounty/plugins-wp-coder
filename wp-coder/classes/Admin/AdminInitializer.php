@@ -49,14 +49,18 @@ class AdminInitializer {
 	}
 
 	public static function add_admin_page(): void {
+		if ( ! WPCoder::user_can_manage() ) {
+			return;
+		}
+
 		$icon       = 'data:image/svg+xml;base64,' . base64_encode( self::icon() );
 		$parent     = 'wp-coder';
 		$title      = WPCoder::info( 'name' ) . ' version ' . WPCoder::info( 'version' );
 		$menu_title = 'All Codes';
-		$capability = 'unfiltered_html';
+		$capability = WPCoder::CAPABILITY;
 		$slug       = WPCoder::SLUG;
 
-		add_menu_page( 'WP Coder Pro', 'WP Coder', 'unfiltered_html', $slug, [ __CLASS__, 'plugin_page' ], $icon );
+		add_menu_page( 'WP Coder Pro', 'WP Coder', $capability, $slug, [ __CLASS__, 'plugin_page' ], $icon );
 
 		add_submenu_page( $slug, $title, $menu_title, $capability, $slug, [ __CLASS__, 'plugin_page' ] );
 

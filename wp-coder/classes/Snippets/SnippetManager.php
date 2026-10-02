@@ -127,7 +127,7 @@ class SnippetManager {
 		}
 
 		return isset( $_POST['wp_coder_snippet'] ) && wp_verify_nonce( $_POST[ $nonce_name ],
-				$nonce_action ) && current_user_can( 'unfiltered_html' );
+				$nonce_action ) && WPCoder::user_can_manage();
 	}
 
 }

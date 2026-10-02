@@ -344,7 +344,7 @@ class ListTable extends WP_List_Table {
 		$nonce_action = WPCoder::PREFIX . '_nonce';
 
 		return ! ( ! isset( $_POST[ $name ] ) || ! wp_verify_nonce( $_POST[ $name ],
-				$nonce_action ) || ! current_user_can( 'unfiltered_html' ) );
+				$nonce_action ) || ! WPCoder::user_can_manage() );
 	}
 
 }

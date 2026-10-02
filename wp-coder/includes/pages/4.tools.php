@@ -5,7 +5,7 @@ use WPCoder\Tools\ToolsManager;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! current_user_can( 'unfiltered_html' ) ) {
+if ( ! \WPCoder\WPCoder::user_can_manage() ) {
 	wp_die( esc_attr__( 'You do not have sufficient permissions to access this page.', 'wp-coder' ) );
 }
 

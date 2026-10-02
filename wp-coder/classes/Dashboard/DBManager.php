@@ -143,7 +143,7 @@ class DBManager {
 	}
 
 	public static function update( $data, $where, $data_formats ): void {
-		if ( ! current_user_can( 'unfiltered_html' ) ) {
+		if ( ! WPCoder::user_can_manage() ) {
 			return;
 		}
 
@@ -153,7 +153,7 @@ class DBManager {
 	}
 
 	public static function insert( $data, $data_formats ) {
-		if ( ! current_user_can( 'unfiltered_html' ) ) {
+		if ( ! WPCoder::user_can_manage() ) {
 			return false;
 		}
 
