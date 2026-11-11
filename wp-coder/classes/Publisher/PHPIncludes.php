@@ -2,7 +2,7 @@
 
 namespace WPCoder\Publisher;
 
-use ParseError;
+use Throwable;
 use WPCoder\Dashboard\DBManager;
 use WPCoder\Dashboard\FolderManager;
 use WPCoder\WPCoder;
@@ -14,8 +14,8 @@ class PHPIncludes {
 	}
 
 	public function include_php(): void {
-		$save_mode = isset( $_GET['wpcoder-safe-mode'] ) ? absint( $_GET['wpcoder-safe-mode'] ) : 0;
-		if ( $save_mode === 1 ) {
+		// The parameter alone used to do it, for any visitor (SafeMode::is_safe_mode()).
+		if ( SafeMode::is_safe_mode() ) {
 			return;
 		}
 
@@ -59,9 +59,24 @@ class PHPIncludes {
 	}
 
 	private function try_include_file( $file_path ) {
+		// The forbidden-function check, as in WP Coder Pro (CodeSafety): Global PHP
+		// and "PHP include" files used to be included unchecked.
+		[ $safe, $hits ] = CodeSafety::scan_file( $file_path );
+		if ( $safe === null ) {
+			return; // File missing or unreadable.
+		}
+		if ( ! $safe ) {
+			error_log( '[WP-Coder] Blocked dangerous PHP include: ' . implode( ', ', $hits ) );
+			set_transient( 'wp_coder_admin_error_php_notice', esc_html__( 'WP Coder blocked a PHP file containing forbidden functions: ', 'wp-coder' ) . esc_html( implode( ', ', $hits ) ), 30 );
+
+			return;
+		}
+
+		// Throwable, not only ParseError: an Error or exception thrown while the file
+		// runs (undefined function, TypeError) is just as fatal to the request.
 		try {
 			@include_once $file_path;
-		} catch ( ParseError $e ) {
+		} catch ( Throwable $e ) {
 			$parts     = explode( '/', $file_path );
 			$file_name = end( $parts );
 			if ( $file_name === 'global-php.php' ) {

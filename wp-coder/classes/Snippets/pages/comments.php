@@ -16,8 +16,10 @@ $snippets = [
 		'Disable Comments',
 		'Turn off comments site-wide, both frontend and admin.',
 	],
-	'disable_comment_from_website_url' => [
-		'Disable Comment Form Website URL',
+	// Renamed from disable_comment_from_website_url ("from" → "form") by the 5.0
+	// migration in UpdateDB::RENAMED_KEYS.
+	'disable_comment_form_website_url' => [
+		'Remove Website URL Field',
 		'Remove the URL field from the comment form.',
 	],
 
@@ -28,7 +30,7 @@ $snippets = [
 
 	'disable_trackbacks_pingbacks' => [
 		'Disable Trackbacks & Pingbacks',
-		'Turn off trackbacks and pingbacks for all future posts.',
+		'Close pings on new posts, stop notifying linked sites when you publish, and refuse incoming pingbacks over XML-RPC. Existing posts keep their current setting.',
 	],
 
 	'disable_comments_html' => [

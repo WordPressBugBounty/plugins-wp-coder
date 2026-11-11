@@ -17,10 +17,16 @@ $default = Field::getDefault();
 $action     = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 $item_id    = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : '';
 $item_title = __( 'Add new code', 'wp-coder' );
+$item_badge = '';
+// The snippet's own name, with the ID beside it as a badge — "Update code ID: 82"
+// said what the screen is, not which snippet. admin-jquery.js keeps the name in
+// step with the Title field. Same as WP Coder Pro.
 if ( $action === 'update' && ! empty( $item_id ) ) {
-	$item_title = __( 'Update code', 'wp-coder' ) . ' ID: ' . $item_id;
+	$item_title = $default['title'] !== '' ? $default['title'] : __( '(no title)', 'wp-coder' );
+	$item_badge = 'ID ' . $item_id;
 } elseif ( $action === 'duplicate' && ! empty( $item_id ) ) {
-	$item_title = __( 'Duplicate the code from', 'wp-coder' ) . ' ID: ' . $item_id;
+	$item_title = __( 'Duplicate the code from', 'wp-coder' );
+	$item_badge = 'ID ' . $item_id;
 }
 $license_page = add_query_arg( [ 'page' => WPCoder::SLUG . '-license' ], admin_url( 'admin.php' ) );
 $add_url      = add_query_arg( [
@@ -42,16 +48,22 @@ $duplicate_url = add_query_arg( [
 
         <div class="wowp-page-header">
             <h2 class="wowp-page-header__title">
-				<?php echo esc_html( $item_title ); ?>
+                <span class="wowp-page-header__name"<?php echo $action === 'update' ? ' id="wowp-page-title" data-empty="' . esc_attr__( '(no title)', 'wp-coder' ) . '"' : ''; ?>><?php echo esc_html( $item_title ); ?></span>
+				<?php if ( $item_badge !== '' ) : ?>
+                    <span class="wowp-page-header__id"><?php echo esc_html( $item_badge ); ?></span>
+				<?php endif; ?>
             </h2>
 
             <a href="<?php echo esc_url( Link::all_codes() ); ?>" class="button button-secondary button-small">
-                ⇐ <?php esc_html_e( 'Back to Codes', 'wp-coder' ); ?>
+                <span class="dashicons dashicons-arrow-left-alt" aria-hidden="true"></span> <?php esc_html_e( 'Back to Codes', 'wp-coder' ); ?>
             </a>
 
+	        <?php // Not on a new snippet: it led to the screen already open. ?>
+	        <?php if ( ! empty( $item_id ) ) : ?>
             <a href="<?php echo esc_url( $add_url ); ?>" class="button button-primary button-small">
                 + <?php esc_html_e( 'Add New', 'wp-coder' ); ?>
             </a>
+	        <?php endif; ?>
 
 	        <?php if ( ! empty( $item_id ) ) : ?>
                 <a href="<?php echo esc_url( $duplicate_url ); ?>" class="button button-secondary button-small">

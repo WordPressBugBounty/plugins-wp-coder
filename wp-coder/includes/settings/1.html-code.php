@@ -4,6 +4,7 @@
  */
 
 use WPCoder\Dashboard\Field;
+use WPCoder\Dashboard\Settings;
 use WPCoder\Dashboard\Option;
 
 defined( 'ABSPATH' ) || exit;
@@ -17,22 +18,37 @@ $options = get_option( '_wp_coder_tools', [] );
     <div class="wowp-settings__page">
 
         <div class="wowp-settings__page-sidebar">
+	        <?php
+	        // Grouped by what each control is for — inserting into the code,
+	        // previewing it, how it is output on the site, and finding your way
+	        // around it. Same groups as WP Coder Pro.
+	        ?>
 
-	        <?php Option::init( [
-		        $opt['preview'],
-	        ] ); ?>
+            <div class="wowp-sidebar-group">
+                <p class="wowp-sidebar-group__title"><?php esc_html_e( 'Insert', 'wp-coder' ); ?></p>
+                <button class="button button-add-img"><?php esc_html_e( 'Add Image', 'wp-coder' ); ?></button>
+            </div>
 
-            <button class="button button-add-img"><?php esc_html_e( 'Add Image', 'wp-coder' ); ?></button>
+            <div class="wowp-sidebar-group">
+                <p class="wowp-sidebar-group__title"><?php esc_html_e( 'Preview', 'wp-coder' ); ?></p>
+		        <?php Option::init( [
+			        $opt['preview'],
+		        ] ); ?>
+            </div>
 
-			<?php Option::init( [
-				$opt['minified'],
-			] ); ?>
+            <div class="wowp-sidebar-group">
+                <p class="wowp-sidebar-group__title"><?php esc_html_e( 'Output', 'wp-coder' ); ?></p>
+		        <?php Option::init( [
+			        $opt['minified'],
+		        ] ); ?>
+            </div>
 
-            <button class="button-editor button"
-                    id="htmlnav"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
-
-            <ol id="htmlNavigationMenu" class="wowp-php-nav-menu"></ol>
-
+            <div class="wowp-sidebar-group">
+                <p class="wowp-sidebar-group__title"><?php esc_html_e( 'Navigate', 'wp-coder' ); ?></p>
+                <button class="button-editor button" id="htmlnav"
+                        title="<?php esc_attr_e( 'Insert a <!-- NAV: name --> comment. Each one is listed below; click it to jump to that line.', 'wp-coder' ); ?>"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
+                <ol id="htmlNavigationMenu" class="wowp-php-nav-menu"></ol>
+            </div>
 
         </div>
 
@@ -40,10 +56,12 @@ $options = get_option( '_wp_coder_tools', [] );
 
 			<?php Field::textarea( 'html_code' ); ?>
 
-            <div class="wowp-notification notification-info">
-                Just enter the HTML content. You don’t need to include <code>&lt;html&gt;</code> or
-                <code>&lt;body&gt;</code> — it's already on the page.
-            </div>
+			<?php Settings::editor_hint( 'html', sprintf(
+				/* translators: 1: <html>, 2: <body> */
+				__( 'Just enter the HTML content. You don’t need to include %1$s or %2$s — it’s already on the page.', 'wp-coder' ),
+				'<code>&lt;html&gt;</code>',
+				'<code>&lt;body&gt;</code>'
+			) ); ?>
         </div>
 
     </div>

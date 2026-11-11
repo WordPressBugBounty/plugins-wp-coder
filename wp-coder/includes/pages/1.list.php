@@ -23,8 +23,8 @@ $add_url = add_query_arg( [
             <h2 class="wowp-page-header__title">
 				<?php esc_html_e( 'All Codes', 'wp-coder' ); ?>
             </h2>
-            <a href="<?php echo esc_url( $add_url ); ?>" class="button button-primary button-large">
-				<?php esc_html_e( 'Add New', 'wp-coder' ); ?>
+            <a href="<?php echo esc_url( $add_url ); ?>" class="button button-primary button-small">
+				+ <?php esc_html_e( 'Add New', 'wp-coder' ); ?>
             </a>
         </div>
 

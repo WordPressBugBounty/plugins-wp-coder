@@ -41,8 +41,8 @@ defined( 'ABSPATH' ) || exit;
                         to find the Facebook pixel ID</a>
                 </div>
                 <div class="wowp-field is-column">
-                    <label><span class="label">Pintrest Pixel</span>
-						<?php self::field( 'text', 'tracking_tool_pintrest', '', 'set Pixel ID' ); ?>
+                    <label><span class="label">Pinterest Pixel</span>
+						<?php self::field( 'text', 'tracking_tool_pinterest', '', 'set Pixel ID' ); ?>
                     </label>
                     <a target="_blank"
                        href="https://help.pinterest.com/en/business/article/install-the-pinterest-tag" rel="noopener noreferrer nofollow">How to

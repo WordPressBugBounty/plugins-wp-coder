@@ -60,7 +60,7 @@ class AdminInitializer {
 		$capability = WPCoder::CAPABILITY;
 		$slug       = WPCoder::SLUG;
 
-		add_menu_page( 'WP Coder Pro', 'WP Coder', $capability, $slug, [ __CLASS__, 'plugin_page' ], $icon );
+		add_menu_page( 'WP Coder', 'WP Coder', $capability, $slug, [ __CLASS__, 'plugin_page' ], $icon );
 
 		add_submenu_page( $slug, $title, $menu_title, $capability, $slug, [ __CLASS__, 'plugin_page' ] );
 

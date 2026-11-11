@@ -72,6 +72,9 @@ class EnqueueScript {
 
 	private static function include_script( $result, $param ): void {
 		$url        = FolderManager::get_js_url( $result );
+		if ( $url === '' ) {
+			return; // The file could not be written; FolderManager::write().
+		}
 		$time       = ! empty( $param['time'] ) ? $param['time'] : time();
 		$dependency = ! empty( $param['jquery_dependency'] ) ? [] : [ 'jquery' ];
 		wp_enqueue_script( WPCoder::SLUG . '-script-' . $result->id, $url, $dependency,

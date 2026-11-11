@@ -15,7 +15,8 @@
  *  - get_data_by_id()        Get single row by ID
  *  - get_data_by_title()     Get row by title
  *  - check_row()             Check if row exists by ID
- *  - get_tags_from_table()   Get unique tags
+ *  - tag_list()              Every distinct tag (a snippet can carry several)
+ *  - get_tags_from_table()   The same, as [ 'tag' => … ] rows
  *  - display_tags()          Output HTML <option> tags for tags
  */
 
@@ -43,6 +44,7 @@ class DBManager {
 		$result = $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] );
 
 		if ( $result ) {
+			FolderManager::delete_files( (int) $id );
 			wp_safe_redirect( Link::remove_item() );
 			exit;
 		}
@@ -59,7 +61,13 @@ class DBManager {
 		global $wpdb;
 		$table = $wpdb->prefix . WPCoder::PREFIX;
 
-		return $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] );
+		$result = $wpdb->delete( $table, [ 'id' => $id ], [ '%d' ] );
+
+		if ( $result ) {
+			FolderManager::delete_files( (int) $id );
+		}
+
+		return $result;
 	}
 
 	public static function create( $columns ): void {
@@ -88,8 +96,13 @@ class DBManager {
 
 		global $wpdb;
 		$table  = esc_sql( $wpdb->prefix . WPCoder::PREFIX );
-		$query  = $wpdb->prepare( "SELECT * FROM {$table} WHERE tag = %s ORDER BY id ASC", sanitize_text_field( $tag ) );
-		$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.*
+		// FIND_IN_SET, not equality: a snippet can carry several comma-separated
+		// tags, and "tag = %s" would only ever match one that has exactly one.
+		$query  = $wpdb->prepare(
+			"SELECT * FROM {$table} WHERE FIND_IN_SET(%s, tag) ORDER BY id ASC",
+			trim( sanitize_text_field( $tag ) )
+		);
+		$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- $query was built with $wpdb->prepare() above
 
 		return ! empty( $result ) ? $result : false;
 	}
@@ -125,7 +138,7 @@ class DBManager {
 			...$ids
 		);
 
-		$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.*
+		$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- $query was built with $wpdb->prepare() above
 
 		return ! empty( $result ) ? $result : false;
 	}
@@ -192,28 +205,34 @@ class DBManager {
 	}
 
 	public static function display_tags(): void {
-		global $wpdb;
-		$table  = $wpdb->prefix . WPCoder::PREFIX;
-		$result = $wpdb->get_results( "SELECT * FROM $table order by tag desc", ARRAY_A );
-		$tags   = [];
-		if ( ! empty( $result ) ) {
-			foreach ( $result as $column ) {
-				if ( ! empty( $column['tag'] ) ) {
-					$tags[ $column['tag'] ] = $column['tag'];
-				}
-			}
-		}
-		if ( ! empty( $tags ) ) {
-			foreach ( $tags as $tag ) {
-				echo '<option value="' . esc_attr( $tag ) . '">';
-			}
+		foreach ( self::tag_list() as $tag ) {
+			echo '<option value="' . esc_attr( $tag ) . '">';
 		}
 	}
 
-	public static function get_tags_from_table() {
+	/**
+	 * Every distinct tag in use, flattened out of the comma-separated column.
+	 *
+	 * SELECT DISTINCT is no use here — it would hand back "landing,hero" as a
+	 * single value and the filter would offer a tag no row matches on its own.
+	 *
+	 * @return string[]
+	 */
+	public static function tag_list(): array {
 		global $wpdb;
-		$table    = $wpdb->prefix . WPCoder::PREFIX;
-		$all_tags = $wpdb->get_results( "SELECT DISTINCT tag FROM $table ORDER BY tag ASC", ARRAY_A );
+		$table = $wpdb->prefix . WPCoder::PREFIX;
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$stored = $wpdb->get_col( "SELECT tag FROM $table WHERE tag IS NOT NULL AND tag <> ''" );
+
+		return Tags::unique( is_array( $stored ) ? $stored : [] );
+	}
+
+	public static function get_tags_from_table() {
+		// Callers expect rows shaped [ 'tag' => '…' ]; keep that contract.
+		$all_tags = array_map( static function ( $tag ) {
+			return [ 'tag' => $tag ];
+		}, self::tag_list() );
 
 		return ! empty( $all_tags ) ? $all_tags : false;
 	}

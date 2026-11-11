@@ -144,7 +144,7 @@ class Option {
                 </span>
 				<?php endif; ?>
 
-				<?php Field::text( $name, $default, $values['type'], $i ); ?>
+				<?php Field::text( $name, $default, $values['type'], $i, (string) ( $values['placeholder'] ?? '' ) ); ?>
 				<?php if ( ! empty( $values['addon'] ) ) : ?>
                     <span class="is-addon"><?php echo esc_html( $values['addon'] ); ?></span>
 				<?php endif; ?>

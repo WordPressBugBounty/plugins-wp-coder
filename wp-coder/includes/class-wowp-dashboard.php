@@ -4,7 +4,10 @@ namespace WPCoder;
 
 use WPCoder\Admin\AdminInitializer;
 use WPCoder\Dashboard\DashboardInitializer;
+use WPCoder\Dashboard\DBManager;
+use WPCoder\Dashboard\FolderManager;
 use WPCoder\Dashboard\ImporterExporter;
+use WPCoder\Dashboard\Tags;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -28,13 +31,13 @@ class WOWP_Dashboard {
 	}
 
 	public function default_custom_post( $display_def ) {
-		if ( str_contains( $display_def, 'custom_post_selected' ) ) {
+		if ( false !== strpos( (string) $display_def, 'custom_post_selected' ) ) {
 			return 'post_selected';
 		}
-		if ( str_contains( $display_def, 'custom_post_tax' ) ) {
+		if ( false !== strpos( (string) $display_def, 'custom_post_tax' ) ) {
 			return 'post_category';
 		}
-		if ( str_contains( $display_def, 'custom_post_all' ) ) {
+		if ( false !== strpos( (string) $display_def, 'custom_post_all' ) ) {
 			return 'post_all';
 		}
 
@@ -52,13 +55,18 @@ class WOWP_Dashboard {
 		$settings['formats'][]           = '%s';
 		$settings['data']['js_code']     = ! empty( $request['js_code'] ) ? wp_unslash( $request['js_code'] ) : '';
 		$settings['formats'][]           = '%s';
-		$settings['data']['php_code']    = ! empty( $request['php_code'] ) ? wp_unslash( $request['php_code'] ) : '';
+		// Without a pasted leading <?php: the file has its own, a second one stops
+		// all of it. Stored stripped too, so the editor shows what runs and an
+		// error's line number matches it.
+		$settings['data']['php_code']    = ! empty( $request['php_code'] ) ? FolderManager::strip_open_tag( (string) wp_unslash( $request['php_code'] ) ) : '';
 		$settings['formats'][]           = '%s';
 		$settings['data']['status']      = ! empty( $request['status'] ) ? sanitize_textarea_field( wp_unslash( $request['status'] ) ) : '';
 		$settings['formats'][]           = '%d';
 		$settings['data']['mode']        = ! empty( $request['mode'] ) ? sanitize_textarea_field( wp_unslash( $request['mode'] ) ) : '';
 		$settings['formats'][]           = '%d';
-		$settings['data']['tag']         = ! empty( $request['tag'] ) ? sanitize_textarea_field( wp_unslash( $request['tag'] ) ) : '';
+		// The single place a tag is written. Normalised so FIND_IN_SET matches:
+		// "landing, hero" would otherwise store the second tag as " hero".
+		$settings['data']['tag']         = ! empty( $request['tag'] ) ? Tags::normalize( sanitize_textarea_field( wp_unslash( $request['tag'] ) ) ) : '';
 		$settings['formats'][]           = '%s';
 		$settings['data']['php_include'] = ! empty( $request['php_include'] ) ? sanitize_textarea_field( wp_unslash( $request['php_include'] ) ) : '';
 		$settings['formats'][]           = '%d';
@@ -69,10 +77,146 @@ class WOWP_Dashboard {
 				'esc_url' ) : [];
 		}
 
+		if ( ! empty( $param['shortcode_attribute'] ) && is_array( $param['shortcode_attribute'] ) ) {
+			$param = $this->normalize_attributes( $param );
+		}
+
+		// The note is plain text for the admin screens only — never printed on the site.
+		$note = isset( $request['param']['note'] ) && is_string( $request['param']['note'] )
+			? trim( sanitize_textarea_field( wp_unslash( $request['param']['note'] ) ) )
+			: '';
+		if ( $note !== '' ) {
+			$param['note'] = $note;
+		} else {
+			unset( $param['note'] );
+		}
+
+		$param = $this->keep_other_param( $param, $request );
+
 		$settings['data']['param'] = maybe_serialize( $param );
 		$settings['formats'][]     = '%s';
 
 		return $settings;
+	}
+
+	/**
+	 * Settings this version's form writes. Unchecked checkboxes are not posted,
+	 * so these are dropped when absent rather than carried over. `show` and
+	 * `location` are not listed: the form leaves them out for a snippet whose
+	 * display rules come from WP Coder Pro, and then they must be kept.
+	 */
+	private const FORM_PARAM_KEYS = [
+		'preview', 'minified_html', 'minified_css', 'minified_js', 'inline_css', 'inline_js',
+		'jquery_dependency', 'js_attributes', 'include', 'include_file', 'css_only_preview',
+		'file_js_att', 'hide_html', 'hide_css', 'hide_js', 'hide_php', 'hide_include',
+		'link', 'tab', 'time', 'note',
+		// The Attributes tab posts all five for every row, Pro-only rows included.
+		'shortcode_attribute', 'shortcode_type', 'shortcode_value', 'shortcode_label', 'shortcode_help',
+	];
+
+	/** Per-row extras Pro keeps beside include_file, aligned by index. */
+	private const INCLUDE_ROW_KEYS = [ 'file_js_position', 'file_js_jquery', 'file_css_media' ];
+
+	/**
+	 * Carry over what the free form does not edit — attributes, Pro's display
+	 * rules and conditions, Pro-only options. Rebuilding param from the form alone
+	 * erased them: a snippet from WP Coder Pro lost its attributes and conditions
+	 * the first time it was saved here, and returning to Pro could not restore them.
+	 */
+	private function keep_other_param( array $param, $request ): array {
+		$source = ! empty( $request['tool_id'] ) ? absint( $request['tool_id'] ) : 0;
+
+		// Duplicate posts no id of its own; the copy keeps the original's settings.
+		if ( ! $source && isset( $_GET['action'], $_GET['id'] ) && $_GET['action'] === 'duplicate' ) {
+			$source = absint( $_GET['id'] );
+		}
+
+		if ( ! $source ) {
+			return $param;
+		}
+
+		$row    = DBManager::get_data_by_id( $source );
+		$stored = ( $row && ! empty( $row->param ) ) ? maybe_unserialize( $row->param ) : [];
+
+		if ( ! is_array( $stored ) ) {
+			return $param;
+		}
+
+		foreach ( $stored as $key => $value ) {
+			if ( array_key_exists( $key, $param ) || in_array( $key, self::FORM_PARAM_KEYS, true ) ) {
+				continue;
+			}
+
+			// Only while the include rows are unchanged — otherwise the indexes
+			// would pin Pro's per-file options to the wrong files.
+			if ( in_array( $key, self::INCLUDE_ROW_KEYS, true )
+			     && count( (array) ( $param['include'] ?? [] ) ) !== count( (array) ( $stored['include'] ?? [] ) ) ) {
+				continue;
+			}
+
+			$param[ $key ] = $value;
+		}
+
+		return $param;
+	}
+
+	/**
+	 * Attribute names usable in code, and the five arrays kept index-aligned
+	 * (as in WP Coder Pro): a row dropped here takes its type, value, label and
+	 * help text with it.
+	 */
+	private function normalize_attributes( array $param ): array {
+		$keys  = [ 'shortcode_type', 'shortcode_value', 'shortcode_label', 'shortcode_help' ];
+		$lists = [];
+		foreach ( $keys as $key ) {
+			$lists[ $key ] = ( isset( $param[ $key ] ) && is_array( $param[ $key ] ) ) ? array_values( $param[ $key ] ) : [];
+		}
+
+		$clean = array_fill_keys( array_merge( [ 'shortcode_attribute' ], $keys ), [] );
+		$seen  = [];
+
+		foreach ( array_values( (array) $param['shortcode_attribute'] ) as $i => $raw ) {
+			$name = $this->sanitize_attr_name( $raw );
+
+			// Nothing in the code can reference an unnamed attribute.
+			if ( $name === '' ) {
+				continue;
+			}
+
+			// Duplicates are numbered rather than dropped, as in Pro.
+			if ( isset( $seen[ $name ] ) ) {
+				$suffix = 2;
+				while ( isset( $seen[ $name . '_' . $suffix ] ) ) {
+					++ $suffix;
+				}
+				$name .= '_' . $suffix;
+			}
+
+			$seen[ $name ]                  = true;
+			$clean['shortcode_attribute'][] = $name;
+			$clean['shortcode_type'][]      = (string) ( $lists['shortcode_type'][ $i ] ?? 'text' ) ?: 'text';
+			$clean['shortcode_value'][]     = (string) ( $lists['shortcode_value'][ $i ] ?? '' );
+			$clean['shortcode_label'][]     = (string) ( $lists['shortcode_label'][ $i ] ?? '' );
+			$clean['shortcode_help'][]      = (string) ( $lists['shortcode_help'][ $i ] ?? '' );
+		}
+
+		return array_merge( $param, $clean );
+	}
+
+	/**
+	 * Lower-case letters, digits and underscores. Values reach snippet code
+	 * through extract(), and PHP has no variable whose name starts with a digit.
+	 */
+	private function sanitize_attr_name( $value ): string {
+		$value = strtolower( (string) $value );
+		$value = preg_replace( '/[^a-z0-9_]/', '_', $value );
+		$value = trim( preg_replace( '/_+/', '_', $value ), '_' );
+
+		if ( $value !== '' && ctype_digit( $value[0] ) ) {
+			$value = '_' . $value;
+		}
+
+		return $value;
 	}
 
 	public function sanitize_param( $value ) {
@@ -118,7 +262,7 @@ class WOWP_Dashboard {
             <span class="dashicons dashicons-star-filled"></span> Reviews
         </a>
 
-        <a href="https://wpcoder.pro/" target="_blank"
+        <a href="<?php echo esc_url( WPCoder::PRO_URL ); ?>" target="_blank"
            class="wowp-button button button-dark">
             <span>⭐</span> See PRO Features
         </a>

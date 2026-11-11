@@ -107,6 +107,11 @@ Generated using nucleoapp.com
   content: "\ea08";
 }
 
+/* Snippets "Security" tab — reuses the padlock glyph (same as .icon-lock-portrait). */
+.icon-security::before {
+  content: "\ea10";
+}
+
 .icon-copy::before {
   content: "\ea09";
 }
@@ -169,4 +174,41 @@ Generated using nucleoapp.com
 
 .icon-developer::before {
   content: "\ea1b";
+}
+
+.icon-mobile::before {
+  content: "\ea1c";
+}
+
+.icon-tablet::before {
+  content: "\ea1d";
+}
+
+.icon-laptop::before {
+  content: "\ea1e";
+}
+
+.icon-monitor::before {
+  content: "\ea1f";
+}
+
+.icon-ai {
+  font-family: initial;
+}
+
+.icon-ai::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.35156 14H16.6562' stroke='black' stroke-width='2' fill='none'/%3E%3Cpath d='M18.8281 6.17188L17 5.34091V4.65909L18.8281 3.82812L19.6591 2H20.3409L21.1719 3.82812L23 4.65909L23 5.34091L21.1719 6.17188L20.3409 8H20H19.6591L18.8281 6.17188Z'/%3E%3Cpath d='M3.82812 21.1719L2 20.3409V19.6591L3.82812 18.8281L4.65909 17H5.34091L6.17187 18.8281L8 19.6591L8 20.3409L6.17187 21.1719L5.34091 23H5H4.65909L3.82812 21.1719Z'/%3E%3Cpath d='M4 6H4.01' stroke='black' stroke-width='2' stroke-linecap='square' fill='none'/%3E%3Cpath d='M13.3936 3.61426L20.666 21H18.4971L12 5.46582L8.0127 15H5.84375L10.6064 3.61426L10.8633 3H13.1367L13.3936 3.61426Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.35156 14H16.6562' stroke='black' stroke-width='2' fill='none'/%3E%3Cpath d='M18.8281 6.17188L17 5.34091V4.65909L18.8281 3.82812L19.6591 2H20.3409L21.1719 3.82812L23 4.65909L23 5.34091L21.1719 6.17188L20.3409 8H20H19.6591L18.8281 6.17188Z'/%3E%3Cpath d='M3.82812 21.1719L2 20.3409V19.6591L3.82812 18.8281L4.65909 17H5.34091L6.17187 18.8281L8 19.6591L8 20.3409L6.17187 21.1719L5.34091 23H5H4.65909L3.82812 21.1719Z'/%3E%3Cpath d='M4 6H4.01' stroke='black' stroke-width='2' stroke-linecap='square' fill='none'/%3E%3Cpath d='M13.3936 3.61426L20.666 21H18.4971L12 5.46582L8.0127 15H5.84375L10.6064 3.61426L10.8633 3H13.1367L13.3936 3.61426Z'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  vertical-align: middle;
 }

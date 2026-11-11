@@ -43,3 +43,14 @@ defined( 'ABSPATH' ) || exit;
 
 
 </div>
+
+<?php
+$wpcoder_pro_tools = [
+	[ __( 'WP Coder Debug Bar', 'wp-coder' ), __( 'A front-end panel for administrators: which snippets are active on the current page, which are shortcode-only, which were skipped and why, and any PHP errors.', 'wp-coder' ) ],
+	[ __( 'Test Users', 'wp-coder' ), __( 'Preview the site as another user role from your own account, without changing any real role.', 'wp-coder' ) ],
+	[ __( 'Plugin Switcher', 'wp-coder' ), __( 'Activate or deactivate installed plugins directly from the admin bar.', 'wp-coder' ) ],
+	[ __( 'Cron Events Viewer', 'wp-coder' ), __( 'List scheduled WP-Cron events with their next run and recurrence in the admin bar.', 'wp-coder' ) ],
+	[ __( 'Registered Shortcodes', 'wp-coder' ), __( 'Show every shortcode registered on the site in the admin bar.', 'wp-coder' ) ],
+	[ __( 'Block Inspector', 'wp-coder' ), __( 'Hover over the WP Coder block preview to see tags and CSS classes, and click to copy a selector.', 'wp-coder' ) ],
+];
+require WPCoder\WPCoder::dir() . 'includes/pages/pro-tools.php';

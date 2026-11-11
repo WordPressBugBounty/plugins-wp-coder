@@ -16,6 +16,10 @@ class DashboardInitializer {
 		echo '</div>';
 	}
 
+	/**
+	 * One line with a small logo on every page — the layout the snippet editor
+	 * had alone (header( true )), where the full header took ~150px above the code.
+	 */
 	public static function header(): void {
 		$logo_url = self::logo_url();
 		$add_url  = add_query_arg( [

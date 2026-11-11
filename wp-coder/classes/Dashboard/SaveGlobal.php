@@ -8,10 +8,22 @@ use WPCoder\WPCoder;
 
 class SaveGlobal {
 
+	/**
+	 * Code posted but not written. Global PHP lives only in its file, so after a
+	 * failed write the page would reload the old file and the new code would be
+	 * gone from the editor; it is shown again instead, with an error.
+	 */
+	private static ?string $unsaved = null;
+
 	public static function init(): void {
 		self::send();
-		$content = self::get_content();
+		$content = self::$unsaved ?? self::get_content();
 		$enabled = get_option( '_wpcoder_enable_php' );
+		if ( self::$unsaved !== null ) {
+			echo '<div class="wowp-notification notification-error notice notice-error"><p>'
+			     . esc_html__( 'Global PHP was not saved: its folder is not writable. Your code is still in the editor below.', 'wp-coder' )
+			     . '</p></div>';
+		}
 		?>
 
 
@@ -45,6 +57,15 @@ class SaveGlobal {
                         <div class="wowp-settings__page-content">
                             <textarea name="wp_coder_global_php" id="wpcoder-global-php" cols="40" rows="5"><?php
 	                            echo esc_textarea( $content ); ?></textarea>
+
+	                        <?php
+	                        // Under the editor, where code is pasted: a second <?php
+	                        // is the usual way Global PHP breaks (FolderManager::strip_open_tag()).
+	                        Settings::editor_hint( 'global_php', sprintf(
+	                        /* translators: %1$s: <?php */
+		                        __( 'Enter the code without %1$s — the file already starts with it. If your code begins with %1$s, it is removed when you save.', 'wp-coder' ),
+		                        '<code>&lt;?php</code>'
+	                        ) ); ?>
                         </div>
 
 
@@ -82,8 +103,10 @@ class SaveGlobal {
 		$path_global = FolderManager::path_upload_dir() . 'global-php.php';
 
 		if ( isset( $_POST['wp_coder_global_php'] ) ) {
-			file_put_contents( $path_global,
-				"<?php\ndefined( 'ABSPATH' ) || exit;\n\n" . wp_unslash( $_POST['wp_coder_global_php'] ) );
+			$code = FolderManager::strip_open_tag( (string) wp_unslash( $_POST['wp_coder_global_php'] ) );
+			if ( FolderManager::write( $path_global, "<?php\ndefined( 'ABSPATH' ) || exit;\n\n" . $code ) === false ) {
+				self::$unsaved = $code;
+			}
 		}
 	}
 

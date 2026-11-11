@@ -3,14 +3,14 @@
  * Plugin Name:       WP Coder
  * Plugin URI:        https://wordpress.org/plugins/wp-coder/
  * Description:       Adding custom HTML, CSS, JavaScript and PHP code to your WordPress site.
- * Version:           4.5.2
+ * Version:           5.0
  * Author:            WPCoder
  * Author URI:        https://wpcoder.pro
  * Author Email:      hey@wow-company.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wp-coder
- * Requires at least: 5.4
+ * Requires at least: 5.3
  * Requires PHP:      7.4
  */
 
@@ -41,6 +41,9 @@ if ( ! class_exists( 'wpcoder' ) ) :
 		// Plugin ULR
 		public const PluginURL = 'https://wordpress.org/plugins/wp-coder/';
 
+		// Where every "Pro" link in the admin points.
+		public const PRO_URL = 'https://wpcoder.pro/pricing/';
+
 		private static $instance;
 		/**
 		 * @var Autoloader
@@ -63,6 +66,7 @@ if ( ! class_exists( 'wpcoder' ) ) :
 
 				register_activation_hook( __FILE__, [ self::$instance, 'plugin_activate' ] );
 				add_action( 'plugins_loaded', [ self::$instance, 'loaded' ] );
+				add_action( 'admin_notices', [ self::class, 'edition_notice' ] );
 			}
 
 
@@ -164,6 +168,7 @@ if ( ! class_exists( 'wpcoder' ) ) :
 			mode BOOLEAN,
 			tag TEXT,
 			php_include int(11) NOT NULL DEFAULT '0',
+			pinned tinyint(1) NOT NULL DEFAULT '0',
 			UNIQUE KEY id (id),
             INDEX id_index (id)
 			";
@@ -173,13 +178,65 @@ if ( ! class_exists( 'wpcoder' ) ) :
 			FolderManager::create();
 			update_option( self::PREFIX . '_db_version', '4.0' );
 
-			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-			if ( is_plugin_active( 'wp-coder-pro/wp-coder-pro.php' ) ) {
-				deactivate_plugins( 'wp-coder-pro/wp-coder-pro.php' );
+			// WP Coder Pro shares the snippets table and options, so only one of
+			// the two may run: activating either one deactivates the other.
+			self::deactivate_other_edition();
+		}
+
+		/**
+		 * Deactivates WP Coder Pro (and its old "wp-coder-pro" edition),
+		 * whatever folder it was installed in, and leaves a notice saying so.
+		 * WP Coder Pro does the same for this plugin.
+		 */
+		private static function deactivate_other_edition(): void {
+			include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+			$files = [ 'wpcoderpro.php', 'wp-coder-pro.php' ];
+
+			$active = (array) get_option( 'active_plugins', [] );
+			if ( is_multisite() ) {
+				$active = array_merge( $active, array_keys( (array) get_site_option( 'active_sitewide_plugins', [] ) ) );
 			}
-			if ( is_plugin_active( 'wpcoderpro/wpcoderpro.php' ) ) {
-				deactivate_plugins( 'wpcoderpro/wpcoderpro.php' );
+
+			$names = [];
+			foreach ( array_unique( $active ) as $plugin ) {
+				if ( ! in_array( basename( $plugin ), $files, true ) ) {
+					continue;
+				}
+				$data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin, false, false );
+				// A file name alone could belong to someone else's plugin.
+				if ( strpos( (string) ( $data['Name'] ?? '' ), 'WP Coder' ) !== 0 ) {
+					continue;
+				}
+				deactivate_plugins( $plugin );
+				$names[] = $data['Name'];
 			}
+
+			if ( $names ) {
+				set_transient( 'wpcoder_edition_switched', [
+					'from' => implode( ', ', $names ),
+					'to'   => 'free',
+				], HOUR_IN_SECONDS );
+			}
+		}
+
+		/**
+		 * Once, after an activation that deactivated WP Coder Pro.
+		 */
+		public static function edition_notice(): void {
+			$switched = get_transient( 'wpcoder_edition_switched' );
+			if ( ! is_array( $switched ) || ( $switched['to'] ?? '' ) !== 'free' || ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+			delete_transient( 'wpcoder_edition_switched' );
+			printf(
+				'<div class="notice notice-info is-dismissible"><p>%s</p></div>',
+				sprintf(
+					/* translators: %s: name of the deactivated plugin, e.g. WP Coder Pro. */
+					esc_html__( '%s has been deactivated: only one of WP Coder and WP Coder Pro can be active. Your snippets and settings are kept, including those of Pro features, for when you activate it again.', 'wp-coder' ),
+					esc_html( $switched['from'] )
+				)
+			);
 		}
 
 		/**

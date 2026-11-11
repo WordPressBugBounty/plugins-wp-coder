@@ -62,7 +62,31 @@ class ListTable extends WP_List_Table {
 		];
 
 
-		return $title . $this->row_actions( $actions );
+		$is_pinned = ! empty( $item['pinned'] );
+		$pin_link  = $is_pinned ? Link::unpin( $item['ID'] ) : Link::pin( $item['ID'] );
+		$pin_label = $is_pinned
+			? esc_attr__( 'Unpin', 'wp-coder' )
+			: esc_attr__( 'Pin to top', 'wp-coder' );
+
+		$pin = '<a href="' . esc_url( $pin_link ) . '" class="wowp-pin wowp-tooltip is-pointer '
+		       . ( $is_pinned ? 'is-on' : 'is-off' ) . '" data-tooltip="' . $pin_label
+		       . '" aria-label="' . $pin_label . '"><span class="dashicons dashicons-sticky"></span></a>';
+
+		// The note is added here, not to the 'title' value, which sort_data()
+		// compares as text — a note would reorder the column.
+		$note = '';
+		if ( ! empty( $item['note'] ) ) {
+			$note = '<p class="wowp-note" title="' . esc_attr( $item['note'] ) . '">' . esc_html( $item['note'] ) . '</p>';
+		}
+
+		return $pin . $title . $note . $this->row_actions( $actions );
+	}
+
+	/** The snippet's note (param[note]), shown under its title. */
+	private static function note( $param ): string {
+		$param = maybe_unserialize( $param );
+
+		return is_array( $param ) && ! empty( $param['note'] ) && is_string( $param['note'] ) ? $param['note'] : '';
 	}
 
 	public function prepare_items(): void {
@@ -92,7 +116,7 @@ class ListTable extends WP_List_Table {
 			'title'    => __( 'Title', 'wp-coder' ),
 			'code'     => __( 'Shortcode', 'wp-coder' ),
 			'code-alt' => __( 'Alternative Shortcode', 'wp-coder' ),
-			'tag'      => __( 'Tag', 'wp-coder' ),
+			'tag'      => __( 'Tags', 'wp-coder' ),
 			'mode'     => __( 'Test mode',
 					'wp-coder' ) . '<sup class="wowp-tooltip" data-tooltip="' . __( 'The item will only be displayed for administrators.',
 					'wp-coder' ) . '">ℹ</sup>',
@@ -159,18 +183,23 @@ class ListTable extends WP_List_Table {
 
 			$mode = empty( $value->mode ) ? $mode_off : $mode_on;
 
-			$tag = '';
-			if ( isset( $value->tag ) ) {
-				$tag_url = add_query_arg( [
+			// One filter link per tag, so each is clickable on its own.
+			$tag_links = [];
+			foreach ( Tags::split( $value->tag ?? '' ) as $one_tag ) {
+				$tag_url     = add_query_arg( [
 					'page' => WPCoder::SLUG,
-					'tag'  => $value->tag
+					'tag'  => $one_tag,
 				], admin_url( 'admin.php' ) );
-				$tag     = '<a href="' . esc_url( $tag_url ) . '">' . esc_attr( $value->tag ) . '</a>';
+				$tag_links[] = '<a href="' . esc_url( $tag_url ) . '" class="wowp-tag">' . esc_html( $one_tag ) . '</a>';
 			}
+			$tag = implode( ' ', $tag_links );
 
 			$link   = add_query_arg( [ 'id' => $value->id ], $main_link );
 			$data[] = array(
 				'ID'       => $value->id,
+				// Not a column — read by sort_data() and column_title().
+				'pinned'   => (int) ( $value->pinned ?? 0 ),
+				'note'     => self::note( $value->param ?? '' ),
 				'title'    => '<a href="' . esc_url( $link ) . '">' . esc_attr( $title ) . '</a>',
 				'code'     => '<div class="wowp-field has-addon"><label for="shortcode" class="label is-addon"><span class="wowp-tooltip on-right is-pointer can-copy" data-tooltip="Copy"><span class="wowp-copy icon icon-copy"></span></span></label><input type="text" value="[' . esc_attr( $shortcode ) . ' id=&quot;' . absint( $value->id ) . '&quot;]" readonly="readonly"></div>',
 				'code-alt' => '<div class="wowp-field has-addon"><label for="shortcode" class="label is-addon"><span class="wowp-tooltip on-right is-pointer can-copy" data-tooltip="Copy"><span class="wowp-copy icon icon-copy"></span></span></label><input type="text" value="[' . esc_attr( $shortcode ) . ' title=&quot;' . esc_attr( $title ) . '&quot;]" readonly="readonly"></div>',
@@ -213,7 +242,7 @@ class ListTable extends WP_List_Table {
 		$search = $this->get_search();
 
 		$tag_search = ( ! empty( $_REQUEST['tag'] ) ) ? sanitize_text_field( $_REQUEST  ['tag'] ) : '';
-		$tag_search = ( $tag_search === 'all' ) ? '' : $tag_search;
+		$tag_search = ( $tag_search === 'all' ) ? '' : trim( $tag_search );
 
 
 		$result = '';
@@ -223,17 +252,17 @@ class ListTable extends WP_List_Table {
 		if ( empty( $search ) ) {
 			$result = $wpdb->get_results( "SELECT * FROM $table order by id desc" );
 			if ( ! empty( $tag_search ) ) {
-				$result = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE tag=%s order by id desc", $tag_search ));
+				$result = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE FIND_IN_SET(%s, tag) order by id desc", $tag_search ));
 			}
 		} elseif ( trim( $search ) === 'Untitled' ) {
 			$result = $wpdb->get_results( "SELECT * FROM $table WHERE title='' order by id desc" );
 			if ( ! empty( $tag_search ) ) {
-				$result = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE title='' AND tag=%s order by id desc", $tag_search));
+				$result = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE title='' AND FIND_IN_SET(%s, tag) order by id desc", $tag_search));
 			}
 		} elseif ( is_numeric( $search ) ) {
 			$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE id=%d", absint( $search ) ) );
 			if ( ! empty( $tag_search ) ) {
-				$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE id=%d AND tag=%s", absint( $search ),
+				$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE id=%d AND FIND_IN_SET(%s, tag)", absint( $search ),
 					$tag_search ) );
 			}
 		} else {
@@ -242,7 +271,7 @@ class ListTable extends WP_List_Table {
 			$like   = $wild . $wpdb->esc_like( $find ) . $wild;
 			$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE title LIKE %s order by id desc", $like ) );
 			if ( ! empty( $tag_search ) ) {
-				$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE title LIKE %s AND tag=%s order by id desc", $like, $tag_search ) );
+				$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE title LIKE %s AND FIND_IN_SET(%s, tag) order by id desc", $like, $tag_search ) );
 			}
 		}
 
@@ -258,6 +287,8 @@ class ListTable extends WP_List_Table {
 			'deactivate' => __( 'Deactivate', 'wp-coder' ),
 			'test_on'    => __( 'Test mode ON', 'wp-coder' ),
 			'test_off'   => __( 'Test mode OFF', 'wp-coder' ),
+			'pin'        => __( 'Pin to top', 'wp-coder' ),
+			'unpin'      => __( 'Unpin', 'wp-coder' ),
 			'export'     => __( 'Export', 'wp-coder' ),
 		];
 
@@ -296,6 +327,12 @@ class ListTable extends WP_List_Table {
 			if ( 'test_off' === $this->current_action() ) {
 				Settings::deactivate_mode( $id );
 			}
+			if ( 'pin' === $this->current_action() ) {
+				Settings::pin_item( $id );
+			}
+			if ( 'unpin' === $this->current_action() ) {
+				Settings::unpin_item( $id );
+			}
 		}
 	}
 
@@ -328,6 +365,15 @@ class ListTable extends WP_List_Table {
 	}
 
 	private function sort_data( $a, $b ) {
+		// Pinned items float to the top of the current selection, whichever
+		// column and direction the user picked.
+		$a_pinned = (int) ( $a['pinned'] ?? 0 );
+		$b_pinned = (int) ( $b['pinned'] ?? 0 );
+
+		if ( $a_pinned !== $b_pinned ) {
+			return $b_pinned <=> $a_pinned;
+		}
+
 		// If no sort, default to title
 		$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( $_GET['orderby'] ) : 'ID';
 		// If no order, default to asc

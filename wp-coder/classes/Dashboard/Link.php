@@ -39,6 +39,21 @@ class Link {
 		], self::link() ), WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_deactivate_item' );
 	}
 
+	// No `action` arg here on purpose: 'pin'/'unpin' are also bulk actions, and
+	// passing it would make WP_List_Table::current_action() match on a plain
+	// row click. The nonce name already identifies the action.
+	public static function pin( $id = 0 ) {
+		return wp_nonce_url( add_query_arg( [
+			'id' => $id,
+		], self::link() ), WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_pin_item' );
+	}
+
+	public static function unpin( $id = 0 ) {
+		return wp_nonce_url( add_query_arg( [
+			'id' => $id,
+		], self::link() ), WPCoder::PREFIX . '_nonce', WPCoder::PREFIX . '_unpin_item' );
+	}
+
 	public static function remove_item() {
 		return add_query_arg( [
 			'notice' => 'remove_item',

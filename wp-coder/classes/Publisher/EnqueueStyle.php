@@ -43,11 +43,18 @@ class EnqueueStyle {
 		}
 
 		$slug = WPCoder::SLUG . '-style-' . $result->id . '-inline';
-		echo '<style id="' . esc_attr( $slug ) . '">' . wp_kses_post( $css ) . '</style>';
+		// Not wp_kses_post(): it is an HTML filter and turned the child combinator
+		// in ".card > .title" into "&gt;", which CSS does not decode. Only what
+		// could end the <style> element or run script is taken out (as in Pro).
+		$css = str_ireplace( '</style', '', (string) $css );
+		echo '<style id="' . esc_attr( $slug ) . '">' . str_ireplace( [ 'expression(', 'javascript:', 'behavior:' ], '', $css ) . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- administrator's CSS, made safe for a <style> element above
 	}
 
 	private static function include_style( $id, $param, $result ) {
 		$url  = FolderManager::get_style_url( $result );
+		if ( $url === '' ) {
+			return; // The file could not be written; FolderManager::write().
+		}
 		$time = ! empty( $param['time'] ) ? $param['time'] : time();
 
 		wp_enqueue_style( WPCoder::SLUG . '-style-' . $id, $url, null, WPCoder::info('version') . '_' . $time );

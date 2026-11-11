@@ -6,6 +6,7 @@
 
 use WPCoder\Dashboard\DashboardInitializer;
 use WPCoder\Dashboard\ImporterExporter;
+use WPCoder\Dashboard\OptionsTransfer;
 use WPCoder\WPCoder;
 
 defined( 'ABSPATH' ) || exit;
@@ -39,10 +40,21 @@ defined( 'ABSPATH' ) || exit;
             <div class="wowp-fieldset">
                 <div class="wowp-fieldset__header">
                     <div class="wowp-fieldset__header-title">
+						<?php esc_html_e( 'Export Snippets & Tools settings', 'wp-coder' ); ?>
+                        <p><?php esc_html_e( 'Download which items are switched on, and their options, on the Snippets and Tools pages. Import the file below on another site.', 'wp-coder' ); ?></p>
+                    </div>
+                </div>
+				<?php OptionsTransfer::form_export(); ?>
+            </div>
+
+            <div class="wowp-fieldset">
+                <div class="wowp-fieldset__header">
+                    <div class="wowp-fieldset__header-title">
 						<?php esc_html_e( 'Import Settings', 'wp-coder' ); ?>
                         <p><?php
 							printf( /* translators:  %s. plugin name */
 								esc_html__( 'Import the %s settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'wp-coder' ), '<b>' . esc_attr( WPCoder::info( 'name' ) ) . '</b>    ' ); ?></p>
+                        <p><?php esc_html_e( 'A Snippets & Tools settings file replaces those settings on this site — each page it contains, as a whole.', 'wp-coder' ); ?></p>
                     </div>
                 </div>
 				<?php ImporterExporter::form_import(); ?>

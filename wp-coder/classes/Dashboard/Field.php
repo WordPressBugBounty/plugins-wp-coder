@@ -27,7 +27,9 @@ class Field {
 		foreach ( $options as $key => $val ) {
 
 			if ( strrpos( $key, '_start' ) ) {
-				echo '<optgroup label="' . esc_attr( $val ) . '">';
+				// A group keyed "pro_…" lists what WP Coder Pro offers here: shown,
+				// but disabled, so it can never be submitted from the free version.
+				echo '<optgroup label="' . esc_attr( $val ) . '"' . disabled( strpos( (string) $key, 'pro_' ) === 0, true, false ) . '>';
 			} elseif ( strrpos( $key, '_end' ) ) {
 				echo '</optgroup>';
 			} else {
@@ -52,7 +54,7 @@ class Field {
 		}
 	}
 
-	public static function text( $name = '', $default = '', $type = 'text', $order = '' ): void {
+	public static function text( $name = '', $default = '', $type = 'text', $order = '', $placeholder = '' ): void {
 		self::check_name( $name );
 		$pre_name = $name;
 		if ( is_numeric( $order ) ) {
@@ -63,7 +65,8 @@ class Field {
 		$id = self::get_id( $pre_name );
 		$class = ( $type === 'color' ) ? 'wowp-field-color' : '';
 		if ( empty( $class ) ) {
-			echo '<input type="' . esc_attr( $type ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" id="'.esc_attr($id).'">';
+			echo '<input type="' . esc_attr( $type ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" id="'.esc_attr($id).'"'
+			     . ( $placeholder !== '' ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . '>';
 
 		} else {
 			echo '<input type="text" data-alpha-enabled="true" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="' . esc_attr( $class ) . '" id="'.esc_attr($id).'">';

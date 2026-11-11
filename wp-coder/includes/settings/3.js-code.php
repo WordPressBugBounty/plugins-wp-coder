@@ -4,6 +4,7 @@
  */
 
 use WPCoder\Dashboard\Field;
+use WPCoder\Dashboard\Settings;
 use WPCoder\Dashboard\FolderManager;
 use WPCoder\Dashboard\Option;
 
@@ -22,23 +23,32 @@ if ( ! empty( $default['js_code'] ) ) {
     <div class="wowp-settings__page">
         <div class="wowp-settings__page-sidebar">
 
-	        <?php Option::init( [
-		        $opt['jquery'],
-		        $opt['inline'],
-		        $opt['minified'],
-		        $opt['attributes'],
-	        ] ); ?>
+            <div class="wowp-sidebar-group">
+                <p class="wowp-sidebar-group__title"><?php esc_html_e( 'Output', 'wp-coder' ); ?></p>
+		        <?php Option::init( [
+			        $opt['jquery'],
+			        $opt['inline'],
+			        $opt['minified'],
+			        $opt['attributes'],
+		        ] ); ?>
+            </div>
 
-            <button class="button-editor button" id="jsnav"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
-            <ol id="jsNavigationMenu" class="wowp-php-nav-menu"></ol>
+            <div class="wowp-sidebar-group">
+                <p class="wowp-sidebar-group__title"><?php esc_html_e( 'Navigate', 'wp-coder' ); ?></p>
+                <button class="button-editor button" id="jsnav"
+                        title="<?php esc_attr_e( 'Insert a // NAV: name comment. Each one is listed below; click it to jump to that line.', 'wp-coder' ); ?>"><?php esc_html_e( 'Add NAV Comment', 'wp-coder' ); ?></button>
+                <ol id="jsNavigationMenu" class="wowp-php-nav-menu"></ol>
+            </div>
 
         </div>
         <div class="wowp-settings__page-content">
 	        <?php Field::textarea( 'js_code' ); ?>
 
-            <div class="wowp-notification notification-info">
-                Just enter the JavaScript content. You don’t need to include <code>&lt;script&gt;</code> — it's already on the page.
-            </div>
+			<?php Settings::editor_hint( 'js', sprintf(
+				/* translators: %s: <script> */
+				__( 'Just enter the JavaScript content. You don’t need to include %s — it’s already on the page.', 'wp-coder' ),
+				'<code>&lt;script&gt;</code>'
+			) ); ?>
 
 	        <?php if ( ! empty( $js_link ) ): ?>
                 <div class="wowp-field has-addon">

@@ -19,7 +19,7 @@ class  WPCoder_Theme_Switcher {
 				'group'  => null,
 				'title'  => '<span class="ab-icon dashicons dashicons-admin-appearance"></span><span class="ab-label">Themes</span>',
 				'href'   => false,
-				'meta'   => [ 'title' => __( 'Installed Themes', 'wpcoderpro' ) ],
+				'meta'   => [ 'title' => __( 'Installed Themes', 'wp-coder' ) ],
 			]
 		);
 

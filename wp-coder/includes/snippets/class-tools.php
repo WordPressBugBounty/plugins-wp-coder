@@ -134,8 +134,8 @@ class WPCoder_Lite_Tools {
             </noscript>
 		<?php }
 
-		// Pintrest Pixel code
-		if ( ! empty( $this->options['tracking_tool_pintrest'] ) ) { ?>
+		// Pinterest Pixel code
+		if ( ! empty( $this->options['tracking_tool_pinterest'] ) ) { ?>
             <script type="text/javascript">
                 !function (e) {
                     if (!window.pintrk) {
@@ -150,12 +150,12 @@ class WPCoder_Lite_Tools {
                         r.parentNode.insertBefore(t, r)
                     }
                 }("https://s.pinimg.com/ct/core.js");
-                pintrk('load', '<?php echo esc_attr( $this->options['tracking_tool_pintrest'] ); ?>');
+                pintrk('load', '<?php echo esc_attr( $this->options['tracking_tool_pinterest'] ); ?>');
                 pintrk('page');
             </script>
             <noscript>
                 <img height="1" width="1" style="display:none;" alt=""
-                     src="https://ct.pinterest.com/v3/?tid=<?php echo esc_attr( $this->options['tracking_tool_pintrest'] ); ?>&noscript=1"/>
+                     src="https://ct.pinterest.com/v3/?tid=<?php echo esc_attr( $this->options['tracking_tool_pinterest'] ); ?>&noscript=1"/>
             </noscript>
 		<?php }
 	}
@@ -197,14 +197,14 @@ class WPCoder_Lite_Tools {
             }
         }
 
-        $container_id = esc_attr( $this->options['gtm_container_id'] );
+        $container_id = (string) $this->options['gtm_container_id'];
         ?>
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','<?php echo $container_id; ?>');</script>
+          })(window,document,'script','dataLayer','<?php echo esc_js( $container_id ); ?>');</script>
         <!-- End Google Tag Manager -->
         <?php
     }
@@ -225,10 +225,10 @@ class WPCoder_Lite_Tools {
             }
         }
 
-        $container_id = esc_attr( $this->options['gtm_container_id'] );
+        $container_id = (string) $this->options['gtm_container_id'];
         ?>
         <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo $container_id; ?>"
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo rawurlencode( $container_id ); ?>"
                           height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- End Google Tag Manager (noscript) -->
         <?php

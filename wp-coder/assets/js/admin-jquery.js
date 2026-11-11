@@ -2,18 +2,64 @@
 
 jQuery(document).ready(function ($) {
 
+    // Snippets and Tools tabs (radios + labels). The radios used to be
+    // display:none, so the keyboard could reach no category but the open one;
+    // now they are only visually hidden — Tab enters the group, the arrow keys
+    // change category — and the label shows the focus. Each label counts the
+    // switches on in its panel, kept live as they change.
+    $('.wowp-snippets__tabs').each(function () {
+        const $tabs = $(this);
+
+        // focusin/focusout: delegated focus events arrive under those names.
+        $tabs.on('focusin', '.wowp-snippets__tabs-radio', function () {
+            $tabs.find('label[for="' + this.id + '"]').toggleClass('is-focused', this.matches(':focus-visible'));
+        });
+        $tabs.on('focusout', '.wowp-snippets__tabs-radio', function () {
+            $tabs.find('label[for="' + this.id + '"]').removeClass('is-focused');
+        });
+
+        const count = function () {
+            $tabs.find('.wowp-snippets__tabs-content').each(function () {
+                const id = String($(this).data('content'));
+                const on = $(this).find('.wowp-snippet__item > .wowp-field .switch input[type="checkbox"]:checked').length;
+                const $label = $tabs.find('label[for="' + id + '"]');
+                let $badge = $label.find('.wowp-snippets__tabs-count');
+                if (!$badge.length) {
+                    $badge = $('<span class="wowp-snippets__tabs-count"></span>').appendTo($label);
+                }
+                $badge.text(on ? on : '').attr('aria-label', on ? on + ' on' : null);
+            });
+        };
+        count();
+        $tabs.on('change', '.switch input[type="checkbox"]', count);
+
+        // On a phone the labels are a strip that scrolls sideways: bring the
+        // open one into it, without moving the page.
+        const reveal = function () {
+            const strip = $tabs.find('.wowp-snippets__tabs-labels')[0];
+            const radio = $tabs.find('.wowp-snippets__tabs-radio:checked')[0];
+            const label = radio ? $tabs.find('label[for="' + radio.id + '"]')[0] : null;
+            if (strip && label && strip.scrollWidth > strip.clientWidth) {
+                strip.scrollLeft = label.offsetLeft - strip.offsetLeft - 16;
+            }
+        };
+        reveal();
+        $tabs.on('change', '.wowp-snippets__tabs-radio', reveal);
+    });
+
+
 
     // All checkboxes
     $('#wowp-settings').on('click', 'input:checkbox', function () {
         checkboxchecked(this);
     });
 
+    // data-inverse: the switch shows the opposite of what is stored — "Active"
+    // over the status column, where "1" means deactivated (sidebar.php).
     function checkboxchecked(el) {
-        if ($(el).prop('checked')) {
-            $(el).next('input[type="hidden"]').val('1');
-        } else {
-            $(el).next('input[type="hidden"]').val('');
-        }
+        const on = $(el).prop('checked');
+        const stored = $(el).data('inverse') ? !on : on;
+        $(el).next('input[type="hidden"]').val(stored ? '1' : '');
     }
 
     // Preview
@@ -154,17 +200,22 @@ jQuery(document).ready(function ($) {
     $('#add-include').on('click', function (e) {
         e.preventDefault();
 
-        const temlate = $('#clone-includes').clone().html();
-
-        $(temlate).insertBefore('#includes-files .btn-add-display');
-        $('#includes-files .display-option select').each(includeFiles);
+        const $row = $($('#clone-includes').html().trim());
+        $row.insertBefore('#includes-files .btn-add-display');
+        $row.find('.display-option select').each(includeFiles);
+        $row.find('.include-file input').trigger('focus');
     });
 
-    $('#includes-files').on('click', '.dashicons-trash', function () {
-        const userConfirmed = confirm("Are you sure you want to remove?");
-        if (userConfirmed) {
-            const parent = $(this).closest('.wowp-fields__group');
-            $(parent).remove();
+    // The type follows the URL's extension (query string and hash aside), so a
+    // pasted .css link does not go out as a script.
+    $('#includes-files').on('input change', '.include-file input', function () {
+        const match = String(this.value).split(/[?#]/)[0].match(/\.(css|js)$/i);
+        if (!match) {
+            return;
+        }
+        const $type = $(this).closest('.wowp-fields__group').find('.display-option select');
+        if ($type.val() !== match[1].toLowerCase()) {
+            $type.val(match[1].toLowerCase()).trigger('change');
         }
     });
 
@@ -188,6 +239,73 @@ jQuery(document).ready(function ($) {
 
     }
 
+    // Scripts & Styles rows (7.include.php): × removes at once, with Undo in the
+    // same list — as on Attributes. The confirm() it replaces was the button
+    // that, cancelled, reloaded the page. Each list shows "No files yet." when
+    // empty, and the tab counts files and handles together.
+    $('.wowp-assets').each(function () {
+        const $list = $(this);
+        const $undo = $list.find('.wowp-attr-undo');
+        let pending = null;
+
+        const drop = function () {
+            if (pending) {
+                clearTimeout(pending.timer);
+                pending = null;
+            }
+            $undo.prop('hidden', true);
+        };
+
+        $list.on('click', '.wowp-asset-remove', function () {
+            const $row = $(this).closest('.wowp-fields__group');
+            drop();
+            // A file by its name, not its whole URL; a handle as typed.
+            const url = $.trim($row.find('.include-file input').val() || '');
+            const name = (url ? url.split(/[?#]/)[0].split('/').filter(Boolean).pop() : $.trim($row.find('input[type="text"]').first().val())) || '…';
+            pending = {
+                $row: $row,
+                index: $list.children('.wowp-fields__group').index($row),
+                timer: setTimeout(drop, 10000),
+            };
+            $row.detach();
+            $undo.find('.wowp-attr-undo__text').text(String($undo.data('removed') || '').replace('%s', name));
+            $undo.prop('hidden', false);
+            $undo.find('.wowp-undo-button').trigger('focus');
+        });
+
+        $undo.on('click', '.wowp-undo-button', function () {
+            if (!pending) {
+                return;
+            }
+            const removal = pending;
+            const $rows = $list.children('.wowp-fields__group');
+            if (removal.index < $rows.length) {
+                removal.$row.insertBefore($rows.eq(removal.index));
+            } else {
+                removal.$row.insertBefore($list.children('.btn-add-display'));
+            }
+            drop();
+            removal.$row.find('.wowp-asset-remove').trigger('focus');
+        });
+    });
+
+    const $assetLists = $('.wowp-assets');
+    const $assetsTab = $('label[for="wowp-tab-include"]');
+    if ($assetLists.length && window.MutationObserver) {
+        const countAssets = function () {
+            let total = 0;
+            $assetLists.each(function () {
+                const rows = $(this).children('.wowp-fields__group').length;
+                $(this).children('.wowp-assets__empty').prop('hidden', rows > 0);
+                total += rows;
+            });
+            $assetsTab.toggleClass('has-count', total > 0).attr('data-count', total || null);
+        };
+        $assetLists.each(function () {
+            new MutationObserver(countAssets).observe(this, { childList: true });
+        });
+    }
+
     // Dequeue Assets files
     $('#add-dequeue').on('click', function (e) {
         e.preventDefault();
@@ -203,15 +321,59 @@ jQuery(document).ready(function ($) {
     });
 
     // Add shortcode attributes
-    $('#add-attribute').on('click', function (e) {
+    // Also at the foot of the list, where a long list ends.
+    $('#add-attribute, #add-attribute-bottom').on('click', function (e) {
         e.preventDefault();
         const temlate = $('#clone-attributes').clone().html();
-        $(temlate).insertBefore('#code-attributes .btn-add-display');
+        const $newRow = $(temlate.trim());
+        $newRow.insertBefore('#code-attributes .btn-add-display');
+        $newRow.find('.wowp-attr-name input').trigger('focus');
     });
 
+    // Remove at once, with Undo (as in WP Coder Pro): nothing is saved until
+    // Save, but a slip used to take the row's values with it. One removal can be
+    // undone at a time; the next one (or ten seconds) makes it final.
+    const $attrUndo = $('#wowp-attr-undo');
+    let pendingRemoval = null;
+
+    const dropPendingRemoval = function () {
+        if (pendingRemoval) {
+            clearTimeout(pendingRemoval.timer);
+            pendingRemoval = null;
+        }
+        $attrUndo.prop('hidden', true);
+    };
+
     $('#code-attributes').on('click', '.dashicons-trash', function () {
-        const parent = $(this).closest('.wowp-fields__group');
-        $(parent).remove();
+        const $row = $(this).closest('.wowp-fields__group');
+        const $list = $row.parent();
+        dropPendingRemoval();
+        const name = $.trim($row.find('.wowp-attr-name input').val()) || '…';
+        pendingRemoval = {
+            $row: $row,
+            $list: $list,
+            index: $list.children('.wowp-fields__group').index($row),
+            timer: setTimeout(dropPendingRemoval, 10000),
+        };
+        $row.detach();
+        $attrUndo.find('.wowp-attr-undo__text').text(String($attrUndo.data('removed') || '').replace('%s', name));
+        $attrUndo.prop('hidden', false);
+        $('#wowp-attr-undo-button').trigger('focus');
+    });
+
+    $('#wowp-attr-undo-button').on('click', function () {
+        if (!pendingRemoval) {
+            return;
+        }
+        const removal = pendingRemoval;
+        const $rows = removal.$list.children('.wowp-fields__group');
+        if (removal.index < $rows.length) {
+            removal.$row.insertBefore($rows.eq(removal.index));
+        } else {
+            removal.$row.insertBefore(removal.$list.children('.btn-add-display'));
+        }
+        dropPendingRemoval();
+        removal.$row.find('.dashicons-trash').trigger('focus');
     });
 
     $('.button-add-img').on('click', function (event) {
@@ -324,20 +486,80 @@ jQuery(document).ready(function ($) {
     });
 
 
+    // navigator.clipboard only exists in a secure context, so on a plain-http
+    // site it is undefined and writeText() throws before anything is copied.
+    // Same fallback as WP Coder Pro.
+    function wpcoderCopyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        }
+
+        return new Promise(function (resolve, reject) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                if (document.execCommand('copy')) {
+                    resolve();
+                } else {
+                    reject(new Error('execCommand failed'));
+                }
+            } catch (err) {
+                reject(err);
+            } finally {
+                document.body.removeChild(ta);
+            }
+        });
+    }
+
+    function flashTooltip($element, message, delay) {
+        const original = $element.attr('data-tooltip');
+        $element.attr('data-tooltip', message);
+        setTimeout(function () {
+            $element.attr('data-tooltip', original);
+        }, delay);
+    }
+
     // Copy
     $('.can-copy').on('click', function () {
-        const parent = $(this).closest('.wowp-field');
-        const input = $(parent).find('input');
-        const originalTooltip = $(this).attr("data-tooltip");
-        const currentElement = $(this);
+        const input = $(this).closest('.wowp-field').find('input');
+        const $element = $(this);
 
-        navigator.clipboard.writeText(input.val()).then(() => {
-            currentElement.attr("data-tooltip", "Copied");
-            setTimeout(function () {
-                currentElement.attr("data-tooltip", originalTooltip);
-            }, 1000);
+        wpcoderCopyText(input.val()).then(function () {
+            flashTooltip($element, 'Copied', 1000);
+        }).catch(function () {
+            // Leave the text selected, so it can still be copied by hand.
+            input.trigger('select');
+            flashTooltip($element, 'Press Ctrl/Cmd+C', 2500);
         });
     });
+
+    // Snippet editor: the shortcode field shows [wp_code id="N"]; this button
+    // copies the form with every attribute, which no longer fits in the field.
+    $('.wowp-copy-full').on('click', function () {
+        const $button = $(this);
+        const full = String($button.data('copy'));
+
+        wpcoderCopyText(full).then(function () {
+            flashTooltip($button, 'Copied', 1000);
+        }).catch(function () {
+            $('#shortcode').val(full).trigger('select');
+            flashTooltip($button, 'Press Ctrl/Cmd+C', 2500);
+        });
+    });
+
+    // The page header names the snippet; keep it in step with the Title field.
+    const $pageTitle = $('#wowp-page-title');
+    if ($pageTitle.length) {
+        $('#title').on('input', function () {
+            const value = $.trim($(this).val());
+            $pageTitle.text(value !== '' ? value : $pageTitle.data('empty'));
+        });
+    }
 
     // Quick Code
 
@@ -418,48 +640,188 @@ jQuery(document).ready(function ($) {
 
     // Popover
 
-    const toggleBtn = document.getElementById('popover-toggle');
-    const popover = document.getElementById('popover-box');
+    // ── Customize tabs (Settings::init(), Settings::hidden_tabs()) ─────────────
+    // Which tabs to show while empty: the user's choice, kept as a WordPress
+    // user setting and applied at once — not snippet data, so no Save and no
+    // "Unsaved changes". A tab that holds code, attributes or files is always
+    // shown: hidden, its code would still run out of sight.
+    const $tabsPopover = $('#popover-box');
+    const $tabsToggle = $('#popover-toggle');
+    if ($tabsPopover.length && $tabsToggle.length) {
+        const tabsSetting = String($tabsPopover.data('setting'));
+        let hiddenPref = String($tabsPopover.data('hidden') || '').split(/[_-]/).filter(Boolean);
 
-    if (toggleBtn) {
+        const tabHolds = function (file) {
+            const $label = $('label[for="wowp-tab-' + file + '"]');
+            return $label.hasClass('has-content') || $label.hasClass('has-count');
+        };
 
-        toggleBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            popover.style.display = popover.style.display === 'block' ? 'none' : 'block';
+        const saveTabs = function () {
+            if (typeof window.setUserSetting === 'function') {
+                // "_", not "-": WordPress drops "-" when it stores the setting.
+                window.setUserSetting(tabsSetting, hiddenPref.length ? hiddenPref.join('_') : 'none');
+            }
+        };
+
+        // onlyShow: content appeared (an AI result, a restored row) — reveal its
+        // tab, but never hide the tab someone is working in.
+        const applyTabs = function (onlyShow) {
+            let hiddenCount = 0;
+            $tabsPopover.find('.wowp-tab-toggle').each(function () {
+                const $box = $(this);
+                const file = String($box.data('file'));
+                const locked = tabHolds(file);
+                const show = locked || hiddenPref.indexOf(String($box.data('tab'))) === -1;
+                const $radio = $('#wowp-tab-' + file);
+                const $label = $('label[for="wowp-tab-' + file + '"]');
+
+                $box.prop({checked: show, disabled: locked});
+                $box.closest('.wowp-tabs-popover__row').toggleClass('is-locked', locked);
+
+                if (show) {
+                    $radio.prop('disabled', false);
+                    $label.removeClass('is-hidden');
+                } else if (!onlyShow || $label.hasClass('is-hidden')) {
+                    const wasOpen = $radio.prop('checked');
+                    $radio.prop({checked: false, disabled: true});
+                    $label.addClass('is-hidden');
+                    if (wasOpen) {
+                        $('.wowp-settins__tabs-radio:not(:disabled)').first().prop('checked', true);
+                    }
+                }
+                if ($label.hasClass('is-hidden')) {
+                    hiddenCount++;
+                }
+            });
+            const $badge = $('#wowp-hidden-tabs');
+            $badge.prop('hidden', hiddenCount === 0).text(String($badge.data('label')).replace('%d', hiddenCount));
+        };
+
+        $tabsPopover.on('change', '.wowp-tab-toggle', function () {
+            const key = String($(this).data('tab'));
+            hiddenPref = hiddenPref.filter(function (k) {
+                return k !== key;
+            });
+            if (!$(this).prop('checked')) {
+                hiddenPref.push(key);
+            }
+            saveTabs();
+            applyTabs(false);
         });
 
-        document.addEventListener('click', (e) => {
-            if (!toggleBtn.contains(e.target) && !popover.contains(e.target)) {
-                popover.style.display = 'none';
+        // A user who never chose takes this snippet's old per-snippet flags as
+        // their choice, so the tabs they hid stay hidden everywhere.
+        if (String($tabsPopover.data('seed')) === '1') {
+            saveTabs();
+        }
+
+        // Tabs gaining content show themselves (marks are kept live elsewhere).
+        if (window.MutationObserver) {
+            const observer = new MutationObserver(function () {
+                applyTabs(true);
+            });
+            $('.wowp-settins__tabs-tab').each(function () {
+                observer.observe(this, {attributes: true, attributeFilter: ['class', 'data-count']});
+            });
+        }
+
+        const openTabs = function (open, refocus) {
+            $tabsPopover.prop('hidden', !open);
+            $tabsToggle.attr('aria-expanded', open ? 'true' : 'false');
+            if (open) {
+                $tabsPopover.find('.wowp-tab-toggle:not(:disabled)').first().trigger('focus');
+            } else if (refocus) {
+                $tabsToggle.trigger('focus');
+            }
+        };
+
+        $tabsToggle.on('click', function (event) {
+            event.preventDefault();
+            openTabs($tabsPopover.prop('hidden'), false);
+        });
+
+        $tabsPopover.on('keydown', function (event) {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                openTabs(false, true);
             }
         });
 
+        $(document).on('click', function (event) {
+            if (!$tabsPopover.prop('hidden') && !$(event.target).closest('.popover-container').length) {
+                openTabs(false, false);
+            }
+        });
     }
 
-    // Hide Tabs
+    // Attributes tab: the number of attribute rows, kept in step as rows are
+    // added and removed (Settings::tab_marks() sets it on load).
+    const attrBox = document.getElementById('code-attributes');
+    const $attrTab = $('label[for="wowp-tab-attributes"]');
+    if (attrBox && $attrTab.length && window.MutationObserver) {
+        const countAttributes = function () {
+            const count = $(attrBox).children('.wowp-attr-row').length;
+            $attrTab.toggleClass('has-count', count > 0).attr('data-count', count || null);
+            $('.wowp-attr-empty').prop('hidden', count > 0);
+            $('#code-attributes .btn-add-display').prop('hidden', count === 0);
+        };
+        new MutationObserver(countAttributes).observe(attrBox, { childList: true });
+    }
 
-    $('#popover-box input[type="checkbox"]').each(hide_tab).on('click', hide_tab);
+    // The ⁱ hints show on :focus too, but a <sup> never got focus — keyboard
+    // users could not read them at all.
+    $('sup.wowp-tooltip[data-tooltip]').each(function () {
+        if (!this.hasAttribute('tabindex')) {
+            this.setAttribute('tabindex', '0');
+            this.setAttribute('aria-label', this.getAttribute('data-tooltip'));
+        }
+    });
 
-    function hide_tab() {
-        const types = {
-            checkbox_hide_html: 'wowp-tab-html-code',
-            checkbox_hide_css: 'wowp-tab-css-code',
-            checkbox_hide_js: 'wowp-tab-js-code',
-            checkbox_hide_php: 'wowp-tab-php-code',
-            checkbox_hide_attributes: 'wowp-tab-attributes',
-            checkbox_hide_settings: 'wowp-tab-settings',
-            checkbox_hide_include: 'wowp-tab-include',
+    // Snippet note (sidebar.php): keep the folded summary — "Add a note" or
+    // "Note", the dot, the first line, the full text on hover — in step with the
+    // text, so a note typed and then folded still shows. The field grows with
+    // the note, and opening the note puts the cursor in it.
+    const $note = $('#note');
+    if ($note.length) {
+        const $details = $note.closest('.wowp-settings__publish-note');
+        const $summary = $details.children('summary');
+        const $label = $details.find('.wowp-note__label');
+
+        const fitNote = function () {
+            const el = $note[0];
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight + 2, 320) + 'px';
         };
 
-        const id = $(this).attr('id');
-        const tab = types[id];
-        if ($(this).is(':checked')) {
-            $('#'+ tab).prop('checked', false);
-            $(`[for="${tab}"]`).addClass('is-hidden');
-        } else {
-            $(`[for="${tab}"]`).removeClass('is-hidden');
-        }
+        $note.on('input', function () {
+            const text = $note.val();
+            const filled = $.trim(text) !== '';
+            $details.toggleClass('has-note', filled);
+            $details.find('.wowp-note__preview').text(text.split('\n')[0]);
+            $label.text(filled ? $label.data('filled') : $label.data('empty'));
+            $summary.attr('title', filled ? text : null);
+            fitNote();
+        });
+
+        $details.on('toggle', function () {
+            if (!$details.prop('open')) {
+                return;
+            }
+            fitNote();
+            const el = $note[0];
+            el.focus();
+            el.setSelectionRange(el.value.length, el.value.length);
+        });
     }
 
+    // Code editor hints (Settings::editor_hint()): × hides one for good — a
+    // WordPress user setting, so the server stops printing it.
+    $(document).on('click', '.wowp-editor-hint__close', function () {
+        const $hint = $(this).closest('.wowp-editor-hint');
+        if (typeof window.setUserSetting === 'function') {
+            window.setUserSetting($hint.data('hint'), '1');
+        }
+        $hint.remove();
+    });
 
 });

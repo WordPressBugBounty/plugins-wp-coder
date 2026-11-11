@@ -13,25 +13,41 @@ class SnippetManager {
 
 		$options = get_option( '_wp_coder_snippets', [] );
 
+		// Group keys double as the page filename and the tab icon class, so they
+		// stay put even where the label changed ('optimization' → "Performance").
 		$snippets = [
 			'content'      => __( 'Editor & Content', 'wp-coder' ),
-			'admin'        => __( 'Admin Interface Tweaks', 'wp-coder' ),
-			'login'        => __( 'Login & User Access', 'wp-coder' ),
+			'admin'        => __( 'Admin Interface', 'wp-coder' ),
+			'login'        => __( 'Login & Users', 'wp-coder' ),
 			'media'        => __( 'Media & Embeds', 'wp-coder' ),
-			'core'         => __( 'Core Functionality', 'wp-coder' ),
 			'comments'     => __( 'Comments & Feedback', 'wp-coder' ),
-			'optimization' => __( ' Cleanup & Optimization', 'wp-coder' ),
+			'security'     => __( 'Security', 'wp-coder' ),
+			'optimization' => __( 'Performance', 'wp-coder' ),
+			'core'         => __( 'Core & System', 'wp-coder' ),
 		];
 
 		?>
         <div class="wowp-settings wowp-snippets">
             <form method="post">
 
+                <div class="wowp-snippets__search">
+                    <span class="icon icon-crosshair wowp-snippets__search-icon" aria-hidden="true"></span>
+                    <input type="search" id="wowp-snippet-search"
+                           class="wowp-snippets__search-input"
+                           autocomplete="off"
+                           placeholder="<?php esc_attr_e( 'Search snippets by name or description…', 'wp-coder' ); ?>"
+                           aria-label="<?php esc_attr_e( 'Search snippets', 'wp-coder' ); ?>">
+                    <span class="wowp-snippets__search-count" id="wowp-snippet-search-count" role="status" aria-live="polite"></span>
+                </div>
 
                 <div class="wowp-snippets__tabs" id="wowp-snippets-tabs">
 					<?php
+					// A saved tab that no longer exists (a renamed or removed group)
+					// would leave every radio unchecked, hiding all the panels.
+					$saved_tab = $options['snippet_tab'] ?? '';
+					$tab       = isset( $snippets[ $saved_tab ] ) ? $saved_tab : 'content';
+
 					foreach ( $snippets as $key => $value ) {
-						$tab = ! empty( $options['snippet_tab'] ) ? $options['snippet_tab'] : 'content';
 						echo '<input type="radio" class="wowp-snippets__tabs-radio" name="wp_coder_snippet[snippet_tab]" value="' . esc_attr( $key ) . '" id="wowp-tab-' . esc_attr( $key ) . '" ' . checked( $tab, $key, false ) . '>';
 					}
 					echo '<div class="wowp-snippets__tabs-labels">';
@@ -42,7 +58,19 @@ class SnippetManager {
 					foreach ( $snippets as $key => $value ) {
 
 						echo '<div class="wowp-snippets__tabs-content" data-content="wowp-tab-' . esc_attr( $key ) . '">';
-						require_once plugin_dir_path( __FILE__ ) . 'pages/' . esc_attr( $key ) . '.php';
+
+						// Isolate each group: a runtime error in one page must not blank
+						// that tab AND every tab rendered after it in this loop.
+						try {
+							require plugin_dir_path( __FILE__ ) . 'pages/' . $key . '.php';
+						} catch ( \Throwable $e ) {
+							error_log( '[WP-Coder] Snippet group "' . $key . '" failed to load: ' . $e->getMessage() );
+							echo '<div class="notice notice-error inline"><p>'
+								. esc_html__( 'This snippet group could not be loaded:', 'wp-coder' ) . ' '
+								. esc_html( $e->getMessage() )
+								. '</p></div>';
+						}
+
 						echo '<input type="submit" name="submit" class="wowp-button button button-dark button-hero" value="' . esc_attr__( 'Save', 'wp-coder' ) . '">';
 						echo '</div>';
 					}
@@ -50,12 +78,111 @@ class SnippetManager {
 					?>
                 </div>
 				<?php
-				//				submit_button( __( 'Save', 'wp-coder' ), 'wowp-button button-dark button-hero', 'submit', false );
 				wp_nonce_field( WPCoder::PREFIX . '_snippets_action', WPCoder::PREFIX . '_save_snippet' );
 				?>
             </form>
 
         </div>
+		<?php
+		self::search_script();
+	}
+
+	/**
+	 * Client-side filter for the snippet list.
+	 *
+	 * Every tab's markup is already in the DOM (the tabs are CSS-only, inactive
+	 * panels are just parked off-screen), so one pass can search all categories at
+	 * once without any request.
+	 *
+	 * Matches are hidden with a class, never detached: the whole page is one form
+	 * and saving replaces the entire option, so an input removed from the DOM would
+	 * silently switch that snippet off. A `display:none` control still submits.
+	 */
+	private static function search_script(): void {
+		?>
+        <script>
+            (function () {
+                var input = document.getElementById('wowp-snippet-search');
+                var tabs = document.getElementById('wowp-snippets-tabs');
+                var count = document.getElementById('wowp-snippet-search-count');
+
+                if (!input || !tabs) {
+                    return;
+                }
+
+                var sections = Array.prototype.slice.call(
+                    tabs.querySelectorAll('.wowp-snippets__tabs-content')
+                );
+
+                function haystack(item) {
+                    if (!item.dataset.searchText) {
+                        item.dataset.searchText = (item.textContent || '')
+                            .toLowerCase().replace(/\s+/g, ' ').trim();
+                    }
+                    return item.dataset.searchText;
+                }
+
+                function filter() {
+                    var query = input.value.trim().toLowerCase();
+                    var searching = query !== '';
+                    var found = 0;
+                    var lastHit = null;
+
+                    tabs.classList.toggle('is-searching', searching);
+
+                    sections.forEach(function (section) {
+                        var hits = 0;
+
+                        Array.prototype.forEach.call(
+                            section.querySelectorAll('.wowp-snippet__item'),
+                            function (item) {
+                                var match = !searching || haystack(item).indexOf(query) !== -1;
+                                item.classList.toggle('is-search-hidden', !match);
+                                if (match) {
+                                    hits++;
+                                }
+                            }
+                        );
+
+                        section.classList.toggle('is-search-empty', searching && hits === 0);
+
+                        if (searching && hits > 0) {
+                            lastHit = section;
+                        }
+
+                        found += hits;
+                    });
+
+                    // Each panel carries its own Save button; while results span
+                    // several categories keep only the last one.
+                    sections.forEach(function (section) {
+                        var button = section.querySelector('.wowp-button[type="submit"]');
+                        if (button) {
+                            button.classList.toggle('is-search-hidden', searching && section !== lastHit);
+                        }
+                    });
+
+                    if (count) {
+                        count.textContent = searching
+                            ? (found > 0
+                                ? found + <?php echo wp_json_encode( ' ' . __( 'found', 'wp-coder' ) ); ?>
+                                : <?php echo wp_json_encode( __( 'Nothing found', 'wp-coder' ) ); ?>)
+                            : '';
+                        count.classList.toggle('is-empty', searching && found === 0);
+                    }
+                }
+
+                input.addEventListener('input', filter);
+
+                input.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape' && input.value !== '') {
+                        event.preventDefault(); // Don't let the browser clear it silently.
+                        input.value = '';
+                        filter();
+                    }
+                });
+            })();
+        </script>
 		<?php
 	}
 

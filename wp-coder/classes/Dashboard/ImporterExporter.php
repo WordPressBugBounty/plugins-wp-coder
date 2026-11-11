@@ -54,7 +54,7 @@ class ImporterExporter {
                 <input type="file" name="import_file" accept="*.json"/>
                 </span>
                 <br>
-                Upload a valid WP Coder Pro .json file exported from another site.
+                Upload a valid WP Coder .json file exported from another site.
             </p>
             <p>
                 <label>
@@ -83,6 +83,23 @@ class ImporterExporter {
 		$import_file = $_FILES['import_file']['tmp_name'];
 		$settings    = json_decode( file_get_contents( $import_file ), false );
 
+		// A Snippets / Tools settings file (OptionsTransfer), not snippet rows —
+		// read as rows, its two sections would be inserted as empty snippets.
+		if ( OptionsTransfer::is_settings_file( $settings ) ) {
+			$written = OptionsTransfer::apply( OptionsTransfer::read( $settings ) );
+			wp_safe_redirect( add_query_arg( [
+				'page'     => WPCoder::SLUG,
+				'notice'   => 'settings_import',
+				'settings' => implode( ',', $written ),
+			], admin_url( 'admin.php' ) ) );
+			exit;
+		}
+
+		if ( ! is_array( $settings ) && ! is_object( $settings ) ) {
+			wp_die( esc_attr__( 'Please upload a valid .json file', 'wp-coder' ), esc_attr__( 'Error', 'wp-coder' ),
+				[ 'response' => 400 ] );
+		}
+
 		$columns = DBManager::get_columns();
 
 		$update = ! empty( $_POST['wowp_import_update'] ) ? '1' : '';
@@ -95,7 +112,13 @@ class ImporterExporter {
 			foreach ( $columns as $column ) {
 				$name          = $column->Field;
 				$data[ $name ] = ! empty( $val->$name ) ? $val->$name : '';
-				if ( $name === 'id' || $name === 'status' || $name === 'mode' ) {
+				if ( $name === 'tag' ) {
+					// Files from older versions (or hand-edited ones) may hold
+					// "a, b"; stored like that, FIND_IN_SET never matches " b".
+					$data[ $name ] = Tags::normalize( $data[ $name ] );
+				}
+				// Integer columns as %d, so a missing value becomes 0, not ''.
+				if ( in_array( $name, [ 'id', 'status', 'mode', 'pinned', 'php_include' ], true ) ) {
 					$formats[] = '%d';
 				} else {
 					$formats[] = '%s';

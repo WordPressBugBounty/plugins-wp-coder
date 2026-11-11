@@ -15,7 +15,17 @@ add_action( 'plugins_loaded', 'wpcoder_maybe_enable_safe_mode' );
  * @return void
  */
 function wpcoder_maybe_enable_safe_mode() {
-	if ( ! isset( $_GET['wpcoder-safe-mode'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	// The parameter counts for an administrator of the plugin only; it used to
+	// put any visitor in safe mode (SafeMode::is_safe_mode()).
+	if ( ! \WPCoder\Publisher\SafeMode::is_safe_mode() ) {
+		return;
+	}
+
+	// Set in wp-config.php: nothing to keep in the URLs, and only the file ends it.
+	if ( \WPCoder\Publisher\SafeMode::by_constant() ) {
+		add_action( 'admin_notices', 'wpcoder_safe_mode_constant_notice' );
+		add_action( 'wpcoder_admin_notices', 'wpcoder_safe_mode_constant_notice' );
+
 		return;
 	}
 
@@ -74,6 +84,25 @@ function wpcoder_safe_mode_notice() {
 		<p>
 			<a class="button button-secondary wpcoder-safe-mode" href="<?php echo esc_url( remove_query_arg( 'wpcoder-safe-mode' ) ); ?>" target="_blank"><?php esc_html_e( 'Exit safe mode', 'wp-coder' ); ?></a>
 		</p>
+	</div>
+	<?php
+}
+
+/**
+ * Safe mode from WPCODER_SAFE_MODE in wp-config.php: leaving it is removing the line.
+ *
+ * @return void
+ */
+function wpcoder_safe_mode_constant_notice() {
+	?>
+	<div class="notice notice-warning">
+		<p><?php
+			printf(
+				/* translators: %s: the line in wp-config.php */
+				esc_html__( 'WPCoder is in Safe Mode for every visitor: no snippet PHP is executed, Global PHP included. It is set in wp-config.php — once the snippet that broke the site is fixed or switched off, remove %s to leave it.', 'wp-coder' ),
+				"<code>define( 'WPCODER_SAFE_MODE', true );</code>"
+			);
+		?></p>
 	</div>
 	<?php
 }

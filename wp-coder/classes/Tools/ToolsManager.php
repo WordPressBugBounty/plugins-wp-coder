@@ -12,9 +12,11 @@ class ToolsManager {
 		$options = get_option( '_wp_coder_tools', [] );
 
 		$tools = [
-			'integrations' => __( 'Integrations', 'wpcoderpro' ),
-			'content'      => __( 'Content & Templates', 'wpcoderpro' ),
-			'developer'    => __( 'Developer', 'wpcoderpro' ),
+			'integrations' => __( 'Integrations', 'wp-coder' ),
+			'content'      => __( 'Content & Templates', 'wp-coder' ),
+			'developer'    => __( 'Developer', 'wp-coder' ),
+			// Describes Pro-only tools; the page file has no inputs.
+			'core'         => __( 'Site Tools · PRO', 'wp-coder' ),
 		];
 
 		?>
@@ -30,8 +32,13 @@ class ToolsManager {
 
                 <div class="wowp-snippets__tabs" id="wowp-snippets-tabs">
 					<?php
+					// A saved tab this version doesn't have (WP Coder Pro's "ai", say,
+					// on a site that ran Pro) would leave every radio unchecked and
+					// hide all the panels — fall back to Integrations.
+					$saved_tab = $options['tool_tab'] ?? '';
+					$tab       = isset( $tools[ $saved_tab ] ) ? $saved_tab : 'integrations';
+
 					foreach ( $tools as $key => $value ) {
-						$tab = ! empty( $options['tool_tab'] ) ? $options['tool_tab'] : 'integrations';
 						echo '<input type="radio" class="wowp-snippets__tabs-radio" name="wp_coder_tool[tool_tab]" value="' . esc_attr( $key ) . '" id="wowp-tab-' . esc_attr( $key ) . '" ' . checked( $tab,
 								$key, false ) . '>';
 					}
@@ -44,7 +51,7 @@ class ToolsManager {
 						echo '<div class="wowp-snippets__tabs-content" data-content="wowp-tab-' . esc_attr( $key ) . '">';
 						require_once plugin_dir_path( __FILE__ ) . 'pages/' . esc_attr( $key ) . '.php';
 						echo '<input type="submit" name="submit" class="wowp-button button button-dark button-hero" value="' . esc_attr__( 'Save',
-								'wpcoderpro' ) . '">';
+								'wp-coder' ) . '">';
 						echo '</div>';
 					}
 
@@ -55,7 +62,7 @@ class ToolsManager {
 				// require_once plugin_dir_path( __FILE__ ) . '/page.php'; ?>
 
 				<?php
-				// submit_button( __( 'Save', 'wpcoderpro' ), 'wowp-button button button-dark button-hero', 'submit', false ); ?>
+				// submit_button( __( 'Save', 'wp-coder' ), 'wowp-button button button-dark button-hero', 'submit', false ); ?>
 
 				<?php
 				wp_nonce_field( WPCoder::PREFIX . '_tools_action', WPCoder::PREFIX . '_save_tools' ); ?>

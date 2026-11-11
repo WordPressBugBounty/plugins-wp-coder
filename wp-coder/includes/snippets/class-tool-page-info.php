@@ -272,56 +272,56 @@ class  WPCoder_Page_Info {
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_wordpress',
 			'parent' => 'wpc_dev_info',
-			'title'  => __( 'WP Environment', 'wpcoderpro' ),
+			'title'  => __( 'WP Environment', 'wp-coder' ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_wp_version',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'WP Version', 'wpcoderpro' ) . ': %s', $wordpress_info['wp_version'] ),
+			'title'  => sprintf( __( 'WP Version', 'wp-coder' ) . ': %s', $wordpress_info['wp_version'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_wp_multisite',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'WP Multisite', 'wpcoderpro' ) . ': %s', ( $wordpress_info['wp_multisite'] ) ? __( 'enable', 'wpcoderpro' ) : __( 'disable', 'wpcoderpro' ) ),
+			'title'  => sprintf( __( 'WP Multisite', 'wp-coder' ) . ': %s', ( $wordpress_info['wp_multisite'] ) ? __( 'enable', 'wp-coder' ) : __( 'disable', 'wp-coder' ) ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_wp_memory_limit',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'WP Memory Limit', 'wpcoderpro' ) . ': %s', $wordpress_info['wp_memory_limit'] ),
+			'title'  => sprintf( __( 'WP Memory Limit', 'wp-coder' ) . ': %s', $wordpress_info['wp_memory_limit'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_wp_debug_mode',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'WP Debug Mode', 'wpcoderpro' ) . ': %s', ( $wordpress_info['wp_debug_mode'] ) ? __( 'enable', 'wpcoderpro' ) : __( 'disable', 'wpcoderpro' ) ),
+			'title'  => sprintf( __( 'WP Debug Mode', 'wp-coder' ) . ': %s', ( $wordpress_info['wp_debug_mode'] ) ? __( 'enable', 'wp-coder' ) : __( 'disable', 'wp-coder' ) ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_wp_cron',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'WP Cron', 'wpcoderpro' ) . ': %s', ( $wordpress_info['wp_cron'] ) ? __( 'enable', 'wpcoderpro' ) : __( 'disable', 'wpcoderpro' ) ),
+			'title'  => sprintf( __( 'WP Cron', 'wp-coder' ) . ': %s', ( $wordpress_info['wp_cron'] ) ? __( 'enable', 'wp-coder' ) : __( 'disable', 'wp-coder' ) ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_language',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'WP language', 'wpcoderpro' ) . ': %s', $wordpress_info['language'] ),
+			'title'  => sprintf( __( 'WP language', 'wp-coder' ) . ': %s', $wordpress_info['language'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_timezone',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'Timezone', 'wpcoderpro' ) . ': %s', $wordpress_info['timezone'] ),
+			'title'  => sprintf( __( 'Timezone', 'wp-coder' ) . ': %s', $wordpress_info['timezone'] ),
 			'href'   => false
 		) );
 		$wp_admin_bar->add_node( [
@@ -348,7 +348,7 @@ class  WPCoder_Page_Info {
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_wordpress_environment',
 			'parent' => 'wpc_dev_wordpress',
-			'title'  => sprintf( __( 'Env', 'wpcoderpro' ) . ': %s', $wordpress_info['environment'] ),
+			'title'  => sprintf( __( 'Env', 'wp-coder' ) . ': %s', $wordpress_info['environment'] ),
 			'href'   => false
 		) );
 
@@ -358,91 +358,91 @@ class  WPCoder_Page_Info {
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment',
 			'parent' => 'wpc_dev_info',
-			'title'  => __( 'Server Environment', 'wpcoderpro' ),
+			'title'  => __( 'Server Environment', 'wp-coder' ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_server_info',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'Server info', 'wpcoderpro' ) . ': %s', $get_environment_info['server_info'] ),
+			'title'  => sprintf( __( 'Server info', 'wp-coder' ) . ': %s', $get_environment_info['server_info'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_php_version',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'PHP version', 'wpcoderpro' ) . ': %s', $get_environment_info['php_version'] ),
+			'title'  => sprintf( __( 'PHP version', 'wp-coder' ) . ': %s', $get_environment_info['php_version'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_mysql_version',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'MySQL version', 'wpcoderpro' ) . ': %s', $get_environment_info['mysql_version'] ),
+			'title'  => sprintf( __( 'MySQL version', 'wp-coder' ) . ': %s', $get_environment_info['mysql_version'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_db_prefix',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'DB Prefix', 'wpcoderpro' ) . ': %s', $get_environment_info['db_prefix'] ),
+			'title'  => sprintf( __( 'DB Prefix', 'wp-coder' ) . ': %s', $get_environment_info['db_prefix'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_db_charset',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'DB Charset/Collate', 'wpcoderpro' ) . ': %s', $get_environment_info['db_charset'] ),
+			'title'  => sprintf( __( 'DB Charset/Collate', 'wp-coder' ) . ': %s', $get_environment_info['db_charset'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_php_post_max_size',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'PHP Post Max Size', 'wpcoderpro' ) . ': %s', $get_environment_info['php_post_max_size'] ),
+			'title'  => sprintf( __( 'PHP Post Max Size', 'wp-coder' ) . ': %s', $get_environment_info['php_post_max_size'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_php_max_execution_time',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'PHP Time Limit', 'wpcoderpro' ) . ': %s' . __( 'sec', 'wpcoderpro' ), $get_environment_info['php_max_execution_time'] ),
+			'title'  => sprintf( __( 'PHP Time Limit', 'wp-coder' ) . ': %s' . __( 'sec', 'wp-coder' ), $get_environment_info['php_max_execution_time'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_php_max_input_vars',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'PHP Max Input Vars', 'wpcoderpro' ) . ': %s', $get_environment_info['php_max_input_vars'] ),
+			'title'  => sprintf( __( 'PHP Max Input Vars', 'wp-coder' ) . ': %s', $get_environment_info['php_max_input_vars'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_max_upload_size',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'Max Upload Size', 'wpcoderpro' ) . ': %s', $get_environment_info['max_upload_size'] ),
+			'title'  => sprintf( __( 'Max Upload Size', 'wp-coder' ) . ': %s', $get_environment_info['max_upload_size'] ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_gzip_enabled',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'GZip', 'wpcoderpro' ) . ': %s', ( $get_environment_info['gzip_enabled'] == '1' ) ? __( 'enable', 'wpcoderpro' ) : __( 'disable', 'wpcoderpro' ) ),
+			'title'  => sprintf( __( 'GZip', 'wp-coder' ) . ': %s', ( $get_environment_info['gzip_enabled'] == '1' ) ? __( 'enable', 'wp-coder' ) : __( 'disable', 'wp-coder' ) ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_mbstring_enabled',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'Multibyte String', 'wpcoderpro' ) . ': %s', ( $get_environment_info['mbstring_enabled'] == '1' ) ? __( 'enable', 'wpcoderpro' ) : __( 'disable', 'wpcoderpro' ) ),
+			'title'  => sprintf( __( 'Multibyte String', 'wp-coder' ) . ': %s', ( $get_environment_info['mbstring_enabled'] == '1' ) ? __( 'enable', 'wp-coder' ) : __( 'disable', 'wp-coder' ) ),
 			'href'   => false
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'wpc_dev_environment_ssl_enabled',
 			'parent' => 'wpc_dev_environment',
-			'title'  => sprintf( __( 'SSL', 'wpcoderpro' ) . ': %s', ( $get_environment_info['ssl_enabled'] == '1' ) ? __( 'enable', 'wpcoderpro' ) : __( 'disable', 'wpcoderpro' ) ),
+			'title'  => sprintf( __( 'SSL', 'wp-coder' ) . ': %s', ( $get_environment_info['ssl_enabled'] == '1' ) ? __( 'enable', 'wp-coder' ) : __( 'disable', 'wp-coder' ) ),
 			'href'   => false
 		) );
 
@@ -463,7 +463,7 @@ class  WPCoder_Page_Info {
 				'parent' => 'wpc_dev_shortcodes_full',
 				'title'  => $shortcodes_list ? implode( ", ", array_map( static function ( $it ) {
 					return esc_html( $it['full'] );
-				}, $shortcodes_list ) ) : __( 'None found', 'wpcoderpro' ),
+				}, $shortcodes_list ) ) : __( 'None found', 'wp-coder' ),
 				'href'   => false
 			] );
 		}
@@ -656,7 +656,7 @@ class  WPCoder_Page_Info {
 			// I18n / Time
 			'language'          => get_locale(),
 			'timezone'          => $tz,
-			'local_time'        => function_exists( 'wp_date' ) ? wp_date( 'Y-m-d H:i:s' ) : date( 'Y-m-d H:i:s' ),
+			'local_time'        => wp_date( 'Y-m-d H:i:s' ), // WordPress 5.3+, both editions' minimum.
 			'utc_time'          => gmdate( 'Y-m-d H:i:s' ),
 
 			// Env type (WP 5.5+)

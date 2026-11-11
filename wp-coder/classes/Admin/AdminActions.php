@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 use WPCoder\Dashboard\DBManager;
 use WPCoder\Dashboard\ImporterExporter;
+use WPCoder\Dashboard\OptionsTransfer;
 use WPCoder\Dashboard\Settings;
 use WPCoder\WPCoder;
 
@@ -27,7 +28,9 @@ class AdminActions {
 			return false;
 		}
 
-		if ( strpos( $name, '_export_data' ) !== false ) {
+		if ( strpos( $name, '_export_options' ) !== false ) {
+			OptionsTransfer::export();
+		} elseif ( strpos( $name, '_export_data' ) !== false ) {
 			ImporterExporter::export_data();
 		} elseif ( strpos( $name, '_export_item' ) !== false ) {
 			ImporterExporter::export_item();
@@ -45,6 +48,11 @@ class AdminActions {
 			Settings::activate_mode();
 		} elseif ( strpos( $name, '_deactivate_mode' ) !== false ) {
 			Settings::deactivate_mode();
+		} elseif ( strpos( $name, '_unpin_item' ) !== false ) {
+			// Before '_pin_item', which is a substring of it.
+			Settings::unpin_item();
+		} elseif ( strpos( $name, '_pin_item' ) !== false ) {
+			Settings::pin_item();
 		}
 
 	}
@@ -59,6 +67,7 @@ class AdminActions {
 		$names = [
 			WPCoder::PREFIX . '_import_data',
 			WPCoder::PREFIX . '_export_data',
+			WPCoder::PREFIX . '_export_options',
 			WPCoder::PREFIX . '_export_item',
 			WPCoder::PREFIX . '_remove_item',
 			WPCoder::PREFIX . '_settings',
@@ -66,6 +75,8 @@ class AdminActions {
 			WPCoder::PREFIX . '_deactivate_item',
 			WPCoder::PREFIX . '_activate_mode',
 			WPCoder::PREFIX . '_deactivate_mode',
+			WPCoder::PREFIX . '_pin_item',
+			WPCoder::PREFIX . '_unpin_item',
 		];
 
 		foreach ( $request as $key => $value ) {

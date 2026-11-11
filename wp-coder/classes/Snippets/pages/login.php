@@ -5,8 +5,8 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
     <div class="wowp-snippets__header">
-        <h3 class="wowp-snippets__header-title">Login & User Access</h3>
-        <p class="wowp-snippets__header-description">Enhance and control access to the WordPress login page.</p>
+        <h3 class="wowp-snippets__header-title">Login &amp; Users</h3>
+        <p class="wowp-snippets__header-description">Customise the login screen and how sessions behave. Login hardening lives in Security.</p>
     </div>
 
 <?php
@@ -96,6 +96,27 @@ self::create_options( $snippets );
 					<label>
 						<span class="label">Redirect to: <?php echo esc_url( get_site_url() ); ?>/</span>
 						<?php self::field( 'text', 'change_redirect_logout_link', '', 'visit-again' ); ?>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="wowp-snippet__item">
+			<div class="wowp-snippet__item-header">
+				<label for="change_expiration_remember_me">Change "Remember Me" Duration</label>
+				<p class="wowp-snippet__item-description">Set how long users stay logged in when they check "Remember Me".</p>
+			</div>
+			<div class="wowp-field has-checkbox">
+				<label class="switch">
+					<?php self::field( 'checkbox', 'change_expiration_remember_me' ); ?>
+					<span class="slider"></span>
+				</label>
+			</div>
+			<div class="wowp-snippet__item-expand is-hidden">
+				<div class="wowp-field">
+					<label>
+						<span class="label">Number of days</span>
+						<?php self::field( 'number', 'change_expiration_remember_me_day', 14, '14' ); ?>
 					</label>
 				</div>
 			</div>

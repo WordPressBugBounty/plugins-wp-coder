@@ -69,7 +69,12 @@ class Obfuscator {
 		$parser->add( '/\'[^\'\\n\\r]*\'/', self::IGNORE );
 		$parser->add( '/"[^"\\n\\r]*"/', self::IGNORE );
 		// remove comments
-		$parser->add( '/\\/\\/[^\\n\\r]*[\\n\\r]/', ' ' );
+		// A line comment swallows the line break that ends it, so the break has to
+		// be put back: JavaScript decides whether to insert a semicolon from
+		// whether a line terminator separates two tokens, and turning one into a
+		// space silently joins two statements ("var a = 1 // note" + "var b = 2"
+		// became "var a=1 var b=2", a syntax error).
+		$parser->add( '/\\/\\/[^\\n\\r]*[\\n\\r]/', "\n" );
 		$parser->add( '/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\//', ' ' );
 		// protect regular expressions
 		$parser->add( '/\\s+(\\/[^\\/\\n\\r\\*][^\\/\\n\\r]*\\/g?i?)/', '$2' ); // IGNORE
@@ -85,6 +90,18 @@ class Obfuscator {
 		$script = $parser->exec( $script );
 
 		// remove white-space
+		//
+		// Whitespace that contains a line terminator collapses to a line
+		// terminator, not to a space or to nothing. Automatic semicolon insertion
+		// is defined in terms of line breaks, so flattening one changes what the
+		// code means — code without trailing semicolons (perfectly valid, and
+		// common) came out as a syntax error. Keeping the break is faithful in
+		// both directions: it never introduces one that the author did not write,
+		// so "return x" on a single line still returns x.
+		//
+		// This is listed first so it wins over the two rules below at the same
+		// position; they still handle whitespace inside a line.
+		$parser->add( '/\\s*[\\n\\r]\\s*/', "\n" );
 		$parser->add( '/(\\b|\\x24)\\s+(\\b|\\x24)/', '$2 $3' );
 		$parser->add( '/([+\\-])\\s+([+\\-])/', '$2 $3' );
 		$parser->add( '/\\s+/', '' );
@@ -381,7 +398,14 @@ class Obfuscator {
 
 	// protect characters used by the parser
 	private function _escape( $script ) {
-		return preg_replace( '/([\\\\\'])/', '\\\$1', $script );
+		$script = preg_replace( '/([\\\\\'])/', '\\\$1', $script );
+
+		// The packed script is embedded as a single-quoted JavaScript string, and
+		// a literal line terminator inside one is a syntax error. Now that
+		// _basicCompression keeps line breaks, they have to be written as escapes.
+		// Runs after the backslash pass above, so the backslash added here is not
+		// escaped a second time.
+		return strtr( $script, [ "\r\n" => '\\n', "\n" => '\\n', "\r" => '\\n' ] );
 	}
 
 	// protect high-ascii characters already in the script
