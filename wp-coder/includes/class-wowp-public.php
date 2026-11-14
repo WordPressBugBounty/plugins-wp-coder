@@ -25,6 +25,27 @@ class WOWP_Public {
 	/** Set while render_atts() runs: block values are always escaped. */
 	private $block_render = false;
 
+	/** Set while get_content() renders values from someone who may not write raw HTML. */
+	private $untrusted_values = false;
+
+	/**
+	 * Run $render with untrusted_values set, then put back what it was — not
+	 * false: a [wp_code] nested in the content renders first (do_shortcode() in
+	 * get_content()), and clearing the flag there would leave the one around it
+	 * rendering a Contributor's values as trusted. As in WP Coder Pro.
+	 *
+	 * @return mixed What $render returns.
+	 */
+	private function with_values_from( bool $untrusted, callable $render ) {
+		$previous               = $this->untrusted_values;
+		$this->untrusted_values = $untrusted;
+		try {
+			return $render();
+		} finally {
+			$this->untrusted_values = $previous;
+		}
+	}
+
 	/** Content positions are applied once per request (see wrap_content_html()). */
 	private $content_wrapped = false;
 
@@ -88,7 +109,8 @@ class WOWP_Public {
 
 		$attrs = shortcode_atts( $result_atts, $atts, WPCoder::SHORTCODE );
 
-		if ( $this->block_render || self::untrusted_author() ) {
+		$untrusted = $this->block_render || self::untrusted_author();
+		if ( $untrusted ) {
 			$attrs = self::sanitize_attrs( $attrs, $this->param( $result ) );
 		}
 
@@ -96,8 +118,9 @@ class WOWP_Public {
 			return false;
 		}
 
-
-		$wp_coder_content_out = $this->get_content( $result, $shortcode_content, $attrs );
+		$wp_coder_content_out = $this->with_values_from( $untrusted, function () use ( $result, $shortcode_content, $attrs ) {
+			return $this->get_content( $result, $shortcode_content, $attrs );
+		} );
 
 		$singleton = Singleton::getInstance();
 		$singleton->setValue( $result->id, $result );
@@ -125,22 +148,48 @@ class WOWP_Public {
 	 *
 	 * Written by Placeholders::fill(), as in WP Coder Pro: inside a tag a value
 	 * keeps no raw "<" or ">" — an HTML attribute with `<b>` in a tag broke the
-	 * page of a block (wptexturize()).
+	 * page of a block (wptexturize()) — and one named in $untrusted no quote or
+	 * whitespace either.
+	 *
+	 * @param string[] $untrusted Names of $vars from someone who may not write raw HTML.
 	 */
-	public static function replace_placeholders( string $content, array $vars ): string {
+	public static function replace_placeholders( string $content, array $vars, array $untrusted = [] ): string {
 		if ( ! preg_match_all( '/\{\{([^{}]*)\}\}/', $content, $matches ) ) {
 			return $content;
 		}
 
-		$values = [];
+		$values       = [];
+		$untrusted_as = [];
 		foreach ( array_unique( $matches[1] ) as $match ) {
 			$name = str_replace( '$', '', $match );
 			if ( isset( $vars[ $name ] ) && is_scalar( $vars[ $name ] ) ) {
 				$values[ $match ] = (string) $vars[ $name ];
+				if ( in_array( $name, $untrusted, true ) ) {
+					$untrusted_as[] = $match;
+				}
 			}
 		}
 
-		return Placeholders::fill( $content, $values );
+		return Placeholders::fill( $content, $values, $untrusted_as );
+	}
+
+	/**
+	 * The placeholder names get_content() fills from a shortcode's or block's
+	 * values: each attribute and image sub-variable (also as extract()'s "wpcp_"
+	 * name for one that clashes with a local variable) and the enclosed content.
+	 * wp_kses_post() — an HTML or Rich text attribute, the content — keeps a `"`
+	 * that is text, and title="{{$shortcode_content}}" was closed by it.
+	 *
+	 * @return string[]
+	 */
+	private static function untrusted_names( array $attrs ): array {
+		$names = [ 'shortcode_content' ];
+		foreach ( array_keys( $attrs ) as $name ) {
+			$names[] = (string) $name;
+			$names[] = 'wpcp_' . $name;
+		}
+
+		return $names;
 	}
 
 	/**
@@ -183,7 +232,7 @@ class WOWP_Public {
 					break;
 				case 'image':
 				case 'image_preload':
-					$attrs[ $name ] = esc_url_raw( (string) $value );
+					$attrs[ $name ] = self::image_url( (string) $value );
 					break;
 				case 'post':
 				case 'term':
@@ -250,16 +299,30 @@ class WOWP_Public {
 	}
 
 	/**
+	 * An image URL safe inside a quoted HTML attribute. esc_url_raw() drops a
+	 * double quote but keeps a single one, so src='{{hero_url}}' could be closed
+	 * from the value; %27 is the same character to the URL.
+	 */
+	private static function image_url( string $url ): string {
+		return str_replace( "'", '%27', esc_url_raw( $url ) );
+	}
+
+	/**
 	 * An image URL as ready-to-use values. {{name_html}} goes through
 	 * wp_get_loading_optimization_attributes() (WP 6.3+), so the first image on
 	 * the page gets fetchpriority="high" and later ones loading="lazy".
+	 *
+	 * Every value is escaped for an HTML attribute whoever wrote the post: the
+	 * alt text is the attachment's, which anyone with upload_files sets, and
+	 * WordPress only runs sanitize_text_field() over it — a raw `"` stays and
+	 * closed alt="{{hero_alt}}" into an event handler.
 	 */
 	private static function expand_image_url( string $url ): array {
 		if ( isset( self::$image_cache[ $url ] ) ) {
 			return self::$image_cache[ $url ];
 		}
 
-		$image_url     = esc_url_raw( $url );
+		$image_url     = self::image_url( $url );
 		$width         = 0;
 		$height        = 0;
 		$alt           = '';
@@ -314,9 +377,9 @@ class WOWP_Public {
 			'_url'           => $image_url,
 			'_width'         => $width,
 			'_height'        => $height,
-			'_alt'           => $alt,
-			'_srcset'        => $srcset,
-			'_sizes'         => $sizes,
+			'_alt'           => esc_attr( $alt ),
+			'_srcset'        => esc_attr( $srcset ),
+			'_sizes'         => esc_attr( $sizes ),
 			'_html'          => $html,
 			'_loading'       => $loading,
 			'_fetchpriority' => $fetchpriority,
@@ -474,7 +537,12 @@ class WOWP_Public {
 			}
 		}
 
-		$wp_coder_content = self::replace_placeholders( $wp_coder_content, get_defined_vars() );
+		// Inline, no new local variable: get_defined_vars() would offer it as a placeholder.
+		$wp_coder_content = self::replace_placeholders(
+			$wp_coder_content,
+			get_defined_vars(),
+			$this->untrusted_values ? self::untrusted_names( (array) $attrs ) : []
+		);
 
 		$param = ! empty( $result->param ) ? maybe_unserialize( $result->param ) : [];
 		if ( ! empty( $param['minified_html'] ) ) {

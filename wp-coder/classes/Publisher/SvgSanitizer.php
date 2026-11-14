@@ -4,6 +4,7 @@ namespace WPCoder\Publisher;
 
 use DOMDocument;
 use DOMElement;
+use DOMXPath;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -71,11 +72,42 @@ class SvgSanitizer {
 			return null;
 		}
 
+		self::strip_processing_instructions( $dom );
 		self::strip_unsafe_svg_nodes( $dom );
 
 		$out = $dom->saveXML();
 
 		return $out === false ? null : $out;
+	}
+
+	/**
+	 * <?xml-stylesheet?> has a browser that opens the file itself run an XSLT
+	 * stylesheet — one that can write a script element. An image has no use for
+	 * processing instructions; the XML declaration is not one of these nodes.
+	 */
+	private static function strip_processing_instructions( DOMDocument $dom ): void {
+		$found = ( new DOMXPath( $dom ) )->query( '//processing-instruction()' );
+
+		if ( $found === false ) {
+			return;
+		}
+
+		foreach ( iterator_to_array( $found, false ) as $node ) {
+			if ( $node->parentNode ) {
+				$node->parentNode->removeChild( $node );
+			}
+		}
+	}
+
+	/**
+	 * An attribute or attributeName without its namespace prefix: a link is a
+	 * link under whatever prefix the file binds to the xlink namespace
+	 * (xmlns:a="http://www.w3.org/1999/xlink" a:href="…"), not only "xlink:".
+	 */
+	private static function local_name( string $name ): string {
+		$colon = strrpos( $name, ':' );
+
+		return strtolower( $colon === false ? $name : substr( $name, $colon + 1 ) );
 	}
 
 	private static function strip_unsafe_svg_nodes( DOMDocument $dom ): void {
@@ -95,9 +127,9 @@ class SvgSanitizer {
 			// An animation that rewrites a link or an event attribute is a script
 			// wearing a different hat.
 			if ( in_array( $name, self::SVG_ANIMATION_ELEMENTS, true ) ) {
-				$target = strtolower( $element->getAttribute( 'attributeName' ) );
+				$target = self::local_name( $element->getAttribute( 'attributeName' ) );
 
-				if ( $target === 'href' || $target === 'xlink:href' || strpos( $target, 'on' ) === 0 ) {
+				if ( $target === 'href' || strpos( $target, 'on' ) === 0 ) {
 					$element->parentNode->removeChild( $element );
 					continue;
 				}
@@ -119,20 +151,22 @@ class SvgSanitizer {
 
 		foreach ( iterator_to_array( $element->attributes, false ) as $attribute ) {
 			$name  = strtolower( $attribute->nodeName );
+			$local = self::local_name( $name );
 			$value = (string) $attribute->nodeValue;
 
 			// Every inline event handler: onload, onclick, onerror, onbegin…
-			if ( strpos( $name, 'on' ) === 0 ) {
+			if ( strpos( $name, 'on' ) === 0 || strpos( $local, 'on' ) === 0 ) {
 				$element->removeAttributeNode( $attribute );
 				continue;
 			}
 
-			if ( in_array( $name, self::SVG_URL_ATTRIBUTES, true ) && self::is_unsafe_url( $value ) ) {
+			if ( ( in_array( $name, self::SVG_URL_ATTRIBUTES, true ) || in_array( $local, self::SVG_URL_ATTRIBUTES, true ) )
+			     && self::is_unsafe_url( $value ) ) {
 				$element->removeAttributeNode( $attribute );
 				continue;
 			}
 
-			if ( ( $name === 'style' || $name === 'filter' ) && self::is_unsafe_css( $value ) ) {
+			if ( ( $local === 'style' || $local === 'filter' ) && self::is_unsafe_css( $value ) ) {
 				$element->removeAttributeNode( $attribute );
 			}
 		}

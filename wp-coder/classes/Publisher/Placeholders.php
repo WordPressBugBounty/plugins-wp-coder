@@ -18,20 +18,48 @@ defined( 'ABSPATH' ) || exit;
  */
 class Placeholders {
 
+	/** Inside a tag a value keeps no raw "<" or ">". */
+	private const IN_TAG = [ '<' => '&lt;', '>' => '&gt;' ];
+
+	/** …an untrusted one in a quoted value no quote either: kses keeps a `"` that is text. */
+	private const IN_QUOTES_UNTRUSTED = [ '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#039;' ];
+
 	/**
-	 * @param string               $html   The template.
-	 * @param array<string, mixed> $values What stands between the braces ("$label",
-	 *                                     "label") => its value.
-	 *                                     Placeholders not named here are left as written.
+	 * …and anywhere else in the tag no whitespace too, which ends an unquoted
+	 * value (class={{x}}) — esc_attr() keeps it. The browser decodes all of
+	 * these back in an attribute value.
 	 */
-	public static function fill( string $html, array $values ): string {
+	private const IN_TAG_UNTRUSTED = [
+		'<'  => '&lt;',
+		'>'  => '&gt;',
+		'"'  => '&quot;',
+		"'"  => '&#039;',
+		' '  => '&#32;',
+		"\t" => '&#9;',
+		"\n" => '&#10;',
+		"\r" => '&#13;',
+		"\f" => '&#12;',
+	];
+
+	/**
+	 * @param string               $html      The template.
+	 * @param array<string, mixed> $values    What stands between the braces ("$label",
+	 *                                        "label") => its value.
+	 *                                        Placeholders not named here are left as written.
+	 * @param string[]             $untrusted Keys of $values that came from someone who may
+	 *                                        not write raw HTML (a block, a Contributor's
+	 *                                        shortcode). In title="{{label}}" a quote of
+	 *                                        theirs closed the attribute.
+	 */
+	public static function fill( string $html, array $values, array $untrusted = [] ): string {
 		if ( $values === [] || ! preg_match_all( '/\{\{([^{}]*)\}\}/', $html, $found, PREG_OFFSET_CAPTURE ) ) {
 			return $html;
 		}
 
-		$tags = null;
-		$out  = '';
-		$at   = 0;
+		$tags      = null;
+		$out       = '';
+		$at        = 0;
+		$untrusted = array_flip( $untrusted );
 
 		// One pass over the template: a value is never searched for placeholders
 		// itself, as the str_replace() for the next name used to.
@@ -41,11 +69,16 @@ class Placeholders {
 				continue;
 			}
 
-			$value = (string) $values[ $name ];
-			if ( strpbrk( $value, '<>' ) !== false ) {
-				$tags = $tags ?? self::tag_ranges( $html );
-				if ( self::inside( $offset, $tags ) ) {
-					$value = str_replace( [ '<', '>' ], [ '&lt;', '&gt;' ], $value );
+			$value  = (string) $values[ $name ];
+			$escape = isset( $untrusted[ $name ] ) ? self::IN_TAG_UNTRUSTED : self::IN_TAG;
+			if ( strpbrk( $value, implode( '', array_keys( $escape ) ) ) !== false ) {
+				$tags  = $tags ?? self::tag_ranges( $html );
+				$start = self::tag_start( $offset, $tags );
+				if ( $start !== null ) {
+					if ( $escape === self::IN_TAG_UNTRUSTED && self::in_quotes( $html, $start, $offset ) ) {
+						$escape = self::IN_QUOTES_UNTRUSTED;
+					}
+					$value = strtr( $value, $escape );
 				}
 			}
 
@@ -105,17 +138,38 @@ class Placeholders {
 		return $ranges;
 	}
 
-	/** @param array<int, array{0: int, 1: int}> $ranges From tag_ranges(). */
-	private static function inside( int $offset, array $ranges ): bool {
+	/**
+	 * Where the tag holding $offset starts, or null outside every tag.
+	 *
+	 * @param array<int, array{0: int, 1: int}> $ranges From tag_ranges().
+	 */
+	private static function tag_start( int $offset, array $ranges ): ?int {
 		foreach ( $ranges as [ $start, $end ] ) {
 			if ( $offset < $start ) {
-				return false;
+				return null;
 			}
 			if ( $offset < $end ) {
-				return true;
+				return $start;
 			}
 		}
 
-		return false;
+		return null;
+	}
+
+	/** Whether $offset, in the tag that starts at $start, is in a quoted value — read as tag_ranges() does. */
+	private static function in_quotes( string $html, int $start, int $offset ): bool {
+		$at = $start;
+		while ( true ) {
+			$at += strcspn( $html, '"\'', $at, $offset - $at );
+			if ( $at >= $offset ) {
+				return false;
+			}
+
+			$close = strpos( $html, $html[ $at ], $at + 1 );
+			if ( $close === false || $close > $offset ) {
+				return true;
+			}
+			$at = $close + 1;
+		}
 	}
 }

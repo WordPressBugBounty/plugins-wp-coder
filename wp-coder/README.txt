@@ -5,7 +5,7 @@ Tags: code snippets, header footer, custom css, php, javascript
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 5.0
+Stable tag: 5.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -270,6 +270,13 @@ Yes. Both versions use the same data, so your snippets, settings, tags and attri
 
 == Changelog ==
 
+= 5.0.1 =
+* Fixed: Security – the alt text of a media library image is now escaped in {{name_alt}} (and {{name_srcset}}, {{name_sizes}}) of an Image attribute. A user who can upload media (Author and above) could set an image's Alt Text so that it broke out of alt="{{name_alt}}" in an administrator's snippet and ran a script for every visitor of the page. An image URL can no longer close a single-quoted attribute either. Reported through Wordfence.
+* Fixed: Security – "Duplicate Posts & Pages" copies only posts the user can edit, and each Duplicate link works for its own post only. A Contributor could copy any post – someone else's private post or draft, with its password and custom fields – into a draft of their own.
+* Fixed: Security – "Open External Links in New Tab" could turn a link written by a Contributor into a script on the page (WordPress before 7.0 keeps the quotes that made it possible). Links are now edited through WordPress's HTML API; on WordPress older than 6.2 they are left as written.
+* Fixed: Security – values from an author who may not publish raw HTML (e.g. a Contributor) can no longer close the HTML attribute of the snippet they are placed in: shortcode and block attributes, HTML and Rich text ones included, and the content between [wp_code]…[/wp_code] ({{$shortcode_content}}). Inside a tag their quotes are encoded, and outside quotes their spaces too; the page shows the same text. Values from administrators are written as before.
+* Fixed: Security – "Allow SVG Uploads" also cleans a file sent to the REST API as the raw request body, and removes links under any xlink prefix and <?xml-stylesheet?> instructions.
+
 = 5.0 =
 * Added: Snippets – the full set from WP Coder Pro, now 82 snippets in 8 groups, with a new Security group and instant search across all of them. Your existing snippet settings are kept; the few renamed options are migrated automatically.
 * Added: Code editor – code folding, highlighting of matching words, Ctrl/Cmd+S to save, find & replace, select next occurrence, go to line, full screen (F11), a shortcuts reference, and a warning before leaving with unsaved code.
@@ -490,6 +497,9 @@ Yes. Both versions use the same data, so your snippets, settings, tags and attri
 * Initial release.
 
 == Upgrade Notice ==
+
+= 5.0.1 =
+Security release: fixes stored XSS through an image's alt text, attribute values and external links, and unauthorized post duplication. Update recommended.
 
 = 5.0 =
 Major update: refreshed interface, site-wide Display, attributes, multiple tags, pinning and 82 snippets. Your snippets and settings are migrated automatically. Please read the changelog: a few long-standing behaviours were fixed.

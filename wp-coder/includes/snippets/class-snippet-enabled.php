@@ -40,6 +40,9 @@ class WPCoder_Lite_Enabled_Snippets {
 			// Strip scripting out of the file before it ever lands in uploads: the
 			// upload is admin-only, but the resulting URL is served to every visitor.
 			add_filter( 'wp_handle_upload_prefilter', [ $this, 'sanitize_svg_upload' ] );
+			// A file sent to the REST media endpoint as the raw request body goes
+			// through wp_handle_sideload(), which runs only this filter.
+			add_filter( 'wp_handle_sideload_prefilter', [ $this, 'sanitize_svg_upload' ] );
 		}
 
 		if ( array_key_exists( 'enable_pages_excerpt', $options ) ) {
@@ -620,24 +623,19 @@ class WPCoder_Lite_Enabled_Snippets {
 	 * but no target got target="_blank" added and its rel left alone, producing the
 	 * one combination this snippet exists to avoid — a new tab with no noopener.
 	 *
-	 * @param string $tag Opening <a …> tag.
+	 * @param string|true|null $rel The link's rel, as WP_HTML_Tag_Processor reads it
+	 *                              (true: present with no value, null: absent).
 	 */
-	private function merge_link_rel( string $tag ): string {
-		$needed = [ 'noopener', 'noreferrer', 'nofollow' ];
+	private function merge_link_rel( $rel ): string {
+		$tokens = is_string( $rel ) ? ( preg_split( '/\s+/', strtolower( $rel ), -1, PREG_SPLIT_NO_EMPTY ) ?: [] ) : [];
 
-		if ( ! preg_match( '/\srel=(["\'])(.*?)\1/i', $tag, $rel ) ) {
-			return str_ireplace( '<a', '<a rel="' . implode( ' ', $needed ) . '"', $tag );
-		}
-
-		$tokens = preg_split( '/\s+/', strtolower( $rel[2] ), -1, PREG_SPLIT_NO_EMPTY ) ?: [];
-
-		foreach ( $needed as $token ) {
+		foreach ( [ 'noopener', 'noreferrer', 'nofollow' ] as $token ) {
 			if ( ! in_array( $token, $tokens, true ) ) {
 				$tokens[] = $token;
 			}
 		}
 
-		return str_replace( $rel[0], ' rel="' . implode( ' ', $tokens ) . '"', $tag );
+		return implode( ' ', $tokens );
 	}
 
 	/**
@@ -668,31 +666,42 @@ class WPCoder_Lite_Enabled_Snippets {
 		return $commentdata;
 	}
 
+	/**
+	 * Open links to other sites in a new tab, with noopener/noreferrer/nofollow.
+	 *
+	 * Through the HTML API (WordPress 6.2+), which reads tags as a browser does
+	 * and escapes what it writes. A regex used to edit the tag as text: it copied
+	 * a rel value's quote out unescaped (rel='x" onmouseover="…') and took an
+	 * "<a" inside another attribute's value for a tag, writing quotes into that
+	 * value. kses keeps both before WordPress 7.0, so a Contributor could put an
+	 * event handler on the page. Without the API, links are left as written.
+	 */
 	public function force_external_links_new_tab( $content ) {
+		if ( ! is_string( $content ) || stripos( $content, '<a' ) === false || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $content;
+		}
+
 		$site_host = wp_parse_url( home_url(), PHP_URL_HOST );
+		$links     = new WP_HTML_Tag_Processor( $content );
 
-		return preg_replace_callback(
-			'#<a\s[^>]*href=["\'](https?:\/\/[^"\']+)["\'][^>]*>#i',
-			function ( $matches ) use ( $site_host ) {
-				$href      = $matches[1];
-				$link_host = wp_parse_url( $href, PHP_URL_HOST );
+		while ( $links->next_tag( [ 'tag_name' => 'a' ] ) ) {
+			$href = $links->get_attribute( 'href' );
+			if ( ! is_string( $href ) || ! preg_match( '#^https?://#i', trim( $href ) ) ) {
+				continue;
+			}
 
-				if ( $link_host && $link_host !== $site_host ) {
-					$tag = $matches[0];
+			$link_host = wp_parse_url( trim( $href ), PHP_URL_HOST );
+			if ( ! $link_host || $link_host === $site_host ) {
+				continue;
+			}
 
-					if ( stripos( $tag, 'target=' ) === false ) {
-						$tag = str_ireplace( '<a', '<a target="_blank"', $tag );
-					}
+			if ( $links->get_attribute( 'target' ) === null ) {
+				$links->set_attribute( 'target', '_blank' );
+			}
+			$links->set_attribute( 'rel', $this->merge_link_rel( $links->get_attribute( 'rel' ) ) );
+		}
 
-					$tag = $this->merge_link_rel( $tag );
-
-					return $tag;
-				}
-
-				return $matches[0];
-			},
-			$content
-		);
+		return $links->get_updated_html();
 	}
 
 	public function default_alt_to_avatar( $atts ) {
@@ -727,8 +736,29 @@ class WPCoder_Lite_Enabled_Snippets {
 		return $content;
 	}
 
+	/**
+	 * Whether the current user may copy this post: edit it, and create posts of
+	 * its type. The copy carries the content, password and every meta value.
+	 */
+	private function can_duplicate( $post ): bool {
+		if ( ! $post instanceof WP_Post ) {
+			return false;
+		}
+
+		$type = get_post_type_object( $post->post_type );
+
+		return $type
+		       && current_user_can( 'edit_post', $post->ID )
+		       && current_user_can( $type->cap->create_posts );
+	}
+
+	/** The nonce action of one post's Duplicate link. */
+	private static function duplicate_nonce_action( int $post_id ): string {
+		return 'wpcoder_duplicate_post_' . $post_id;
+	}
+
 	public function add_duplicate_link( $actions, $post ) {
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! $this->can_duplicate( $post ) ) {
 			return $actions;
 		}
 
@@ -740,7 +770,7 @@ class WPCoder_Lite_Enabled_Snippets {
 				),
 				'admin.php'
 			),
-			basename( __FILE__ ),
+			self::duplicate_nonce_action( (int) $post->ID ),
 			'duplicate_nonce'
 		);
 
@@ -755,17 +785,25 @@ class WPCoder_Lite_Enabled_Snippets {
 			wp_die( 'No post to duplicate has been provided!' );
 		}
 
-		// Nonce verification
-		if ( ! isset( $_GET['duplicate_nonce'] ) || ! wp_verify_nonce( $_GET['duplicate_nonce'],
-				basename( __FILE__ ) ) ) {
-			return;
-		}
-
 		// Get the original post id
 		$post_id = absint( $_GET['post'] );
 
+		// The nonce is the post's own: one action for every post (the file name)
+		// let a nonce from any Duplicate link copy any other post.
+		if ( ! isset( $_GET['duplicate_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['duplicate_nonce'] ) ),
+				self::duplicate_nonce_action( $post_id ) ) ) {
+			wp_die( esc_html__( 'The link has expired. Go back to the list and try again.', 'wp-coder' ), 403 );
+		}
+
 		// And all the original post data then
 		$post = get_post( $post_id );
+
+		// Anyone who could see one Duplicate link — a Contributor — could copy any
+		// post into their own draft: someone else's private post or draft, its
+		// password and its meta.
+		if ( $post && ! $this->can_duplicate( $post ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to duplicate this item.', 'wp-coder' ), 403 );
+		}
 
 		/*
 		 * if you don't want current user to be the new post author,
